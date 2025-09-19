@@ -1,0 +1,127 @@
+    .comment_area {
+    border-bottom: 1px solid #c5c5c5;
+    padding-bottom: 40px;
+    }
+    .comment_area .title {
+    margin-bottom: 50px;
+    }
+
+    .comment_area h4{
+        margin: 30px 0;
+    }
+
+    @media only screen and (max-width: 767px) {
+    .comment_area .comment-content {
+    padding: 20px 15px;
+    }
+    .comment_area .comment-content .comment-author {
+    flex: 0 0 60px;
+    min-width: 60px;
+    margin-right: 15px;
+    }
+    }
+    .comment_area .comment-content .comment-author {
+    flex: 0 0 79px;
+    min-width: 79px;
+    margin-right: 55px;
+    border-radius: 50%;
+    }
+    .comment_area .comment-content .comment-author img {
+    border-radius: 50%;
+    }
+    .comment_area .comment-content .comment-meta {
+    margin-bottom: 30px;
+    }
+    .comment_area .comment-content .comment-meta .post-date {
+    color: #a1a1a1;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 0;
+    display: block;
+    }
+    .comment_area .comment-content .comment-meta .post-author {
+    margin-bottom: 15px;
+    display: block;
+    }
+    .comment_area .comment-content .comment-meta p {
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 2;
+    }
+    .comment_area .comment-content .comment-meta .comment-reply {
+    font-size: 11px;
+    color: #e75e8d;
+    text-transform: uppercase;
+    }
+    .comment_area .bd_comment{
+    border-top: 1px solid #a1a1a1;
+    border-bottom: 1px solid #a1a1a1;
+    }
+    .comment_area .single_comment_area{
+    margin-bottom: 30px;
+    }
+    .comment_area .single_comment_area .children .children_reply{
+        border-top: 1px solid #a1a1a1;
+        }
+    .comment_area .single_comment_area:last-of-type {
+    margin-bottom: 0;
+    }
+    .comment_area .children .single_comment_area {
+    margin-left: 60px;
+    }
+    @media only screen and (max-width: 767px) {
+    .comment_area .children .single_comment_area {
+    margin-left: 40px;
+    }
+    }
+    .single_comment_area .children .single_comment_area .comment-meta {
+    margin-bottom: 0;
+    }
+    
+    .post-a-comment-area h4 {
+    font-size: 18px;
+    color: #fff;
+    margin: 30px 0;
+    }
+    .post-a-comment-area button {
+    border-color: #e75e8d;
+    color: #fff;
+    background-color: none;
+    }
+    .post-a-comment-area button:hover {
+    background-color: #e75e8d;
+    color: #fff;
+    }
+    
+    /* Form CSS */
+    .group {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 30px;
+    }
+    .group input,
+    .group textarea {
+    font-size: 12px;
+    font-style: italic;
+    padding: 10px;
+    display: block;
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-bottom: 2px solid;
+    border-color: #f1f1f1;
+    }
+    .group input:focus,
+    .group textarea:focus {
+    outline: none;
+    box-shadow: none;
+    }
+    .group .bar {
+    position: relative;
+    display: block;
+    width: 100%;
+    }
+    .group textarea {
+    min-height: 90px;
+    }

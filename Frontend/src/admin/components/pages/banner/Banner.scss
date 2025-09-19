@@ -1,0 +1,54 @@
+.admin-banner{
+    background-color: #191C24;
+    color: #CCC;
+    h4,h5,h6{
+        text-transform: uppercase;
+    }
+    th{
+        color: #ec6090;
+    }
+    td{
+        color: #CCC;
+    }
+    a{
+        i{
+            font-size: 16px;
+        }
+    }
+}
+
+.img-banner{
+width: 120px;
+}
+
+.toggle-btn {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 24px;
+    transition: background-color 0.2s ease;
+    overflow: hidden;
+  }
+  
+  .toggle-btn.active {
+    background-color: #2196f3;
+  }
+  
+  .slider {
+    position: absolute;
+    top: 0;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 20px;
+    transition: transform 0.2s ease;
+    transform: translateX(0);
+    z-index: 100;
+  }
+  
+  .toggle-btn.active .slider {
+    transform: translateX(26px);
+  }

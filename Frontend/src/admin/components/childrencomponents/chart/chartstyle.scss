@@ -1,0 +1,13 @@
+.action-chart{
+    button{
+        width: 100px;
+        font-size: 12px;
+        background-color: #b6b0b0;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+        &:hover{
+            background-color: #96c93d;
+        }
+    }
+}

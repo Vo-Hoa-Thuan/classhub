@@ -1,0 +1,86 @@
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+    }
+    .card-registration .select-arrow {
+    top: 13px;
+    }
+
+    .container-bg{
+        position: relative;
+    }
+
+    .title-signup{
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        position: absolute;
+        top: 30%;
+        text-align: center;
+        padding: 70px;
+        h4{
+            color: #151414;
+            font-weight: bold;
+            font-size: 50px;
+        }
+    }
+    .hidden-title{
+        display: none;
+    }
+
+    .mt-40{
+        margin-top: 50px;
+    }
+    .signup-social{
+        text-align: center;
+        i{
+            font-size: 45px;
+            margin-right: 15px;
+        }
+        .facebook-icon{
+            color: #3b5998;
+        }
+        .google-icon{
+            color: #4285F4;
+        }
+    }
+
+    .combo-gender{
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
+
+    .label-gender{
+        margin-right: 10px;
+    }
+    .container-btn-signup{
+        text-align: center;
+    }
+    .signup-btn{
+        width: 200px;
+        padding: 10px 60px;
+        border: none;
+        outline: none;
+        border-radius: 13px;
+        background-color: #4285F4;
+        color: #fff;
+        &:hover{
+            background-color: #ec6090;
+        }
+    }
+    @media (max-width: 1200px) {
+        .hidden-title{
+            display: block;
+            color: #151414;
+            font-size: 40px;
+            text-align: center;
+        }
+    }
+
+    .card-body{
+        background-color: #ffffff !important;
+    }

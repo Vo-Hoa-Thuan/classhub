@@ -1,0 +1,98 @@
+.mr-2{
+    margin-right: 10px;
+}
+.container {
+    border-radius: 25px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    }
+    
+.cart {
+line-height: 1;
+}
+
+.icon {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: #eee;
+}
+
+.pic {
+width: 70px;
+height: 90px;
+border-radius: 5px;
+}
+
+td {
+vertical-align: middle;
+}
+
+.red {
+color: #fd1c1c;
+font-weight: 600;
+}
+
+.b-bottom {
+border-bottom: 2px dotted black;
+padding-bottom: 20px;
+}
+
+p {
+margin: 0px;
+}
+
+table input {
+width: 40px;
+border: 1px solid #eee;
+}
+
+input:focus {
+outline: none;
+border: 1px solid #eee;
+}
+
+.round {
+height: 40px;
+width: 40px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+background-color: #eee;
+}
+
+.red {
+color: #fd1c1c;
+}
+
+.del {
+width: 35px;
+height: 35px;
+object-fit: cover;
+}
+
+.delivery .card {
+padding: 10px 5px;
+}
+
+.option {
+position: relative;
+top: 50%;
+display: block;
+cursor: pointer;
+color: #888;
+}
+
+.option input {
+display: none;
+}
+
+.text-muted{
+    font-size: 12px;
+}

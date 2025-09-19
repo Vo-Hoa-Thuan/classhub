@@ -1,0 +1,39 @@
+:root{
+    --text--color--heading: #154398;
+}
+.text_heading{
+    display: block !important;
+    text-align: center !important;
+    align-items: center !important;
+    margin-top: 50px;
+}
+
+.table_details{
+min-height: 223px;
+border: 1px solid #bdbbbb;
+}
+
+.ant-table-thead .ant-table-cell{
+    background-color: #154398 !important;
+    color: #fff !important;
+    text-align: center !important;
+}
+
+.ant-table-cell{
+    text-align: center !important;
+}
+
+.text-des{
+    font-weight: 400;
+    font-size: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #154398;
+  }
+
+
+@media (min-width: 1200px) {
+    .contact-info{
+        margin-left: 80px !important;
+        margin-top: 200px !important;
+    }
+  }

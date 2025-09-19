@@ -1,0 +1,67 @@
+.container-dialog-edit{
+    background: #fff;
+}
+
+.dialog-edit-profile{
+    position: fixed;
+    width: 80%;
+    height: 100vh;
+    z-index: 100000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px 20px;
+    border-radius: 10px;
+    background: #fff;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.tab-control{
+    display: flex;
+    width: 100%;
+    background-color: #e9ecef;
+    padding: 10px;
+}
+
+.btn-tab-control{
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: 1px solid #616161;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.active-btn-tab{
+background-color: #616161;
+}
+
+.image-change{
+    input{
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+    button{
+        margin-top: 10px;
+    }
+}
+
+.text-pink{
+    color: var(--pink);
+}
+
+.icon-cancel-edit{
+    position: absolute;
+    z-index: 1111111111;
+    font-size: 40px;
+    left: 95%;
+    top: 1%;
+    cursor: pointer;
+    color: #a00f0f;
+}
+
+.text-right{
+    button{
+        margin-right: 10px;
+    }
+}

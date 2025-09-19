@@ -1,0 +1,100 @@
+/* 
+---------------------------------------------
+Featured Games Style
+--------------------------------------------- 
+*/
+.container_featured_apps{
+margin-bottom: 20px !important;
+}
+
+.swiper_apps {
+    border-radius: 23px;
+    background-color: #1f2122;
+    padding: 30px;
+    width: 100%;
+  }
+
+  .swiper_apps .item .thumb {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .swiper_apps .item .thumb .hover-effect {
+    position: absolute;
+    bottom: -100px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .4s;
+  }
+  
+  .swiper_apps .item .thumb:hover .hover-effect {
+    opacity: 1;
+    visibility: visible;
+    bottom: 15px;
+  }
+  
+  .swiper_apps .item .thumb .hover-effect h6 {
+    background-color: rgba(31,33,34,0.95);
+    display: inline-block;
+    color: #ec6090;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 25px;
+  }
+  
+  .swiper_apps .item img {
+    border-radius: 23px;
+  }
+  
+  .swiper_apps .item h4 {
+    font-size: 15px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    display: inline-block;
+  }
+  
+  .swiper_apps .item span {
+    color: #666;
+    display: block;
+    margin-top: 7px;
+    font-weight: 400;
+  }
+  
+  .swiper_apps .item ul {
+    float: right;
+    margin-top: 20px;
+  }
+  
+  .swiper_apps .item ul li {
+    text-align: right;
+    color: #fff;
+    font-size: 14px;
+  }
+  
+  .swiper_apps .item ul li:first-child i {
+    color: yellow;
+  }
+  
+  .swiper_apps .item ul li:last-child i {
+    color: #ec6090;
+  }
+  .end_slider{
+    width: 200px;
+    margin-left: 200px !important;
+    color: #ec6090;
+  }
+  
+  .btn_featured{
+    margin-top: 10px;
+    button{
+        background-color: #27292a;
+        border: none;
+        outline: none;
+        padding: 8px;
+        border-radius: 10px;
+        color: #ec6090;
+    }
+  }
+  

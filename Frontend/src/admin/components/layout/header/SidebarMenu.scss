@@ -1,0 +1,132 @@
+.sidebar-admin{
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  left: -250px;
+  background: #1b1b1b;
+  transition: left 0.4s ease;
+}
+.show-side-bar{
+  left: 0px;
+}
+.sidebar-admin .text{
+  color: white;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 55px;
+  text-align: center;
+  background: #1e1e1e;
+  letter-spacing: 1px;
+}
+.sidebar-admin ul{
+  background: #1b1b1b;
+  height: 100%;
+  width: 100%;
+  list-style: none;
+      padding-left: 10px;
+}
+.sidebar-admin ul li{
+  line-height: 50px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-admin ul li:last-child{
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.sidebar-admin ul li a{
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  padding-left: 14px;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+  border-left: 3px solid transparent;
+  i{
+    font-size: 16px;
+    margin-right: 5px;
+  }
+}
+.sidebar-admin ul li.active a{
+  color: #FC5404;
+  background: #1e1e1e;
+  border-left-color: #FC5404;
+}
+.sidebar-admin ul li a:hover{
+  background: #1e1e1e;
+}
+
+.feat-show{
+  transition: all 0.5s;
+}
+
+.sidebar-admin ul li.active ul{
+ transition: all 0.5s;
+}
+
+.sidebar-admin ul ul{
+  position: static;
+  display: none; 
+}
+
+.sidebar-admin ul.show{
+  display: block;
+  transition: all 0.5s;
+}
+
+.sidebar-admin ul ul li{
+  line-height: 42px;
+  border-top: none;
+}
+.sidebar-admin ul ul li a{
+  font-size: 12px;
+  color: #e6e6e6;
+  
+}
+.sidebar-admin ul li.active ul li a{
+  color: #e6e6e6;
+  background: #1b1b1b;
+  border-left-color: transparent;
+}
+
+.sidebar-admin a:hover{
+  color: #FC5404 !important;
+}
+.sidebar-admin ul ul li a:hover{
+  color: #FC5404 !important;
+  background: #1e1e1e!important;
+}
+.tab-sidebar-item{
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  font-size: 15px;
+  transition: transform 0.4s;
+}
+.sidebar-admin ul li a span.rotate{
+  transform: translateY(-50%) rotate(-180deg);
+}
+
+.main_side ul li .active{
+  color: #FC5404 !important;
+}
+
+.main_side ul.show li{
+  position: relative;
+}
+
+.count-orders{
+  position: absolute;
+  z-index: 9999999;
+  top: 5px;
+  right: 0;
+  font-size: 12px;
+  padding: 0 9px;
+  background-color: #FC5404;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  margin-right: 10px;
+  border-radius: 50%;
+}

@@ -1,0 +1,66 @@
+.stretch-card {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-pack: stretch;
+    -ms-flex-pack: stretch;
+    justify-content: stretch; }
+.stretch-card > .card {
+    width: 100%;
+    min-width: 100%; }
+.grid-margin, .purchase-popup {
+    margin-bottom: 2.5rem; }
+.form-group{
+    margin: 10px 0;
+}
+.form-group .file-upload-info {
+background: transparent; }
+.btn-success{
+    margin-right: 10px;
+}
+.img-add-preview{
+    width: 200px;
+}
+.action-form{
+    margin-top: 40px;
+}
+.editor-text{
+    margin-bottom: 40px;
+}
+.ql-editor{
+background-color: #f3f1f1 !important;
+}
+.card-body{
+    background-color: #babcc1;
+}
+.icon-alert{
+    font-size: 20px;
+}
+
+.text-small{
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 5px;
+}
+
+.bg-image-sub {
+    padding: 10px;
+    background-color: #6c6f7b;
+    border-radius: 5px;
+}
+
+.btn-add-subimg{
+width: 30% !important;
+}
+
+@media screen and (max-width: 520px) {
+    .editor-text{
+        margin-bottom: 60px;
+    }
+    .action-form{
+        margin-top: 60px;
+    }
+}

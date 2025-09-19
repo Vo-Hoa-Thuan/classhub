@@ -1,0 +1,61 @@
+/* 
+---------------------------------------------
+Profile Style
+--------------------------------------------- 
+*/
+
+.main-profile {
+    border-radius: 23px;
+    padding: 30px;
+    background-color: #1f2122;
+  }
+  
+  .main-profile .main-info h4 {
+    margin-bottom: 20px;
+  }
+  
+  .main-profile .main-info .main-border-button {
+    margin-top: 25px;
+  }
+
+  .btn-logout{
+    margin-top: 15px;
+    a{
+      padding: 10px;
+      border: 1px solid #d23535;
+      border-radius: 23px;
+      color: #d23535;
+      &:hover{
+        background-color: #d23535;
+        color: #fff;
+      }
+    }
+  }
+
+  .main-profile ul {
+    border-radius: 23px;
+    padding: 30px;
+    background-color: #27292a;
+  }
+  
+  .main-profile ul li {
+    width: 100%;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #666;
+  }
+  
+  .main-profile ul li span {
+    float: right;
+    font-weight: 500;
+    color: #ec6090;
+  }
+  
+  .main-profile ul li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  

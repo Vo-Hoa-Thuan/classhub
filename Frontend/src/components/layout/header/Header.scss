@@ -1,0 +1,282 @@
+/*=============== VARIABLES CSS ===============*/
+:root {
+  --header-height: 3rem;
+
+  /*========== Colors ==========*/
+  --title-color: #666;
+  --container-color: #1f2122;
+}
+
+/*=============== HEADER ===============*/
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--container-color);
+  width: 100%;
+  z-index: 100;
+  transition: .4s;
+}
+
+/*=============== NAV ===============*/
+.nav {
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.search-input{
+position: relative;
+}
+#search input {
+  background-color: #27292a;
+  border-radius: 23px;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  padding: 10px;
+}
+
+#search i {
+  position: absolute;
+  color: #666;
+  right: 18px;
+  top: 12px;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+
+  &:hover{
+  cursor: pointer;
+  }
+}
+
+.profie__nav{
+  display: flex;
+  span {
+    margin-right: 3px;
+    font-weight: bold;
+    color: var(--title-color);
+  }
+}
+
+#profileHeader .active{
+  background-color: #e75e8d;
+    cursor: pointer;
+    border-radius: 1rem;
+    height: 35px;
+  span{
+    color: #fff;
+  }
+}
+
+.profile_container{
+  display: flex;
+  &:hover{
+    background-color: #e75e8d;
+    cursor: pointer;
+    border-radius: 1rem;
+    span{
+      color: #fff;
+    }
+  }
+  span{
+    font-size: 14px;
+    padding: 5px 5px 5px 10px ;
+  }
+  .user-name{
+    display: block;
+  }
+}
+
+.icon-login{
+  display: none;
+  margin-top: 2px;
+  &:hover{
+    cursor: pointer;
+    border-radius: 1rem;
+    i{
+      color: #e75e8d;
+    }
+  }
+  i{
+    font-size: 35px;
+    color: #666;
+  }
+}
+
+.cart-container{
+  position: relative;
+  margin-left: 15px;
+  &:hover{
+    cursor: pointer;
+    border-radius: 1rem;
+    i{
+      color: #e75e8d;
+    }
+  }
+  i{
+    color: #666;
+    font-size: 37px;
+  }
+  .cart-count{
+    background-color: #e75e8d;
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    padding: 1px 6px;
+    border-radius: 50%;
+    color: #fff;
+  }
+}
+
+.nav__img {
+  width: 32px;
+  border-radius: 50%;
+}
+.nav__mode__icon{
+  margin-top: 5px;
+  margin-left: 15px;
+  font-size: 30px;
+  color: var(--title-color);
+  display: none;
+  &:hover {
+    color: #e75e8d;
+    cursor: pointer;
+  }
+}
+
+.active_mode{
+  display: block;
+  opacity: 0;
+  animation-name: fade-in;
+  animation-duration: 1s;
+  animation-delay: 0.2s;
+  animation-fill-mode: forwards;
+}
+
+.nav__logo {
+  color: var(--title-color);
+  font-weight: 600;
+}
+
+.nav__list, 
+.nav__link {
+  display: flex;
+}
+
+.nav__link {
+  flex-direction: column;
+  align-items: center;
+  row-gap: 4px;
+  color: var(--title-color);
+  font-weight: 600;
+}
+
+.nav__list {
+  justify-content: space-around;
+}
+
+.nav__name {
+  font-size: .625rem;
+  /* display: none;*/ /* Minimalist design, hidden labels */
+}
+.nav_search{
+  display: none;
+}
+.nav__icon {
+  font-size: 1.5rem;
+}
+
+/*Active link*/
+.header .active {
+  position: relative;
+  color: #e75e8d;
+  transition: .3s;
+}
+
+/* Change background header */
+.scroll-header {
+  box-shadow: 0 1px 12px hsla(var(--hue), var(--sat), 15%, 0.15);
+}
+
+/*=============== MEDIA QUERIES ===============*/
+/* For small devices */
+/* Remove if you choose, the minimalist design */
+@media screen and (max-width: 320px) {
+  .nav__name {
+    display: none;
+  }
+}
+
+/* For medium devices */
+@media screen and (min-width: 576px) {
+  .nav__list {
+    justify-content: center;
+    column-gap: 3rem;
+  }
+}
+
+@media screen and (min-width: 767px) {
+  .nav {
+    height: calc(var(--header-height) + 1.5rem); /* 4.5rem */
+  }
+  .nav__icon {
+    display: none;
+  }
+  .nav__name {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .nav__menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0 -1px 12px hsla(var(--hue), var(--sat), 15%, 0.15);
+    width: 100%;
+    height: 4rem;
+    padding: 0 1rem;
+    display: grid;
+    align-content: center;
+    border-radius: 1.25rem 1.25rem 0 0;
+    transition: .4s;
+  }
+}
+
+@media (max-width: 767px){
+  .search-input {
+    display: none;
+}
+  .nav_search{
+  display: block;
+}
+.icon-login{
+  display: block;
+}
+.title-login{
+  display: none;
+}
+}
+@media screen and (max-width: 1158px) {
+  .user-name{
+    display: none !important;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0; /* Bắt đầu với opacity = 0 */
+  }
+  to {
+    opacity: 1; /* Kết thúc với opacity = 1 */
+  }
+}
+

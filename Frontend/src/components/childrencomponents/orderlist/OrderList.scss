@@ -1,0 +1,35 @@
+.order-list-container{
+    background-color: var(--dark-body);
+    border-radius: 23px;
+    padding: 20px 10px 40px 10px;
+}
+.tab-control-order{
+    background-color: #ccc;
+    border-radius: 5px;
+}
+.nav-item{
+    .nav-link{
+        color: #9a9898;
+        &:hover{
+                color: var(--pink);
+        }
+    }
+    .active{
+        color: var(--pink);
+        border-bottom: 2px solid var(--pink);
+    }
+}
+/* .card-order-item{
+    max-height: 200px;
+} */
+.order-product-item{
+border-bottom: 1px solid #ccc;
+padding: 10px;
+}
+
+.order-action-item{
+    padding: 0 20px;
+}
+.text-right {
+    float: right;
+  }

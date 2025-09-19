@@ -1,0 +1,54 @@
+//Css dialog delete
+.container-dialog-delete{
+    position: relative;
+    width: 100vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.overlay-dialog{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); // Màu nền đen có độ mờ 50%
+    z-index: 99999; // Đặt z-index cao hơn dialog để che phủ toàn bộ trang web bên dưới
+}
+
+.icon-cancel-delete{
+    position: absolute;
+    font-size: 20px;
+    right: 1%;
+    top: 2%;
+    cursor: pointer;
+}
+
+.dialog-delete{
+    position: fixed;
+    width: 50%;
+    z-index: 100000;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+    background: #fff;
+    animation: fade-in 0.5s ease-out;
+}
+
+.dialog-action{
+    margin-top: 40px;
+a {
+    margin-left: 10px;
+}
+}
+
+@keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }

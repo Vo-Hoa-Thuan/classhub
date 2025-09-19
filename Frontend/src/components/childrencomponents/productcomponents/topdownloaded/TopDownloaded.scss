@@ -1,0 +1,111 @@
+/*
+------------------------------------------------
+Top Downloaded
+------------------------------------------------
+*/
+
+.top-downloaded {
+    border-radius: 23px;
+    background-color: #1f2122;
+    padding: 30px;
+    max-height: 567px;
+    min-height: 400px;
+  }
+  
+  .top-downloaded ul li {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 86px;
+  }
+  
+  .top-downloaded ul li img {
+    float: left;
+    margin-right: 15px;
+  }
+  
+  .top-downloaded ul li h4 {
+    font-size: 15px;
+    padding-top: 7px;
+  }
+  
+  .top-downloaded ul li h6 {
+    font-size: 15px;
+    color: #666;
+    font-weight: 400;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .top-downloaded ul li span {
+    color: #fff;
+    font-size: 15px;
+    margin-right: 10px;
+  }
+  
+  .top-downloaded ul li .download i {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-23px);
+    width: 46px;
+    height: 46px;
+    text-align: center;
+    line-height: 46px;
+    color: #ec6090;
+    background-color: #27292a;
+    border-radius: 50%;
+  }
+  
+  .top-downloaded ul li {
+    border-bottom: 1px solid #27292a;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+  }
+  
+  .top-downloaded .text-button  {
+    text-align: center;
+  }
+  
+  .top-downloaded .text-button a {
+    font-weight: 600;
+    color: #ec6090;
+    font-size: 15px;
+  }
+
+  .hidden_swiper{
+   width: 30px !important;
+   .swiper-slide{
+    display: none !important;
+   }
+  }
+
+  .name-app{
+    font-size: 12px !important;
+  }
+
+  .item-app-topdown{
+    span{
+      font-size: 12px !important;
+    }
+    h6{
+      font-size: 12px !important;
+    }
+  }
+  @media (max-width: 992px) {
+    .top-downloaded{
+        margin-top: 20px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .top-downloaded{
+        margin-top: 20px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .top-downloaded{
+        margin-top: 20px;
+    }
+  }

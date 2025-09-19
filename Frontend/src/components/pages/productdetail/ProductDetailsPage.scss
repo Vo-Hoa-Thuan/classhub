@@ -1,0 +1,193 @@
+/* 
+---------------------------------------------
+Featured Banner Style
+--------------------------------------------- 
+*/
+
+.feature-banner .thumb {
+  position: relative;
+  max-width: 700px;
+  max-height: 450px;
+  overflow: hidden;
+  border-radius: 23px;
+  display:block; 
+  margin:auto;
+}
+
+.img_banner_detail{
+
+}
+/* 
+---------------------------------------------
+product Details Style
+--------------------------------------------- 
+*/
+
+.product-details h2 {
+    font-size: 45px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 60px 0px;
+  }
+  
+  .product-details .content {
+    border-radius: 23px;
+    padding: 30px;
+    background-color: #1f2122;
+  }
+  
+  .product-details .content .left-info {
+    background-color: #27292a;
+    border-radius: 23px;
+    padding: 30px;
+    margin-bottom: 30px;
+    min-height: 125px;
+    max-height: 125px;
+  }
+  
+  .product-details .content .left-info .left {
+    float: left;
+  }
+  
+  .product-details .content .left-info h4 {
+    font-size: 15px;
+    display: block;
+  }
+  
+  .product-details .content .left-info span {
+    color: #666;
+    display: block;
+    margin-top: 7px;
+    font-weight: 400;
+  }
+  
+  .product-details .content .left-info ul {
+    text-align: right;
+  }
+  
+  .product-details .content .left-info ul li {
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  
+  .product-details .content .left-info ul li:first-child i {
+    color: yellow;
+  }
+  
+  .product-details .content .left-info ul li:last-child i {
+    color: #ec6090;
+  }
+  
+  .product-details .content .right-info {
+    background-color: #27292a;
+    border-radius: 23px;
+    padding: 30px;
+    margin-bottom: 30px;
+    min-height: 125px;
+    max-height: 125px;
+  }
+  
+  .product-details .content .right-info ul li {
+    display: inline-block;
+    width: 23%;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+    .bxs-cart{
+      font-size: 20px;
+    }
+  }
+  .price-product-detail{
+    width: 50%;
+    margin-right: 40px;
+    i{
+      font-size: 14px;
+    }
+    b{
+      font-size: 16px;
+    }
+  }
+  .product-details .content .right-info ul li i {
+    display: block;
+    margin-bottom: 12px;
+  }
+  
+  .product-details .content .right-info ul li:first-child i {
+    color: #ec6090;
+  } 
+  
+  .product-details .content .right-info ul li i {
+    color: #ec6090;
+  }
+  
+  .product-details .main-border-button {
+    margin-top: 35px;
+  }
+  
+  .product-details .main-border-button a {
+    text-align: center;
+    width: 100%;
+  } 
+  
+  .img-sub-product{
+    max-width: 400px !important;
+  }
+  /* 
+  ---------------------------------------------
+  Other Related Style
+  --------------------------------------------- 
+  */
+  
+  .other-products {
+    border-radius: 23px;
+    padding: 30px 30px 0px 30px;
+    background-color: #1f2122;
+    margin-top: 60px;
+  }
+  
+  .other-products .item {
+    position: relative;
+    border-bottom: 1px solid #27292a;
+    padding-bottom: 52px;
+    margin-bottom: 30px;
+  }
+  
+  .other-products .item img {
+    float: left;
+    margin-right: 15px;
+  }
+  
+  .other-products .item h4 {
+    display: inline-block;
+    font-size: 15px;
+    margin-bottom: 5px;
+    padding-top: 15px;
+  }
+  
+  .other-products .item span {
+    color: #666;
+    font-size: 14px;
+    display: block;
+  }
+  
+  .other-products ul {
+    position: absolute;
+    right: 0;
+    top: 15px;
+  }
+  
+  .other-products ul li {
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  
+  .other-products ul li:first-child i {
+    color: yellow;
+  }
+  
+  .other-products ul li:last-child i {
+    color: #ec6090;
+  }
+  
