@@ -58,7 +58,7 @@ function OtherProducts() {
             id={item._id}
             img={item.imageUrl}
             name={item.name}
-            author='VNSIM'
+            author='Class Hub'
             star='4.3'
             download={item.purchased}
             ></OtherProductItem>

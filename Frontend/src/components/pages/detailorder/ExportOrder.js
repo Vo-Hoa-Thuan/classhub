@@ -56,7 +56,7 @@ function ExportOrder() {
                 <div className="card">
                 <div className="invoice p-5">
                 <div className="text-left mb-4">
-                    <img src={Images.logo} style={{width:"80px"}}/>
+                    <img src={Images.logo} style={{width:"200px"}}/>
                 </div>
                     <h5 className="text-dark">Đơn đặt hàng của bạn đã được xác nhận!</h5>
                     <span className="font-weight-bold d-block mt-4">Xin chào, {order && order.userName}</span>
@@ -190,7 +190,7 @@ function ExportOrder() {
                     </div>
                     <p>Chúng tôi sẽ gửi email xác nhận khi đơn hàng được vận chuyển thành công!</p>
                     <p className="font-weight-bold mb-0">Cảm ơn đã mua sắm với chúng tôi!</p>
-                    <span>VNSIM Team</span>
+                    <span>Class Hub Team</span>
                 </div>
                 <div className="justify-content-between footer p-3 rounded-4">
                     <span>Need Help? Visit our <a href="#">help center</a></span>

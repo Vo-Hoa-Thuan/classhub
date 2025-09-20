@@ -162,7 +162,7 @@ function OrderList() {
                             </Link>
                             <ul className="list-inline list-inline-dotted mb-3 mb-lg-2">
                                 <li className="list-inline-item"><a href="#" className="text-muted" data-abc="true">Nhà sản xuất:</a></li>
-                                <li className="list-inline-item"><a href="#" className="text-muted" data-abc="true">VNSIM</a></li>
+                                <li className="list-inline-item"><a href="#" className="text-muted" data-abc="true">Class Hub</a></li>
                             </ul>
                             <p className="mb-3">Số lượng: {item.quantity}</p>
                         </div>

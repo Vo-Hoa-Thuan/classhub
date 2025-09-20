@@ -144,7 +144,7 @@ const handleDownloadAgain = () =>{
                       <div className="left-info mode-page">
                         <div className="left">
                           <h4 className="title">{product && product.name}</h4>
-                          <span>VNSIM</span>
+                          <span>Class Hub</span>
                         </div>
                         <ul>
                           <li><i className="fa fa-star"></i> 4.8</li>

@@ -33,17 +33,17 @@ mongoose.connect(process.env.MONGODB_URL)
   });
 
 //ROUTES
-app.use("/web-vnsim/auth", authRoute);
-app.use("/web-vnsim/user", userRoute);
-app.use("/web-vnsim/banner", bannerRoute);
-app.use("/web-vnsim/product", productRoute);
-app.use("/web-vnsim/blog", blogRoute);
-app.use("/web-vnsim/order", orderRoute);
-app.use("/web-vnsim/order-tracking", orderTrackingRoute);
-app.use("/web-vnsim/payment", paymentRoute);
-app.use("/web-vnsim/topic", topicRoute);
-app.use("/web-vnsim/order-app", orderAppRoute);
-app.use("/web-vnsim/shipping-company", shippingCompanyRoute);
+app.use("/classhub/auth", authRoute);
+app.use("/classhub/user", userRoute);
+app.use("/classhub/banner", bannerRoute);
+app.use("/classhub/product", productRoute);
+app.use("/classhub/blog", blogRoute);
+app.use("/classhub/order", orderRoute);
+app.use("/classhub/order-tracking", orderTrackingRoute);
+app.use("/classhub/payment", paymentRoute);
+app.use("/classhub/topic", topicRoute);
+app.use("/classhub/order-app", orderAppRoute);
+app.use("/classhub/shipping-company", shippingCompanyRoute);
 
 //Chạy server tại  cổng (port)
 app.listen(port, ()=>{

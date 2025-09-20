@@ -61,7 +61,7 @@ function FeaturedApp({appList}) {
             <FeaturedAppItem
                 image={Images.app}
                 name='App hay quá'
-                author='VNSIM'
+                author='Class Hub'
                 star='4.5'
                 downloaded='1024'
             />    

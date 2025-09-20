@@ -7,7 +7,7 @@ function Footer({shippCompanys,payments,ewallets}) {
     <div className="container">
       <div className="row">
         <div className="col-lg-12">
-          <p>Copyright © 2023 <a href="/" target='_blank'>VNSIM</a> Company. All rights reserved.<br></br>
+          <p>Copyright © 2025 <a href="/" target='_blank'>Class Hub</a> Company. All rights reserved.<br></br>
           Design: <a href="https://tiedun46.github.io/user-ntd/?fbclid=IwAR0Ok-RhFfeWl-VavA3D7f9Pz3emFDr0vF21egsoKHBeeS5dbMzd0xdVYOY" target="_blank" rel="noreferrer">Dung Nguyen</a></p>
         </div>
       </div>

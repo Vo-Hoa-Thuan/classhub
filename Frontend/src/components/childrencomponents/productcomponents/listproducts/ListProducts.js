@@ -106,7 +106,7 @@ function ListProducts() {
                   {/* <ProductItem
                     image= {Images.appItem}
                     name='App Học Tập'
-                    author='VNSIM'
+                    author='Class Hub'
                     star='4.5'
                     downLoad='1023'
                     software={true}

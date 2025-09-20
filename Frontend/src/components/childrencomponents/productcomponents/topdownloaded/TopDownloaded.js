@@ -16,7 +16,7 @@ function TopDownloaded({appList}) {
                 id={app._id}
                 image={app.imageUrl}
                 name={app.name}
-                author='VNSIM'
+                author='Class Hub'
                 star='4.9'
                 downloaded={app.purchased}
               />

@@ -77,7 +77,7 @@ function PopularList({appList}) {
             {/* <SwiperSlide>
             <PopularItem
               title='App Học Tập'
-              author='VNSIM'
+              author='Class Hub'
               star='4.5'
               order='1023'
               image= {Images.appItem}

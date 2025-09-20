@@ -41,7 +41,7 @@ function Header({searchOff,themeContext}) {
     <div>
 <header className="header" id="header">
             <nav className="nav">
-                <a href="#home" className="nav__logo"><img src={Images.logo} alt="" style={{width:"90px"}}/></a>
+                <a href="#home" className="nav__logo"><img src={Images.logo} alt="" style={{width:"200px"}}/></a>
 
                 <div className="nav__menu" id="nav-menu">
                     <ul className="nav__list">

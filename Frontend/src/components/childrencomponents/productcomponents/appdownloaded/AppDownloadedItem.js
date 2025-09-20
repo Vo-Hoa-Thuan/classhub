@@ -63,7 +63,7 @@ function AppDownloadedItem({order}) {
         <div className="item">
             <ul>
             <li><img src={order.product.imageUrl} alt="" className="templatemo-item"/></li>
-            <li><h4 className="title">{order.product.name}</h4><span>VNSIM</span></li>
+            <li><h4 className="title">{order.product.name}</h4><span>Class Hub</span></li>
             <li><h4 className="title">Ngày Tải</h4><span>{outputDateString}</span></li>
             <li><h4 className="title">Trạng Thái</h4>
             <span>{order.status && order.paymentStatus && 'Downloaded'}

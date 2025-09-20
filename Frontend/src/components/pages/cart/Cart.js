@@ -88,7 +88,7 @@ function Cart() {
           <div className="row d-flex justify-content-center my-4 swiper_apps mode-bar">
             <div className="col-md-12">
               <div className="heading-section">
-                  <h4><em>VNSIM</em> / Giỏ Hàng</h4>
+                  <h4><em>Class Hub</em> / Giỏ Hàng</h4>
                   </div>
                   {cart && cart.map((product)=>(
                   <div key={product.id}>

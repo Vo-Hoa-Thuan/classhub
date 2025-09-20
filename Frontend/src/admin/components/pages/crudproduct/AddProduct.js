@@ -162,7 +162,7 @@ function AddProduct() {
                         <div className="form-group row">
                             <label>Tải Ảnh Sản Phẩm</label><br></br>
                                 <img src={imageURL || 
-                                'https://firebasestorage.googleapis.com/v0/b/uploadingvnsim.appspot.com/o/images%2FR.jpg?alt=media&token=6ff3f044-a8ea-42f3-a30e-0475583c9477'} 
+                                'https://firebasestorage.googleapis.com/v0/b/classhub.appspot.com/o/images%2FR.jpg?alt=media&token=6ff3f044-a8ea-42f3-a30e-0475583c9477'} 
                                 alt="Selected" 
                                 className="img-add-preview" />
                                 <input type="file" 

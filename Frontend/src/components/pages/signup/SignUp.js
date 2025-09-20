@@ -132,7 +132,7 @@ function SignUp() {
                 style={{borderTopLeftRadius: '.25rem', borderBottomLeftRadius: '.25rem'}}/>
                 <div className='title-signup'>
                 <h4>ĐĂNG KÝ NGAY</h4>
-                <p>Chào mừng bạn đã đến với VNSIM. Nhanh tay đăng ký và tận hưởng nhé!</p>
+                <p>Chào mừng bạn đã đến với Class Hub. Nhanh tay đăng ký và tận hưởng nhé!</p>
                 </div>
             </div>
             <div className="col-xl-6">

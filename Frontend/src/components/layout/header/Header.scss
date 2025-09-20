@@ -163,6 +163,16 @@ position: relative;
 .nav__logo {
   color: var(--title-color);
   font-weight: 600;
+  
+  img {
+    width: 120px;
+    height: auto;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
 }
 
 .nav__list, 
@@ -212,6 +222,10 @@ position: relative;
   .nav__name {
     display: none;
   }
+  
+  .nav__logo img {
+    width: 80px;
+  }
 }
 
 /* For medium devices */
@@ -219,6 +233,10 @@ position: relative;
   .nav__list {
     justify-content: center;
     column-gap: 3rem;
+  }
+  
+  .nav__logo img {
+    width: 100px;
   }
 }
 

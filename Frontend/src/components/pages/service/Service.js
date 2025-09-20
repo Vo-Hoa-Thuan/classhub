@@ -9,7 +9,7 @@ function Service() {
 <div class="col-12">
 <div class="section-title text-center mb-4 pb-2">
 <h2 class="title mb-4">DỊCH VỤ CỦA CHÚNG TÔI</h2>
-<p class="text-muted para-desc mx-auto mb-0">Cảm ơn bạn đã quan tâm đến sản phẩm và dịch vụ của VNSIM, rất vui khi được hỗ trợ bạn. Tham khảo các dịch vụ dưới đây:</p>
+<p class="text-muted para-desc mx-auto mb-0">Cảm ơn bạn đã quan tâm đến sản phẩm và dịch vụ của Class Hub, rất vui khi được hỗ trợ bạn. Tham khảo các dịch vụ dưới đây:</p>
 </div>
 </div>
 </div>

@@ -38,7 +38,7 @@ function SideBarMenu({activeSideBar}) {
     return ( 
         <nav className={`sidebar-admin ${activeSideBar && 'show-side-bar'}`}>
          <div className="text">
-         VNSIM ADMIN
+         Class Hub ADMIN
          </div>
          <ul className="main_side">
             <li onClick={()=>handleActiveItem(0)} className={activeMenu===0 && 'active'}>
