@@ -4,29 +4,38 @@ import { api } from "../../../../api";
 import { Link } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { customStylesDark } from "../datatable/DatatableCustom";
+import DeleteUserDialog from "../../dialogs/dialogdelete/DeleteUserDialog";
 
 function CustomerTable() {
     const [customers, setCustomers] = useState([]);
     const [records,setRecords] = useState([]);
-    const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [customerIdToDelete, setCustomerIdToDelete] = useState(null);
+    const [token] = useState(() => {
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
-    const headers = {
-      token: `Bearer ${token}`,
-      };
 
     useEffect(()=>{
-        axios.get(api+'/user',{headers})
-        .then((response)=>{
-        setCustomers(response.data.filter(item => item.admin===false && item.blogger===false));
-        setRecords(response.data.filter(item => item.admin===false && item.blogger===false));
-        console.log(response.data);
-        })
-        .catch((err)=>{
-        console.log(err);
-        });
-    },[]);
+        if(token) {
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            
+            axios.get(api+'/user',{headers})
+            .then((response)=>{
+                // Kiểm tra cấu trúc response và lấy data array
+                const users = response.data.data || response.data;
+                const filteredUsers = users.filter(item => item.admin===false && item.blogger===false);
+                setCustomers(filteredUsers);
+                setRecords(filteredUsers);
+                console.log('Users data:', users);
+            })
+            .catch((err)=>{
+                console.error('Error fetching users:', err);
+            });
+        }
+    },[token]);
 
     const columns = [
         {
@@ -59,7 +68,10 @@ function CustomerTable() {
           name: 'Action',
           cell: (row) => <>
             <Link to={`/admin/details-customer/${row._id}`} 
-            className="btn-update-table">Xem</Link>
+            className="btn-update-table">Xem</Link> | 
+            <a href="#home" 
+            className="btn-delete-table" 
+            onClick={() => handleDelete(row._id)}>Xóa</a>
           </>,
         }
       ];
@@ -70,6 +82,11 @@ function CustomerTable() {
         })
         setRecords(newData);
       }
+
+    const handleDelete = (id) => {
+        setCustomerIdToDelete(id);
+        setDeleteDialog(true);
+    }
     return ( 
         <>
             <div className="row mb-4">
@@ -89,6 +106,15 @@ function CustomerTable() {
                     ></DataTable>
                 </div>
             </div>
+            {deleteDialog && (
+                <DeleteUserDialog
+                    id={customerIdToDelete}
+                    setDeleteDialog={setDeleteDialog}
+                    data={customers}
+                    setData={setCustomers}
+                    api_request={`${api}/user/delete/`}
+                />
+            )}
         </>
      );
 }

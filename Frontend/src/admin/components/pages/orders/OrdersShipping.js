@@ -7,11 +7,11 @@ import OrderTable from "../../childrencomponents/ordertable/OrderTable";
 function OrdersShipping() {
     const [orders, setOrders] = useState([]);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
 
     useEffect(()=>{

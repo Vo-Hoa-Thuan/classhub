@@ -3,10 +3,11 @@ import Images from "../../../assets/img/Image";
 import AppsDownloaded from "../../childrencomponents/productcomponents/appdownloaded/AppsDownloaded";
 import Default from "../../layout/default/Default";
 import './ProfilePage.scss'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { api} from "../../../api";
 import DialogEditProfile from "../../dialogs/dialogeditprofile/DialogEditProfile";
+import authService from "../../../services/AuthService";
 
 function ProfilePage() {
   const navigate = useNavigate()
@@ -17,13 +18,13 @@ function ProfilePage() {
   const [orderShipping,setOrderShipping] = useState(0);
   const [dataUser, setDataUser] = useState([]);
   const [loaders, setLoaders] = useState(false);
-  const [token,setToken] = useState(() => {
-    const data = localStorage.getItem('token');
+  const [token] = useState(() => {
+    const data = localStorage.getItem('accessToken');
     return data ? data : '';
   });
-  const headers = {
-    token: `Bearer ${token}`,
-    };
+  const headers = useMemo(() => ({
+    Authorization: `Bearer ${token}`,
+  }), [token]);
   const user = JSON.parse(localStorage.getItem('user'));
     useEffect(()=>{
       setLoaders(true);
@@ -52,32 +53,44 @@ function ProfilePage() {
         console.log(error);
         });
         setLoaders(false);
-    },[]);
+    },[headers, id]);
     
-  const handleLogout = (e)=>{
+  const handleLogout = async (e) => {
     e.preventDefault();
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    localStorage.removeItem('order');
-    localStorage.removeItem('export_order');
-    navigate('/');
+    try {
+      await authService.logout();
+      authService.stopTokenExpiryTimer();
+      localStorage.removeItem('order');
+      localStorage.removeItem('export_order');
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if API call fails
+      authService.clearTokens();
+      authService.clearUser();
+      authService.stopTokenExpiryTimer();
+      localStorage.removeItem('order');
+      localStorage.removeItem('export_order');
+      navigate('/');
+    }
   }
 
   useEffect(()=>{
     const user = localStorage.getItem('user');
     if(!user){
         navigate('/404-page');
-  }},[]);
+  }},[navigate]);
 
   useEffect(() => {
     axios.get(api +`/user/${id}`,{headers})
             .then(response => {
-                setDataUser(response.data)
+                console.log('User data response:', response.data);
+                setDataUser(response.data.data || response.data)
             })
             .catch(error => {
-            console.log(error);
+            console.log('Error loading user data:', error);
             });
-  },[activeDialogEdit]);
+  },[activeDialogEdit, headers, id]);
 
   useEffect(()=>{
     localStorage.removeItem('order');
@@ -123,7 +136,7 @@ function ProfilePage() {
                         <Link to={`/profile/${id}`} onClick={handleActiveDialogEdit}>Sửa Thông Tin</Link>
                       </div>
                       <div className="btn-logout">
-                        <a href="#" onClick={handleLogout}>Đăng Xuất</a>
+                        <button onClick={handleLogout} style={{background: 'none', border: 'none', color: 'inherit', cursor: 'pointer'}}>Đăng Xuất</button>
                       </div>
                     </div>
                   </div>

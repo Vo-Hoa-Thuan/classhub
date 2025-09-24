@@ -16,11 +16,11 @@ function AddPayment() {
     const [isbank, setIsBank] = useState(true);
     const [status, setStatus] = useState(true);
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
 
     const payment =

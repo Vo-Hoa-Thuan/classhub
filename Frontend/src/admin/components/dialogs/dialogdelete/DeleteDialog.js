@@ -6,11 +6,11 @@ import { useState } from 'react';
 
 function DeleteDialog({id,setDeleteDialog,data, setData, imageUrl,api_request}) {
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
       const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
     const deleteApi = async() => {
         await axios.delete(api_request+id,{headers})

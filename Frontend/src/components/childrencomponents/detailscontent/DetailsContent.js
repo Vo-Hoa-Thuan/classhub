@@ -1,4 +1,3 @@
-import Images from "../../../assets/img/Image";
 import DetailVideo from "./DetailVideo";
 import { useContext, useEffect, useState } from "react";
 import { getCartLocalStorage, setCartLocalStorage } from "../../../store/CartLocalStorage";
@@ -12,16 +11,16 @@ function DetailsContent({product}) {
   const cartCountContext = useContext(CartCountContext);
   const [checkDL, setCheckDL] = useState(0);
   const [linkDL, setLinkDL] = useState();
-  const [user,setUser] = useState(() => {
+  const [user] = useState(() => {
     const data = JSON.parse(localStorage.getItem('user'));
     return data ? data : [];
     });
-  const [token,setToken] = useState(() => {
-    const data = localStorage.getItem('token');
+  const [token] = useState(() => {
+    const data = localStorage.getItem('accessToken');
     return data ? data : '';
     });
     const headers = {
-    token: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
     };
   const [cart, setCart] = useState(() => {
     const cartData = getCartLocalStorage();
@@ -29,10 +28,14 @@ function DetailsContent({product}) {
   });
 
   useEffect(()=>{
-    axios.post(api +'/product/check_downloaded',{
-      userId: user._id,
-      productId: product && product._id
-    },{headers})
+    if (user && user._id && product && product._id) {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      axios.post(api +'/product/check_downloaded',{
+        userId: user._id,
+        productId: product._id
+      },{headers})
       .then(response => {
           console.log(response.data);
           if(response.status===200){
@@ -51,8 +54,8 @@ function DetailsContent({product}) {
       .catch(error => {
       console.log(error);
       });
-      
-  },[product])
+    }
+  },[product, user, token])
 
   const addToCart = (product,image) => {
     notifySuccess('Thêm thành công!');
@@ -89,6 +92,11 @@ const handleAddToCart = () =>{
 addToCart(productItem);
 }
 const handleDownload = async()=>{
+if (!user || !user._id || !product || !product._id) {
+  notifyError("Thông tin người dùng hoặc sản phẩm không hợp lệ!");
+  return;
+}
+
 const orderApp = {
   user:user._id,
   product:product._id,
@@ -173,13 +181,13 @@ const handleDownloadAgain = () =>{
                         </ul>
                       </div>
                     </div>
-                    {product && product.imagesSub.map((item)=>(
+                    {product && product.imagesSub && product.imagesSub.map((item)=>(
                       <div key={item} className="col-lg-4">
                       <img className="img-sub-product" src={item} alt={product.name} style={{borderRadius: '23px', marginBottom: '30px'}}/>
                     </div>
                     ))}
                     <div className="col-lg-12">
-                      <div dangerouslySetInnerHTML={{__html: product && product.desc}}></div>
+                      <div dangerouslySetInnerHTML={{__html: product && product.desc ? product.desc : ''}}></div>
                     </div>
                     <div className="col-lg-12">
                       {product && 

@@ -5,8 +5,8 @@ function Banner({banners}) {
     return (
         
     <Carousel autoplay>
-    {banners && banners.map((item)=>(
-    <div>
+    {banners && banners.map((item, index)=>(
+    <div key={item._id || index}>
      <div
      style={{backgroundImage: `url(${item.imageUrl})`}} 
      className={`main-banner ${item.offBanner ? 'off-banner' : ''}`} >

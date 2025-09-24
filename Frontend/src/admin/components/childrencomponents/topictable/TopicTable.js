@@ -14,11 +14,11 @@ function TopicTable() {
     const [deleteDialog, setDeleteDialog] = useState(false);
     const api_delete = api+'/topic/delete/'
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
 
     useEffect(()=>{

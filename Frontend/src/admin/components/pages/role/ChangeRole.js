@@ -15,22 +15,22 @@ function ChangeRole() {
     const [admin, setAdmin] = useState(false);
     const [blogger, setBlogger] = useState(false);
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
     useEffect(()=>{
         axios.get(api +`/user/${id}`,{headers})
             .then(response => {
                 console.log(response.data);
-                setImage(response.data.image)
-                setFullname(response.data.fullname)
-                setEmail(response.data.email)
-                setPhone(response.data.phone)
-                setAdmin(response.data.admin)
-                setBlogger(response.data.blogger)
+                setImage(response.data.data.image)
+                setFullname(response.data.data.fullname)
+                setEmail(response.data.data.email)
+                setPhone(response.data.data.phone)
+                setAdmin(response.data.data.admin)
+                setBlogger(response.data.data.blogger)
             })
             .catch(error => {
             console.log(error);

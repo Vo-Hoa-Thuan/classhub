@@ -10,17 +10,45 @@ function ChangePassword({data,id}) {
     const [confirmPassword,setConfirmPassword] = useState('');
     const [checkHidePass,setCheckHidePass] = useState(false);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
       const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
     
+    const validatePassword = (password) => {
+        const minLength = password.length >= 8;
+        const hasLower = /[a-z]/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecial = /[@$!%*?&]/.test(password);
+        
+        return {
+            isValid: minLength && hasLower && hasUpper && hasNumber && hasSpecial,
+            errors: {
+                minLength: !minLength ? 'Mật khẩu phải có ít nhất 8 ký tự' : null,
+                hasLower: !hasLower ? 'Mật khẩu phải có ít nhất 1 chữ thường' : null,
+                hasUpper: !hasUpper ? 'Mật khẩu phải có ít nhất 1 chữ hoa' : null,
+                hasNumber: !hasNumber ? 'Mật khẩu phải có ít nhất 1 số' : null,
+                hasSpecial: !hasSpecial ? 'Mật khẩu phải có ít nhất 1 ký tự đặc biệt (@$!%*?&)' : null
+            }
+        };
+    };
+
     const handleChangePassword = async() =>{
         if(!password || !newPassword || !confirmPassword){
             notifyError('Thông tin không được để trống. Kiểm tra lại!')
+        } else if(newPassword !== confirmPassword) {
+            notifyError('Mật mới và mật khẩu nhập lại chưa trùng nhau!')
         } else {
+            // Validate new password
+            const passwordValidation = validatePassword(newPassword);
+            if (!passwordValidation.isValid) {
+                const firstError = Object.values(passwordValidation.errors).find(error => error !== null);
+                notifyError(firstError);
+                return;
+            }
             const userAcc = {
                 email: data.email,
                 password: password.toString()
@@ -38,10 +66,25 @@ function ChangePassword({data,id}) {
                         setConfirmPassword('');
                     })
                     .catch((error)=>{
-                        notifyError('Đã có lỗi xảy ra. Thử lại sau!')
+                        console.log('Change password error:', error.response?.data);
+                        if(error.response?.status === 400) {
+                            const errorData = error.response.data;
+                            if(errorData.errors && errorData.errors.length > 0) {
+                                // Hiển thị lỗi validation cụ thể
+                                const passwordError = errorData.errors.find(err => err.field === 'password');
+                                if(passwordError) {
+                                    notifyError(passwordError.message);
+                                } else {
+                                    notifyError(errorData.message || 'Mật khẩu không hợp lệ');
+                                }
+                            } else {
+                                notifyError(errorData.message || 'Mật khẩu không hợp lệ');
+                            }
+                        } else {
+                            notifyError('Đã có lỗi xảy ra. Thử lại sau!');
+                        }
                     })
                 }
-                if(newPassword !== confirmPassword) notifyError('Mật mới và mật khẩu nhập lại chưa trùng nhau!')
             })
             .catch((error)=>{
                 console.log(error);

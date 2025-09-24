@@ -2,35 +2,42 @@ import { useEffect, useState } from "react";
 import { api } from "../../../../api";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Toast,{ notifyError} from "../../../../components/toast/Toast";
+import Toast from "../../../../components/toast/Toast";
 import DataTable from 'react-data-table-component'
 import { customStylesDark } from "../datatable/DatatableCustom";
+import DeleteUserDialog from "../../dialogs/dialogdelete/DeleteUserDialog";
 
 function UserTable() {
     const [users, setUsers] = useState([]);
     const [records,setRecords] = useState([]);
-    const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [userIdToDelete, setUserIdToDelete] = useState(null);
+    const [token] = useState(() => {
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
-    const [userLocal,setUserLocal] = useState(() => {
+    const [userLocal] = useState(() => {
         const data = JSON.parse(localStorage.getItem('user'));
         return data ? data : [];
       });
-    const headers = {
-      token: `Bearer ${token}`,
-      };
 
     useEffect(()=>{
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+        
         axios.get(api+'/user',{headers})
         .then((response)=>{
-        setUsers(response.data.filter(item => item._id !== userLocal._id));
-        console.log(response.date);
+            // Kiểm tra cấu trúc response và lấy data array
+            const users = response.data.data || response.data;
+            const filteredUsers = users.filter(item => item._id !== userLocal._id);
+            setUsers(filteredUsers);
+            console.log('Users data:', users);
         })
         .catch((err)=>{
-        console.log(err);
+            console.error('Error fetching users:', err);
         });
-    },[]);
+    },[token, userLocal._id]);
     
     useEffect(() => {
         setRecords(users);
@@ -71,7 +78,10 @@ function UserTable() {
           name: 'Action',
           cell: (row) => <>
             <Link to={`/admin/role/change/${row._id}`} 
-            className="btn-update-table">Phân quyền</Link>
+            className="btn-update-table">Phân quyền</Link> | 
+            <a href="#home" 
+            className="btn-delete-table" 
+            onClick={() => handleDelete(row._id)}>Xóa</a>
           </>,
         }
       ];
@@ -82,6 +92,11 @@ function UserTable() {
         })
         setRecords(newData);
       }
+
+    const handleDelete = (id) => {
+        setUserIdToDelete(id);
+        setDeleteDialog(true);
+    }
     return ( 
         <>
             <div className="row mb-4">
@@ -102,6 +117,15 @@ function UserTable() {
                 </div>
             </div>
             <Toast/>
+            {deleteDialog && (
+                <DeleteUserDialog
+                    id={userIdToDelete}
+                    setDeleteDialog={setDeleteDialog}
+                    data={users}
+                    setData={setUsers}
+                    api_request={`${api}/user/delete/`}
+                />
+            )}
         </>
      );
 }

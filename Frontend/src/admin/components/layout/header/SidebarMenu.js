@@ -10,26 +10,28 @@ function SideBarMenu({activeSideBar}) {
     const [ordersNew, setOrdersNew] = useState([]);
     const [ordersShipping, setOrdersShipping] = useState([]);
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
    const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
 
     useEffect(()=>{
         setActiveMenu(parseInt(sessionStorage.getItem('code')));
-        axios.get(api+'/order',{headers})
-        .then((response)=>{
-        const data = response.data
-        setOrdersCancel(data.filter((item) => item.orderTracking === 20));
-        setOrdersNew(data.filter((item) => item.orderTracking === 1 & item.paymentId===null));
-        setOrdersShipping(data.filter((item) => item.orderTracking === 4 || item.orderTracking === 5));
-        })
-        .catch((err)=>{
-        console.log(err);
-    });
-    },[]);
+        if(token) {
+            axios.get(api+'/order',{headers})
+            .then((response)=>{
+            const data = response.data.data || response.data
+            setOrdersCancel(data.filter((item) => item.orderTracking === 20));
+            setOrdersNew(data.filter((item) => item.orderTracking === 1 & item.paymentId===null));
+            setOrdersShipping(data.filter((item) => item.orderTracking === 4 || item.orderTracking === 5));
+            })
+            .catch((err)=>{
+            console.log(err);
+        });
+        }
+    },[token]);
 
     const handleActiveItem = (code)=>{
         sessionStorage.setItem('code',code);

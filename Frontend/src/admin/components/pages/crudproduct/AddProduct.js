@@ -28,11 +28,11 @@ function AddProduct() {
     const [desc, setDesc] = useState('');
     const [status, setStatus] = useState(true);
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
     const product = {
         name:name,
@@ -67,23 +67,36 @@ function AddProduct() {
         e.preventDefault();
         if(selectedImage === null) notifyError("Bạn chưa chọn ảnh!") 
         else {
-        const imagRef = ref(storage,`images/products/${selectedImage.name + v4()}`);
-        await uploadBytes(imagRef, selectedImage)
-        .then(()=>{
-            // Lấy URL của ảnh từ StorageRef
-            getDownloadURL(imagRef)
-            .then((url) => {
-                console.log(url); // In URL của ảnh ra console
+            try {
+                // Tạo tên file an toàn, loại bỏ ký tự đặc biệt
+                const fileName = selectedImage.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+                const fileExtension = fileName.split('.').pop();
+                const safeFileName = `${fileName.split('.')[0]}_${v4()}.${fileExtension}`;
+                
+                const imagRef = ref(storage, `images/products/${safeFileName}`);
+                
+                console.log('Uploading file:', safeFileName);
+                
+                await uploadBytes(imagRef, selectedImage);
+                
+                // Lấy URL của ảnh từ StorageRef
+                const url = await getDownloadURL(imagRef);
+                console.log('Upload successful, URL:', url);
                 setImageURL(url);
-                notifySuccess("Tải ảnh thành công!")
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        })
-        .catch((err)=>{
-          console.log(err);
-        })
+                notifySuccess("Tải ảnh thành công!");
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                if (error.code === 'storage/unauthorized') {
+                    notifyError('Không có quyền upload ảnh. Vui lòng kiểm tra cấu hình Firebase!');
+                } else if (error.code === 'storage/canceled') {
+                    notifyError('Upload bị hủy!');
+                } else if (error.code === 'storage/unknown') {
+                    notifyError('Lỗi không xác định. Có thể do CORS hoặc cấu hình Firebase!');
+                } else {
+                    notifyError(`Lỗi upload: ${error.message}`);
+                }
+            }
         }
       };
       

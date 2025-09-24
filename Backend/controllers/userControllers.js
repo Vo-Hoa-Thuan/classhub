@@ -1,63 +1,111 @@
 const User = require("../models/User")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 const jwt = require('jsonwebtoken')
 
 const userControllers = {
     getUser: async(req,res) => {
         try {
             const user = await User.findById(req.params.id).select("-password");
-            res.status(200).json(user);
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found"
+                });
+            }
+            res.status(200).json({
+                success: true,
+                data: user
+            });
         } catch (error) {
-            res.status(500).json(error);
+            next(error);
         }
     },
     //Get All User
-    getAllUser: async(req,res) =>{
+    getAllUser: async(req,res,next) =>{
         try {
-            const user = await User.find().select("-password");
-            res.status(200).json(user)
+            const users = await User.find().select("-password");
+            res.status(200).json({
+                success: true,
+                count: users.length,
+                data: users
+            });
         } catch (error) {
-            res.status(500).json(error)
+            next(error);
         }
     },
-    deleteUser: async(req,res) =>{
+    deleteUser: async(req,res,next) =>{
         try {
             const user = await User.findById(req.params.id);
-            res.status(200).json("Delete success fully")
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found"
+                });
+            }
+            await User.findByIdAndDelete(req.params.id);
+            res.status(200).json({
+                success: true,
+                message: "User deleted successfully"
+            });
         } catch (error) {
-            res.status(500).json(error)
+            next(error);
         }
     },
-    updateUser: async(req,res) =>{
+    updateUser: async(req,res,next) =>{
         try {
             const user = await User.findById(req.params.id);
-            if(!await User.findOne({email: req.body.email})){
-                if(!await User.findOne({phone: req.body.phone})){
-                    if(req.body.password){
-                        const salt = await bcrypt.genSalt(10);
-                        const hashed = await bcrypt.hash(req.body.password, salt);
-                        await user.updateOne({
-                            email: req.body.email,
-                            password: hashed,
-                            image:req.body.image,
-                            fullname:req.body.fullname,
-                            phone:req.body.phone,
-                            birth:req.body.birth,
-                            gender:req.body.gender,                
-                            address: req.body.address,
-                            dowloaded:req.body.dowloaded,
-                            admin:req.body.admin,
-                            blogger:req.body.blogger,
-                        });
-                        res.status(200).json("Update successfully");
-                    } else {
-                        await user.updateOne({$set: req.body});
-                        res.status(200).json("Update successfully");
-                    }
-                } else res.status(400).json("Phone number already exists!");
-            } else res.status(400).json("Email already exists!");
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found"
+                });
+            }
+
+            // Check for duplicate email (excluding current user)
+            if (req.body.email && req.body.email !== user.email) {
+                const existingUser = await User.findOne({ email: req.body.email });
+                if (existingUser) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Email already exists"
+                    });
+                }
+            }
+
+            // Check for duplicate phone (excluding current user)
+            if (req.body.phone && req.body.phone !== user.phone) {
+                const existingUser = await User.findOne({ phone: req.body.phone });
+                if (existingUser) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Phone number already exists"
+                    });
+                }
+            }
+
+            // Prepare update data
+            const updateData = { ...req.body };
+            
+            // Hash password if provided
+            if (req.body.password) {
+                const salt = await bcrypt.genSalt(12);
+                updateData.password = await bcrypt.hash(req.body.password, salt);
+            }
+
+            // Remove confirmPassword from update data
+            delete updateData.confirmPassword;
+
+            await User.findByIdAndUpdate(req.params.id, updateData, { 
+                new: true,
+                runValidators: true 
+            });
+
+            res.status(200).json({
+                success: true,
+                message: "User updated successfully"
+            });
         } catch (error) {
-            res.status(500).json(error);
+            next(error);
         }
     },
 }

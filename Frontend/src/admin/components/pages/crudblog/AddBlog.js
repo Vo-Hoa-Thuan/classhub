@@ -23,11 +23,11 @@ function AddBlog() {
     const [imageUrl, setImageUrl] = useState('');
     const [status, setStatus] = useState(true);
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : [];
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
     const user = JSON.parse(localStorage.getItem('user'));
     const blog = {
@@ -63,23 +63,37 @@ function AddBlog() {
     const handleUploadImage = async(e) => {
         e.preventDefault();
         if(selectedImage == null) return notifyError('Bạn chưa chọn ảnh!');
-        const imagRef = ref(storage,`images/blogs/${selectedImage.name + v4()}`);
-        await uploadBytes(imagRef, selectedImage)
-        .then(()=>{
+        
+        try {
+            // Tạo tên file an toàn, loại bỏ ký tự đặc biệt
+            const fileName = selectedImage.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+            const fileExtension = fileName.split('.').pop();
+            const safeFileName = `${fileName.split('.')[0]}_${v4()}.${fileExtension}`;
+            
+            const imagRef = ref(storage, `images/blogs/${safeFileName}`);
+            
+            console.log('Uploading file:', safeFileName);
+            
+            await uploadBytes(imagRef, selectedImage);
+            
             // Lấy URL của ảnh từ StorageRef
-            getDownloadURL(imagRef)
-            .then((url) => {
-                console.log(url); // In URL của ảnh ra console
-                setImageUrl(url);
-                notifySuccess('Đã lưu ảnh lên cloud');
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        })
-        .catch((err)=>{
-          console.log(err);
-        })
+            const url = await getDownloadURL(imagRef);
+            console.log('Upload successful, URL:', url);
+            setImageUrl(url);
+            notifySuccess('Đã lưu ảnh lên cloud');
+            
+        } catch (error) {
+            console.error('Upload error:', error);
+            if (error.code === 'storage/unauthorized') {
+                notifyError('Không có quyền upload ảnh. Vui lòng kiểm tra cấu hình Firebase!');
+            } else if (error.code === 'storage/canceled') {
+                notifyError('Upload bị hủy!');
+            } else if (error.code === 'storage/unknown') {
+                notifyError('Lỗi không xác định. Có thể do CORS hoặc cấu hình Firebase!');
+            } else {
+                notifyError(`Lỗi upload: ${error.message}`);
+            }
+        }
       };
       //Add blog vào api
     const handleAddBlog = async(e) =>{

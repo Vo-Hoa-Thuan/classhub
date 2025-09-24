@@ -12,11 +12,11 @@ function AddTopic() {
     const [desc, setDesc] = useState('');
     const [status, setStatus] = useState(true);
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
     const topic = {
         title: title,

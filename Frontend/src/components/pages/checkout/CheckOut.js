@@ -25,11 +25,11 @@ function CheckOut() {
     const [note, setNote] = useState('');
     const [vnpayUrl, setVNPay] = useState('');
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
     const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
     useEffect(()=>{
         const user = localStorage.getItem('user');

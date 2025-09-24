@@ -1,5 +1,6 @@
 const middlewareControllers = require("../controllers/middlewareControllers");
 const userControllers = require("../controllers/userControllers");
+const { validateUpdateUser } = require("../middleware/validation");
 
 const router = require("express").Router();
 
@@ -13,7 +14,7 @@ router.get("/",middlewareControllers.vertifyTokenAdmin,userControllers.getAllUse
 router.delete("/delete/:id",middlewareControllers.vertifyTokenAdmin ,userControllers.deleteUser)
 
 //UPDATE USER
-router.put("/update/:id",middlewareControllers.vertifyToken,userControllers.updateUser)
+router.put("/update/:id",middlewareControllers.vertifyToken,validateUpdateUser,userControllers.updateUser)
 
 
 module.exports = router;

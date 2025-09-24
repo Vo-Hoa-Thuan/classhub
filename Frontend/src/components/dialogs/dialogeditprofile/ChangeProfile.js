@@ -9,12 +9,12 @@ function ChangeProfile({data,id,setDialogActive}) {
     const [email,setEmail] = useState();
     const [birth,setBirth] = useState();
     const [gender,setGender] = useState();
-    const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+    const [token] = useState(() => {
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
       const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
 
     //Sate để nhận địa chỉ:
@@ -30,32 +30,42 @@ function ChangeProfile({data,id,setDialogActive}) {
     const [communes,setCommunes] = useState('');
 
     useEffect(() => {
-            setFullName(data.fullname);
-            setPhone(data.phone);
-            setEmail(data.email);
-            setGender(data.gender);
-            const address = data.address;
-            const parts = address.split(", ");
-            setDetailAddress(parts[0]);
-            setCommune(parts[1]);
-            setDistrict(parts[2]);
-            setCity(parts[3]);
-            // Chuyển đổi chuỗi đầu vào sang kiểu Date
-            const inputDate = new Date(data.birth);
-            // Lấy các thông tin ngày, tháng và năm từ kiểu Date
-            const day = inputDate.getDate().toString().padStart(2, '0');
-            const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
-            const year = inputDate.getFullYear();
-            // Chuyển đổi sang chuỗi định dạng mong muốn
-            const outputDateString = `${year}-${month}-${day}`;
-            setBirth(outputDateString);
+            if (data) {
+                setFullName(data.fullname || '');
+                setPhone(data.phone || '');
+                setEmail(data.email || '');
+                setGender(data.gender || '');
+                
+                // Xử lý địa chỉ an toàn
+                if (data.address) {
+                    const address = data.address;
+                    const parts = address.split(", ");
+                    setDetailAddress(parts[0] || '');
+                    setCommune(parts[1] || '');
+                    setDistrict(parts[2] || '');
+                    setCity(parts[3] || '');
+                }
+                
+                // Xử lý ngày sinh an toàn
+                if (data.birth) {
+                    const inputDate = new Date(data.birth);
+                    // Kiểm tra xem ngày có hợp lệ không
+                    if (!isNaN(inputDate.getTime())) {
+                        const day = inputDate.getDate().toString().padStart(2, '0');
+                        const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+                        const year = inputDate.getFullYear();
+                        const outputDateString = `${year}-${month}-${day}`;
+                        setBirth(outputDateString);
+                    }
+                }
+            }
       },[data]);
 
       useEffect(() => {
         axios.get(api_province_url)
                 .then(response => {
                     let citys = [];
-                    response.data.map((item)=>{
+                    response.data.forEach((item)=>{
                             citys.push({
                             name: item.name,
                             code: item.code,

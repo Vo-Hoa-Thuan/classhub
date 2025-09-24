@@ -12,11 +12,11 @@ function BlogManagement() {
     const [blogs, setBlogs] = useState([]);
     const [records,setRecords] = useState([]);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : [];
       });
     const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
     const [user,setUser] = useState(() => {
       const data = JSON.parse(localStorage.getItem('user'));

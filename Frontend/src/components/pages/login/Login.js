@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Images from '../../../assets/img/Image';
 import './Login.scss'
-import axios from 'axios'
-import { api_auth } from '../../../api';
+import authService from '../../../services/AuthService';
 
 function Login() {
   const [email,setEmail] = useState("");
@@ -11,38 +10,47 @@ function Login() {
   const [checkEmail,setCheckEmail] = useState(true);
   const [checkPassword,setCheckPassword] = useState(true);
   const navigate = useNavigate();
-  const user = {
-    email: email,
-    password: password
-  }
-  const handleLogin = (e)=>{
+  const handleLogin = async (e) => {
     e.preventDefault();
     if(email === '' || password === ''){
       alert('Thông tin không được để trống!')
+      return;
     }
-    axios
-      .post(api_auth+"/login",user)
-      .then((response) => {
-        localStorage.setItem('user',JSON.stringify(response.data));
-        localStorage.setItem('token',response.data.accessToken);
-        setTimeout(function() {
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-        }, 4 * 60 * 60 * 1000);
+
+    try {
+      const result = await authService.login(email, password);
+      
+      if (result.success) {
         setCheckEmail(true);
         setCheckPassword(true);
-        if(response.data.admin){
-          navigate('/admin/dashboard')
+        
+        // Start token expiry timer
+        authService.startTokenExpiryTimer();
+        
+        console.log('Login successful:', result);
+        console.log('User data:', result.user);
+        console.log('Admin status:', result.admin);
+        
+        if (result.admin === true) {
+          navigate('/admin/dashboard');
         } else {
           navigate('/'); 
           window.location.reload();
         }
-      })
-      .catch((error) => {
-        console.log(error.response.status);
-        if(error.response.status===400) setCheckPassword(false)
-        if(error.response.status===404) setCheckEmail(false)
-      });
+      } else {
+        // Handle login errors
+        if (result.error.includes('password') || result.error.includes('mật khẩu')) {
+          setCheckPassword(false);
+        } else if (result.error.includes('email') || result.error.includes('Email')) {
+          setCheckEmail(false);
+        } else {
+          alert(result.error);
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Đã xảy ra lỗi khi đăng nhập');
+    }
   }
     return ( 
       <div className="limiter">

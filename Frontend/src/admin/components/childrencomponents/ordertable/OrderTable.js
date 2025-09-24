@@ -20,7 +20,7 @@ function OrderTable({ orders }) {
     return data ? data : "";
   });
   const headers = {
-    token: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   };
 
   useEffect(() => {

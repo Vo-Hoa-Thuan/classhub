@@ -1,11 +1,15 @@
-const user = JSON.parse(localStorage.getItem('user'));
+import { getUser, safeSetJSON, safeGetJSON } from '../utils/localStorage';
+
 const setCartLocalStorage = (value) => {
-    localStorage.setItem(`cart_${user ? user._id : ''}`,JSON.stringify(value));
+    const user = getUser();
+    const userId = user ? user._id : '';
+    safeSetJSON(`cart_${userId}`, value);
 }
 
 const getCartLocalStorage = () => {
-    const cart = JSON.parse(localStorage.getItem(`cart_${user ? user._id : ''}`));
-    return cart;
+    const user = getUser();
+    const userId = user ? user._id : '';
+    return safeGetJSON(`cart_${userId}`, []);
 }
 
 export {setCartLocalStorage,getCartLocalStorage}

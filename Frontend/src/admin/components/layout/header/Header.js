@@ -2,12 +2,12 @@ import { useState } from 'react';
 import './Header.scss'
 import { useNavigate } from 'react-router-dom';
 import DialogEditProfile from '../../../../components/dialogs/dialogeditprofile/DialogEditProfile';
+import authService from '../../../../services/AuthService';
 
 function Header({activeSideBar,setActiveSideBar}) {
     const navigate = useNavigate();
     const [user,setUser] = useState(()=>{
-        const data = JSON.parse(localStorage.getItem('user'));
-        return data ? data : [];
+        return authService.getCurrentUser() || {};
     });
     const [showMenuProfile,setMenuProfile] = useState(false);
     const [activeDialogEdit, setActiveProfileEdit] = useState(false);
@@ -21,10 +21,19 @@ function Header({activeSideBar,setActiveSideBar}) {
         setMenuProfile(!showMenuProfile);
     }
 
-    const handleLogOut = ()=>{
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        navigate('/login');
+    const handleLogOut = async () => {
+        try {
+            await authService.logout();
+            authService.stopTokenExpiryTimer();
+            navigate('/login');
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Force logout even if API call fails
+            authService.clearTokens();
+            authService.clearUser();
+            authService.stopTokenExpiryTimer();
+            navigate('/login');
+        }
     }
     const handleActiveDialogEdit = () => {
         setActiveProfileEdit(true);

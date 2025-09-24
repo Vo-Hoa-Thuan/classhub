@@ -7,11 +7,11 @@ import { notifyError, notifySuccess } from '../../../toast/Toast';
 function AppDownloadedItem({order}) {
     const outputDateString = moment(order.createdAt).format('HH:mm, DD/MM/YYYY');
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
         });
         const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
 
     const handlePayment = async(e)=>{

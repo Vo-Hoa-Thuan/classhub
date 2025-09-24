@@ -4,6 +4,8 @@ import './Header.scss'
 import Images from '../../../assets/img/Image'
 import DialogSearch from '../../dialogs/dialogsearch/DialogSearch'
 import { CartCountContext } from '../../../store/CartCountContext';
+import authService from '../../../services/AuthService';
+import SessionManagement from '../../dialogs/sessionmanagement/SessionManagement';
 
 function Header({searchOff,themeContext}) {
   themeContext.setTheme(localStorage.getItem("theme"));
@@ -11,8 +13,13 @@ function Header({searchOff,themeContext}) {
   const [isDark, setDark] = useState(localStorage.getItem("theme") === "dark")
   const [isView, setView] = useState(false)
   const [search, setSearch] = useState('')
+  const [showSessionManagement, setShowSessionManagement] = useState(false)
+  const [showUserMenu, setShowUserMenu] = useState(false)
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = authService.getCurrentUser();
+  
+  console.log('Header - Current user:', user);
+  console.log('Header - User exists:', !!user);
 
   const hanlChangleMode = ()=>{
     setDark(!isDark);
@@ -29,6 +36,27 @@ function Header({searchOff,themeContext}) {
     } else {
       setView(true)
     }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      authService.stopTokenExpiryTimer();
+      navigate('/');
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if API call fails
+      authService.clearTokens();
+      authService.clearUser();
+      authService.stopTokenExpiryTimer();
+      navigate('/');
+      window.location.reload();
+    }
+  }
+
+  const toggleUserMenu = () => {
+    setShowUserMenu(!showUserMenu);
   }
 
   const handleSearch = (e) => {
@@ -94,12 +122,31 @@ function Header({searchOff,themeContext}) {
                 <div className='profie__nav' id='profileHeader'>
                 {user
                 ? <>
-                <NavLink to={`/profile/${user._id}`}>
-                <div className='profile_container'>
-                <span className='user-name'>{user.fullname}</span>
-                <img src={user.image ? user.image : Images.avatar} alt="" className="nav__img"/>
+                <div className='user-menu-container'>
+                  <div className='profile_container' onClick={toggleUserMenu}>
+                    <span className='user-name'>{user.fullname}</span>
+                    <img src={user.image ? user.image : Images.avatar} alt="" className="nav__img"/>
+                    <i className='bx bx-chevron-down user-menu-arrow'></i>
+                  </div>
+                  
+                  {showUserMenu && (
+                    <div className='user-dropdown-menu'>
+                      <NavLink to={`/profile/${user._id}`} onClick={() => setShowUserMenu(false)}>
+                        <i className='bx bx-user'></i>
+                        <span>Hồ sơ của tôi</span>
+                      </NavLink>
+                      <button onClick={() => { setShowSessionManagement(true); setShowUserMenu(false); }}>
+                        <i className='bx bx-devices'></i>
+                        <span>Quản lý Sessions</span>
+                      </button>
+                      <button onClick={handleLogout}>
+                        <i className='bx bx-log-out'></i>
+                        <span>Đăng xuất</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
-                </NavLink>
+                
                 <Link to='/cart'>
                 <div className='cart-container'>
                 <div className='cart-count'>{cartCountContext.cartCount}</div>
@@ -124,6 +171,10 @@ function Header({searchOff,themeContext}) {
             </nav>
         </header>
         <DialogSearch view={isView}></DialogSearch>
+        <SessionManagement 
+          isOpen={showSessionManagement} 
+          onClose={() => setShowSessionManagement(false)} 
+        />
         </div>
    );
 }

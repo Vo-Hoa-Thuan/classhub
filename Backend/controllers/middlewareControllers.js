@@ -1,23 +1,60 @@
 const jwt = require('jsonwebtoken')
+const RefreshTokenService = require('../services/refreshTokenService')
 
 const middlewareControllers = {
     //verify token
-    vertifyToken: (req,res,next) =>{
-        const token = req.headers.token;
-        if(token){
-            // const accessToken = token.split("")[1];
+    vertifyToken: async (req,res,next) =>{
+        try {
+            // Check both Authorization and token headers
+            const authHeader = req.headers.authorization;
+            const tokenHeader = req.headers.token;
+            
+            let token = null;
+            if (authHeader && authHeader.startsWith('Bearer ')) {
+                token = authHeader;
+            } else if (tokenHeader) {
+                token = tokenHeader;
+            }
+            
+            if(!token){
+                return res.status(401).json({
+                    success: false,
+                    message: "Access token is required"
+                });
+            }
+
             const accessToken = token.split(" ")[1];
-            jwt.verify(accessToken, process.env.MY_ACCESS_KEY,(err,user)=>{
+            if(!accessToken){
+                return res.status(401).json({
+                    success: false,
+                    message: "Invalid token format"
+                });
+            }
+
+            jwt.verify(accessToken, process.env.JWT_ACCESS_KEY || 'HJAWJBFUAHWUFHUANWDUNWAUXCNAWHJAWJBFUAHWUFHUANWDUNWAUXCNAW', (err, user) => {
                 if(err){
-                   return res.status(403).json("Token is not valid")
+                    return res.status(403).json({
+                        success: false,
+                        message: "Token is not valid or expired"
+                    });
                 }
-                else{
-                    req.user = user;
-                    next();
+                
+                // Check if token type is access token
+                if(user.type !== 'access'){
+                    return res.status(403).json({
+                        success: false,
+                        message: "Invalid token type"
+                    });
                 }
-            })
-        } else {
-           return res.status(401).json("You're not authentication")
+                
+                req.user = user;
+                next();
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Token verification failed"
+            });
         }
     }, 
     //verify token admin
@@ -27,7 +64,10 @@ const middlewareControllers = {
             next()
         }
         else{
-            res.status(403).json("You're not have access!")
+            res.status(403).json({
+                success: false,
+                message: "Admin access required"
+            })
         }
        })
     },  
@@ -38,37 +78,64 @@ const middlewareControllers = {
              next()
          }
          else{
-             res.status(403).json("You're not have access")
+             res.status(403).json({
+                 success: false,
+                 message: "Blogger or admin access required"
+             })
          }
         })
      },  
     //verify token - check token
     checkToken: (req,res) =>{
-        const token = req.headers.token;
+        // Check both Authorization and token headers
+        const authHeader = req.headers.authorization;
+        const tokenHeader = req.headers.token;
+        
+        let token = null;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader;
+        } else if (tokenHeader) {
+            token = tokenHeader;
+        }
+        
         if(token){
-            // const accessToken = token.split("")[1];
             const accessToken = token.split(" ")[1];
-            jwt.verify(accessToken, process.env.MY_ACCESS_KEY,(err,user)=>{
+            jwt.verify(accessToken, process.env.JWT_ACCESS_KEY || 'HJAWJBFUAHWUFHUANWDUNWAUXCNAWHJAWJBFUAHWUFHUANWDUNWAUXCNAW',(err,user)=>{
                 if(err){
-                   return res.status(403).json("Token is not valid")
+                   return res.status(403).json({
+                       success: false,
+                       message: "Token is not valid"
+                   })
                 }
                 else{
                     req.user = user;
-                    return res.status(200).json("Valid token")
+                    return res.status(200).json({
+                        success: true,
+                        message: "Valid token"
+                    })
                 }
             })
         } else {
-           return res.status(401).json("You're not authentication")
+           return res.status(401).json({
+               success: false,
+               message: "Access token is required"
+           })
         }
     }, 
     //check token admin
     checkTokenAdmin: (req,res) =>{
         middlewareControllers.vertifyToken(req,res,()=>{
          if(req.user.admin=== true){
-            res.status(200).json("Valid admin token")
+            res.status(200).json({
+                success: true,
+                message: "Valid admin token"
+            })
          }
          else{
-             res.status(401).json("You're not have access!")
+             res.status(401).json({
+                 success: false,
+                 message: "Admin access required"
+             })
          }
         })
      }, 

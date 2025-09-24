@@ -10,14 +10,14 @@ import SideBarMenu from "../header/SidebarMenu";
 function DefaultLayout({children, childrenKey}) {
     const navigate = useNavigate();
     const [activeSideBar, setActiveSideBar] = useState(true);
-    const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+    const [token] = useState(() => {
+        const data = localStorage.getItem('accessToken');
         return data ? data : [];
       });
     useEffect(()=>{
-    if(localStorage.getItem('token')){
+    if(localStorage.getItem('accessToken')){
         const headers = {
-            token: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         };
         axios.post(api_auth+'/check-admin',null,{headers})
         .then(response => {
@@ -25,10 +25,10 @@ function DefaultLayout({children, childrenKey}) {
         })
         .catch(error => {
         console.log(error);
-        console.log('Error:',error.response.status)
-        if(error.response.status===401){
-            // localStorage.removeItem('user');
-            // localStorage.removeItem('token');
+        console.log('Error:',error.response?.status)
+        if(error.response?.status===401 || error.response?.status===403){
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('user');
             navigate('/404-page');
         }
         });
@@ -36,7 +36,7 @@ function DefaultLayout({children, childrenKey}) {
     else{
      navigate('/404-page');
     }
-    },[token])
+    },[token, navigate])
     return ( 
         <div className="container-fluid position-relative d-flex p-0">
         {/* <!-- Sidebar Start --> */}

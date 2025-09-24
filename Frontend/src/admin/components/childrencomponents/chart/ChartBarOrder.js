@@ -17,11 +17,11 @@ function ChartBarOrder() {
     const [orders, setOrders] = useState([]);
     const [next, setNext] = useState(false);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
      const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
   
       useEffect(()=>{

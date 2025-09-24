@@ -19,22 +19,23 @@ function AdminProfile() {
     const [selectedImage,setSelectedImage] = useState(null);
     const [checkUpdate,setCheckUpdate] = useState(false);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
       const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
 
     useEffect(() => {
         axios.get(api +`/user/${id}`,{headers})
                 .then(response => {
                     console.log('Dữ liệu user:',response.data);
-                    setUser(response.data);
-                    setImageUrl(response.data.image);
+                    const userData = response.data.data || response.data;
+                    setUser(userData);
+                    setImageUrl(userData.image);
                 })
                 .catch(error => {
-                console.log(error);
+                console.log('Error loading user data in admin profile:', error);
                 });
       },[]);
 

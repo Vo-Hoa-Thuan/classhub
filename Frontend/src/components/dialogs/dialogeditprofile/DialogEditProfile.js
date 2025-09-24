@@ -16,24 +16,27 @@ function DialogEditProfile({dialogActive,id,setDialogActive}) {
     const [imageUrl,setImageUrl] = useState();
     const [selectedImage,setSelectedImage] = useState(null);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
       const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
 
     useEffect(() => {
-        axios.get(api +`/user/${id}`,{headers})
-                .then(response => {
-                    console.log('Dữ liệu bên dialog:',response.data);
-                    setUser(response.data);
-                    setImageUrl(response.data.image);
-                })
-                .catch(error => {
-                console.log(error);
-                });
-      },[dialogActive]);
+        if(token && id) {
+            axios.get(api +`/user/${id}`,{headers})
+                    .then(response => {
+                        console.log('Dữ liệu bên dialog:',response.data);
+                        const userData = response.data.data || response.data;
+                        setUser(userData);
+                        setImageUrl(userData.image);
+                    })
+                    .catch(error => {
+                    console.log('Error loading user data in dialog:', error);
+                    });
+        }
+      },[dialogActive, token, id]);
 
     const uploadImage = async() => {
         const imagRef = ref(storage,`images/profile-users/${selectedImage.name + v4()}`);

@@ -28,11 +28,11 @@ function AddBlog() {
     const [status, setStatus] = useState(true);
     const user = JSON.parse(localStorage.getItem('user'));
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : [];
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
     useEffect(()=>{
         axios.get(api +`/blog/${id}`)

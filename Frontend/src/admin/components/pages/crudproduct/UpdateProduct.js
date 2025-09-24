@@ -31,11 +31,11 @@ function UpdateProduct() {
     const [status, setStatus] = useState();
     const navigate = useNavigate();
     const [token,setToken] = useState(() => {
-      const data = localStorage.getItem('token');
+      const data = localStorage.getItem('accessToken');
       return data ? data : [];
     });
     const headers = {
-      token: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       };
       
     useEffect(()=>{

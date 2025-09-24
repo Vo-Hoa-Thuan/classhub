@@ -5,6 +5,7 @@ import { api, api_auth} from "../../../api";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../../store/ThemeContext";
+import authService from "../../../services/AuthService";
 
 function Default({children,searchOff}) {
   const themeContext = useContext(ThemeContext);
@@ -14,7 +15,7 @@ function Default({children,searchOff}) {
   const [ewallets,setEwallets] = useState()
   const navigate = useNavigate();
   const [token,setToken] = useState(() => {
-    const data = localStorage.getItem('token');
+    const data = localStorage.getItem('accessToken');
     return data ? data : '';
   });
 
@@ -42,9 +43,12 @@ function Default({children,searchOff}) {
   }, []);
 
   useEffect(() => {
-    if(token){
+    if(authService.isAuthenticated()){
+      // Start token expiry timer if user is authenticated
+      authService.startTokenExpiryTimer();
+      
       const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${authService.getAccessToken()}`,
         };
       axios.post(api_auth+'/check-token',null,{headers})
       .then(response => {
@@ -52,15 +56,15 @@ function Default({children,searchOff}) {
       })
       .catch(error => {
         console.log(error);
-        console.log('Error:',error.response.status)
-        if(error.response.status===403){
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
+        console.log('Error:',error.response?.status)
+        if(error.response?.status===403 || error.response?.status===401){
+          authService.logout();
+          authService.stopTokenExpiryTimer();
           navigate('/login');
         }
       });
     }
-  }, [token]);
+  }, []);
 
     return ( 
         <div className={`${themeContext.theme==='dark' ? 'layout-default':'layout-light'}`}>

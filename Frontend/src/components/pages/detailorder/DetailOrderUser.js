@@ -13,11 +13,11 @@ function DetailOrderUser() {
     const [order,setOrder] = useState([]);
     const [cancelOrder,setCancelOrder] = useState(false);
     const [token,setToken] = useState(() => {
-        const data = localStorage.getItem('token');
+        const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
     const headers = {
-        token: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         };
     useEffect(()=>{
     const user = localStorage.getItem('user');
