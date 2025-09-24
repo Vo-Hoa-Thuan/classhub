@@ -4,13 +4,13 @@ const middlewareControllers = require("../controllers/middlewareControllers");
 const router = require("express").Router();
 
 //ADD BLOG
-router.post("/",middlewareControllers.vertifyTokenBlogger, blogControllers.addBlog);
+router.post("/",middlewareControllers.vertifyToken, blogControllers.addBlog);
 
 //GET ALL BLOG
 router.get("/", blogControllers.getAllBlog);
 
 //GET ALL BLOG BY BLOGGER
-router.get("/get_by_blogger/:id", middlewareControllers.vertifyTokenBlogger, blogControllers.getAllBlogByBlogger);
+router.get("/get_by_blogger/:id", middlewareControllers.vertifyToken, blogControllers.getAllBlogByBlogger);
 
 //GET BLOG
 router.get("/:id", blogControllers.getBlog);
@@ -19,9 +19,9 @@ router.get("/:id", blogControllers.getBlog);
 router.post("/search", blogControllers.searchBlog);
 
 //UPDATE BLOG
-router.put("/update/:id",middlewareControllers.vertifyTokenBlogger, blogControllers.updateBlog);
+router.put("/update/:id",middlewareControllers.vertifyToken, blogControllers.updateBlog);
 
 //DELETE BLOG
-router.delete("/delete/:id",middlewareControllers.vertifyTokenBlogger, blogControllers.deleteBlog);
+router.delete("/delete/:id",middlewareControllers.vertifyToken, blogControllers.deleteBlog);
 
 module.exports = router;

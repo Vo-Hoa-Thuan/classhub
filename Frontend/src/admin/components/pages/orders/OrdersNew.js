@@ -24,7 +24,7 @@ function OrdersNew() {
             setOrders(sortedOrders.filter((item) => item.orderTracking === 1 & item.paymentId===null ));
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching orders in OrdersNew:', err);
         });
         },[]);
     return ( 

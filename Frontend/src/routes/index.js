@@ -6,6 +6,8 @@ import ProductDetailsPage from '../components/pages/productdetail/ProductDetails
 import BlogDetailPage from '../components/pages/blogdetail/BlogDetailPage'
 import Login from '../components/pages/login/Login'
 import SignUp from '../components/pages/signup/SignUp'
+import ForgotPassword from '../components/pages/forgot-password/ForgotPassword'
+import ResetPassword from '../components/pages/reset-password/ResetPassword'
 import Cart from '../components/pages/cart/Cart'
 import SearchResult from '../components/pages/searchresult/SearchResult'
 import Topic from '../admin/components/pages/topic/Topic'
@@ -50,7 +52,7 @@ import AddBanner from '../admin/components/pages/crudbanner/AddBanner'
 import UpdateBanner from '../admin/components/pages/crudbanner/UpdateBanner'
 //CRUD Blog
 import AddBlog from '../admin/components/pages/crudblog/AddBlog'
-import UpdateBlog from '../admin//components/pages/crudblog/UpdateBlog'
+import UpdateBlog from '../admin/components/pages/crudblog/UpdateBlog'
 
 //CRUD Topic
 import AddTopic from '../admin/components/pages/crudtopic/AddTopic'
@@ -67,6 +69,9 @@ import UpdatePayment from '../admin/components/pages/crudpayment/UpdatePayment'
 //CHANGE ROLE
 import ChangeRole from '../admin/components/pages/role/ChangeRole'
 
+//DEMO
+import PermissionDemo from '../admin/components/pages/demo/PermissionDemo'
+
 
 const publicRouter = [
 
@@ -81,6 +86,8 @@ const publicRouter = [
 {path:'/profile/:id',component:ProfilePage},
 {path:'/login',component:Login},
 {path:'/sign-up',component:SignUp},
+{path:'/forgot-password',component:ForgotPassword},
+{path:'/reset-password/:token',component:ResetPassword},
 {path:'/confirm-payment',component:ConfirmPayment},
 {path:'/confirm-app-payment',component:ConfirmAppDownload},
 {path:'/user/detail-order/:id',component:DetailOrderUser},
@@ -143,6 +150,9 @@ const publicRouter = [
 
 //CHANGE ROLE
 {path:'/admin/role/change/:id',component:ChangeRole},
+
+//DEMO
+{path:'/admin/demo/permissions',component:PermissionDemo},
 
 //DETAIL
 {path:'/product-detail/:id',component:ProductDetailsPage},

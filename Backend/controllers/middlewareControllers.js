@@ -84,6 +84,20 @@ const middlewareControllers = {
              })
          }
         })
+     },
+    //verify token product manager
+    vertifyTokenProductManager: (req,res,next) =>{
+        middlewareControllers.vertifyToken(req,res,()=>{
+         if(req.user.productManager==true || req.user.admin==true){
+             next()
+         }
+         else{
+             res.status(403).json({
+                 success: false,
+                 message: "Product Manager or admin access required"
+             })
+         }
+        })
      },  
     //verify token - check token
     checkToken: (req,res) =>{

@@ -298,6 +298,78 @@ class AuthService {
       this.tokenExpiryTimer = null;
     }
   }
+
+  // Forgot Password - Gửi email reset password
+  async forgotPassword(email) {
+    try {
+      const response = await axios.post(`${api_auth}/forgot-password`, {
+        email
+      });
+
+      if (response.data.success) {
+        return {
+          success: true,
+          message: response.data.message
+        };
+      }
+      
+      throw new Error(response.data.message || 'Gửi email thất bại');
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại'
+      };
+    }
+  }
+
+  // Verify Reset Token - Kiểm tra token reset password
+  async verifyResetToken(token) {
+    try {
+      const response = await axios.get(`${api_auth}/verify-reset-token/${token}`);
+
+      if (response.data.success) {
+        return {
+          success: true,
+          email: response.data.email,
+          message: response.data.message
+        };
+      }
+      
+      throw new Error(response.data.message || 'Token không hợp lệ');
+    } catch (error) {
+      console.error('Verify reset token error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Token không hợp lệ hoặc đã hết hạn'
+      };
+    }
+  }
+
+  // Reset Password - Đặt lại mật khẩu mới
+  async resetPassword(token, newPassword) {
+    try {
+      const response = await axios.post(`${api_auth}/reset-password`, {
+        token,
+        newPassword
+      });
+
+      if (response.data.success) {
+        return {
+          success: true,
+          message: response.data.message
+        };
+      }
+      
+      throw new Error(response.data.message || 'Đặt lại mật khẩu thất bại');
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại'
+      };
+    }
+  }
 }
 
 // Create singleton instance

@@ -24,7 +24,7 @@ function OrdersCancel() {
             setOrders(sortedOrders.filter((item) => item.orderTracking === 20));
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching orders in OrdersCancel:', err);
         });
         },[]);
     return ( 

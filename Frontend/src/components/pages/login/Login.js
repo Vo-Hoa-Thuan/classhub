@@ -100,9 +100,9 @@ function Login() {
 							</label>
             </div>
             <div className='forgot-pw'>
-              <a href="#home" className="txt1">
+              <NavLink to="/forgot-password" className="txt1">
 								Quên mật khẩu?
-							</a>
+							</NavLink>
             </div>
             </div>
 
@@ -140,5 +140,3 @@ function Login() {
 }
 
 export default Login;
-
-

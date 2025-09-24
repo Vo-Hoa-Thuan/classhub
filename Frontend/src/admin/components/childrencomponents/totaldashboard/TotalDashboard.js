@@ -24,7 +24,7 @@ function TotalDashboard() {
             setTotal(prev => prev + total);
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching orders:', err);
         });
     },[]);
 
@@ -36,7 +36,7 @@ function TotalDashboard() {
             setTotal(prev => prev + total);
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching app orders:', err);
         });
     },[]);
 
@@ -46,67 +46,67 @@ function TotalDashboard() {
             setUsers(response.data);
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching users:', err);
         });
     },[]);
 
     return ( 
-<div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-<div class="col">
-<div class="card radius-10 border-start border-0 border-3 border-info">
-<div class="card-body bg-card-bd">
-<div class="d-flex align-items-center">
+<div className="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+<div className="col">
+<div className="card radius-10 border-start border-0 border-3 border-info">
+<div className="card-body bg-card-bd">
+<div className="d-flex align-items-center">
 <div>
-<p class="mb-0 text-secondary">Tổng Đơn Hàng</p>
-<h4 class="my-1 text-info">{orders && orders.length}</h4>
-<p class="mb-0 font-13">+2.5% so với tuần trước</p>
+<p className="mb-0 text-secondary">Tổng Đơn Hàng</p>
+<h4 className="my-1 text-info">{orders && orders.length}</h4>
+<p className="mb-0 font-13">+2.5% so với tuần trước</p>
 </div>
-<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="fa fa-shopping-cart"></i>
-</div>
-</div>
+<div className="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i className="fa fa-shopping-cart"></i>
 </div>
 </div>
 </div>
-<div class="col">
-<div class="card radius-10 border-start border-0 border-3 border-danger">
-<div class="card-body bg-card-bd">
-<div class="d-flex align-items-center">
+</div>
+</div>
+<div className="col">
+<div className="card radius-10 border-start border-0 border-3 border-danger">
+<div className="card-body bg-card-bd">
+<div className="d-flex align-items-center">
 <div>
-<p class="mb-0 text-secondary">Tổng Lượt Tải App</p>
-<h4 class="my-1 text-danger">{ordersApp && ordersApp.length}</h4>
-<p class="mb-0 font-13">+5.4% so với tuần trước</p>
+<p className="mb-0 text-secondary">Tổng Lượt Tải App</p>
+<h4 className="my-1 text-danger">{ordersApp && ordersApp.length}</h4>
+<p className="mb-0 font-13">+5.4% so với tuần trước</p>
 </div>
-<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class="fa-solid fa-download"></i>
-</div>
-</div>
+<div className="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i className="fa-solid fa-download"></i>
 </div>
 </div>
 </div>
-<div class="col">
-<div class="card radius-10 border-start border-0 border-3 border-success">
-<div class="card-body bg-card-bd">
-<div class="d-flex align-items-center">
+</div>
+</div>
+<div className="col">
+<div className="card radius-10 border-start border-0 border-3 border-success">
+<div className="card-body bg-card-bd">
+<div className="d-flex align-items-center">
 <div>
-<p class="mb-0 text-secondary">Tổng Thu Nhập</p>
-<h4 class="my-1 text-success">{total&& parseInt(total).toLocaleString('vi-VN')}đ</h4> 
-<p class="mb-0 font-13">-4.5% so với tuần trước</p>
+<p className="mb-0 text-secondary">Tổng Thu Nhập</p>
+<h4 className="my-1 text-success">{total&& parseInt(total).toLocaleString('vi-VN')}đ</h4> 
+<p className="mb-0 font-13">-4.5% so với tuần trước</p>
 </div>
-<div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i class="fa fa-dollar"></i>
-</div>
-</div>
+<div className="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i className="fa fa-dollar"></i>
 </div>
 </div>
 </div>
-<div class="col">
-<div class="card radius-10 border-start border-0 border-3 border-warning">
-<div class="card-body bg-card-bd">
-<div class="d-flex align-items-center">
+</div>
+</div>
+<div className="col">
+<div className="card radius-10 border-start border-0 border-3 border-warning">
+<div className="card-body bg-card-bd">
+<div className="d-flex align-items-center">
 <div>
-<p class="mb-0 text-secondary">Khách Hàng Mới</p>
-<h4 class="my-1 text-warning">{users && users.length}</h4>
-<p class="mb-0 font-13">+8.4% so với tuần trước</p>
+<p className="mb-0 text-secondary">Khách Hàng Mới</p>
+<h4 className="my-1 text-warning">{users && users.length}</h4>
+<p className="mb-0 font-13">+8.4% so với tuần trước</p>
 </div>
-<div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="fa fa-users"></i>
+<div className="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i className="fa fa-users"></i>
 </div>
 </div>
 </div>

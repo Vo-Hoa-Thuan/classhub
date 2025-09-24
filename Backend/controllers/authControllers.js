@@ -2,6 +2,7 @@ const User = require("../models/User")
 const bcrypt = require("bcryptjs")
 const jwt = require('jsonwebtoken')
 const RefreshTokenService = require('../services/refreshTokenService')
+const rolePermissionService = require('../services/rolePermissionService')
 
 const authControllers = {
 
@@ -9,6 +10,9 @@ const authControllers = {
     createAccessToken: (user)=>{
         return jwt.sign({
             id: user.id,
+            role: user.role,
+            permissions: user.permissions,
+            // Legacy fields for backward compatibility
             admin: user.admin,
             blogger: user.blogger,
             type: 'access'

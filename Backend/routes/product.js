@@ -4,7 +4,7 @@ const middlewareControllers = require("../controllers/middlewareControllers");
 const router = require("express").Router();
 
 //ADD PRODUCT
-router.post("/",middlewareControllers.vertifyTokenAdmin, productControllers.addProduct);
+router.post("/",middlewareControllers.vertifyTokenProductManager, productControllers.addProduct);
 
 //GET ALL PRODUCT
 router.get("/", productControllers.getAllProduct);
@@ -13,7 +13,7 @@ router.get("/", productControllers.getAllProduct);
 router.get("/:id", productControllers.getProduct);
 
 //GET PRODUCT BY ADMIN
-router.get("/admin/:id", middlewareControllers.vertifyTokenAdmin, productControllers.getProductByAdmin);
+router.get("/admin/:id", middlewareControllers.vertifyTokenProductManager, productControllers.getProductByAdmin);
 
 //SEARCH PRODUCT
 router.post("/search", productControllers.searchProduct);
@@ -25,7 +25,7 @@ router.post("/getlink_download",middlewareControllers.vertifyToken, productContr
 router.post("/check_downloaded",middlewareControllers.vertifyToken, productControllers.checkDownloaded);
 
 //UPDATE PRODUCT
-router.put("/update/:id",middlewareControllers.vertifyTokenAdmin, productControllers.updateProduct);
+router.put("/update/:id",middlewareControllers.vertifyTokenProductManager, productControllers.updateProduct);
 
 //UPDATE PURCHASED PRODUCT
 router.put("/update-count-purchased/:id",middlewareControllers.vertifyToken, productControllers.updatePurchasedProduct);
@@ -34,7 +34,7 @@ router.put("/update-count-purchased/:id",middlewareControllers.vertifyToken, pro
 router.put("/update_qty_purchased/:id",middlewareControllers.vertifyToken, productControllers.updateQtyPurchased);
 
 //DELETE PRODUCT
-router.delete("/delete/:id",middlewareControllers.vertifyTokenAdmin, productControllers.deleteProduct);
+router.delete("/delete/:id",middlewareControllers.vertifyTokenProductManager, productControllers.deleteProduct);
 
 
 

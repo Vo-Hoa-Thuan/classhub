@@ -6,12 +6,15 @@ import Toast from "../../../../components/toast/Toast";
 import DataTable from 'react-data-table-component'
 import { customStylesDark } from "../datatable/DatatableCustom";
 import DeleteUserDialog from "../../dialogs/dialogdelete/DeleteUserDialog";
+import PermissionManager from "../../pages/role/PermissionManager";
 
 function UserTable() {
     const [users, setUsers] = useState([]);
     const [records,setRecords] = useState([]);
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState(null);
+    const [permissionDialog, setPermissionDialog] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
     const [token] = useState(() => {
       const data = localStorage.getItem('accessToken');
       return data ? data : '';
@@ -62,26 +65,51 @@ function UserTable() {
         },
         {
             name: 'Role',
-            cell: (row) => <>
-            {row.admin &&
-            <b>Admin</b>
-            }
-            {row.blogger &&
-            <b>Blogger</b>
-            }
-            { !row.admin && !row.blogger &&
-            <b>User</b>
-            }
-          </>,
+            cell: (row) => {
+                const getRoleLabel = (role) => {
+                    switch(role) {
+                        case 'admin': return 'Quản trị viên';
+                        case 'productManager': return 'Quản lý sản phẩm';
+                        case 'blogger': return 'Người viết blog';
+                        case 'user': return 'Người dùng';
+                        default: return 'Người dùng';
+                    }
+                };
+                
+                const getRoleBadge = (role) => {
+                    const badges = {
+                        'admin': 'badge bg-danger',
+                        'productManager': 'badge bg-warning',
+                        'blogger': 'badge bg-info',
+                        'user': 'badge bg-secondary'
+                    };
+                    return badges[role] || 'badge bg-secondary';
+                };
+                
+                return (
+                    <span className={getRoleBadge(row.role)}>
+                        {getRoleLabel(row.role)}
+                    </span>
+                );
+            },
         },
         {
           name: 'Action',
           cell: (row) => <>
+            <button 
+                className="btn btn-sm btn-primary me-1"
+                onClick={() => handlePermissionClick(row._id)}
+            >
+                Quản lý quyền
+            </button>
             <Link to={`/admin/role/change/${row._id}`} 
-            className="btn-update-table">Phân quyền</Link> | 
-            <a href="#home" 
-            className="btn-delete-table" 
-            onClick={() => handleDelete(row._id)}>Xóa</a>
+            className="btn btn-sm btn-outline-secondary me-1">Phân quyền cũ</Link>
+            <button 
+                className="btn btn-sm btn-danger" 
+                onClick={() => handleDelete(row._id)}
+            >
+                Xóa
+            </button>
           </>,
         }
       ];
@@ -96,6 +124,34 @@ function UserTable() {
     const handleDelete = (id) => {
         setUserIdToDelete(id);
         setDeleteDialog(true);
+    }
+
+    const handlePermissionClick = (id) => {
+        setSelectedUserId(id);
+        setPermissionDialog(true);
+    }
+
+    const handlePermissionClose = () => {
+        setPermissionDialog(false);
+        setSelectedUserId(null);
+        // Refresh user data
+        fetchUsers();
+    }
+
+    const fetchUsers = () => {
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
+        
+        axios.get(api+'/user',{headers})
+        .then((response)=>{
+            const users = response.data.data || response.data;
+            const filteredUsers = users.filter(item => item._id !== userLocal._id);
+            setUsers(filteredUsers);
+        })
+        .catch((err)=>{
+            console.error('Error fetching users:', err);
+        });
     }
     return ( 
         <>
@@ -125,6 +181,28 @@ function UserTable() {
                     setData={setUsers}
                     api_request={`${api}/user/delete/`}
                 />
+            )}
+            {permissionDialog && (
+                <div className="modal show d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Quản lý quyền người dùng</h5>
+                                <button 
+                                    type="button" 
+                                    className="btn-close" 
+                                    onClick={handlePermissionClose}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <PermissionManager 
+                                    userId={selectedUserId} 
+                                    onClose={handlePermissionClose}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
         </>
      );

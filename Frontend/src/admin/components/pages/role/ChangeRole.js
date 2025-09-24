@@ -12,6 +12,8 @@ function ChangeRole() {
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [role, setRole] = useState('user');
+    const [permissions, setPermissions] = useState({});
     const [admin, setAdmin] = useState(false);
     const [blogger, setBlogger] = useState(false);
     const [token,setToken] = useState(() => {
@@ -29,6 +31,8 @@ function ChangeRole() {
                 setFullname(response.data.data.fullname)
                 setEmail(response.data.data.email)
                 setPhone(response.data.data.phone)
+                setRole(response.data.data.role || 'user')
+                setPermissions(response.data.data.permissions || {})
                 setAdmin(response.data.data.admin)
                 setBlogger(response.data.data.blogger)
             })

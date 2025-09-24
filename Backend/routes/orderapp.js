@@ -6,7 +6,7 @@ const router = require("express").Router();
 router.post("/",middlewareControllers.vertifyToken, orderAppControllers.addOrderApp);
 
 //GET ALL ORDERAPP
-router.get("/",middlewareControllers.vertifyTokenAdmin, orderAppControllers.getAllOrderApp);
+router.get("/",middlewareControllers.vertifyTokenProductManager, orderAppControllers.getAllOrderApp);
 
 //GET ORDERAPP BY USER
 router.get("/user/:id",middlewareControllers.vertifyToken, orderAppControllers.getOrderAppByUser);

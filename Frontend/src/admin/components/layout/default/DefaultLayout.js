@@ -16,6 +16,23 @@ function DefaultLayout({children, childrenKey}) {
       });
     useEffect(()=>{
     if(localStorage.getItem('accessToken')){
+        // Kiểm tra role từ localStorage trước
+        const userData = localStorage.getItem('user');
+        if(userData) {
+            try {
+                const user = JSON.parse(userData);
+                // Nếu là Product Manager hoặc Blogger, cho phép vào admin mà không cần gọi API check-admin
+                if(user.role === 'productManager' || user.role === 'Quản lý sản phẩm' || 
+                   user.role === 'blogger' || user.role === 'Blogger' ||
+                   user.blogger === true) {
+                    console.log('Product Manager or Blogger detected, allowing admin access');
+                    return;
+                }
+            } catch(e) {
+                console.log('Error parsing user data:', e);
+            }
+        }
+        
         const headers = {
             Authorization: `Bearer ${token}`,
         };

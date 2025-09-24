@@ -29,9 +29,9 @@ function ChartBarOrder() {
           .then((response)=>{
           setOrders(response.data)
           })
-          .catch((err)=>{
-          console.log(err);
-      });
+            .catch((err)=>{
+            console.log('Error fetching orders in ChartBarOrder:', err);
+        });
       },[]);
 
     const handleNextChart = (e)=>{

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import OrderTable from "../../childrencomponents/ordertable/OrderTable";
 import DefaultLayout from "../../layout/default/DefaultLayout";
+import ProtectedRoute from "../../common/ProtectedRoute";
 import axios from "axios";
 import { api } from "../../../../api";
 
@@ -24,15 +25,21 @@ function Orders() {
             setOrders(sortedOrders);
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching orders in Orders:', err);
         });
         },[]);
     return ( 
-        <DefaultLayout>
-            <OrderTable
-                orders={orders}
-            />
-        </DefaultLayout>
+        <ProtectedRoute 
+            requiredPermissions={['canConfirmOrders', 'canCancelOrders']}
+            mode="any"
+            customMessage="Bạn cần có quyền quản lý đơn hàng để truy cập trang này"
+        >
+            <DefaultLayout>
+                <OrderTable
+                    orders={orders}
+                />
+            </DefaultLayout>
+        </ProtectedRoute>
      );
 }
 

@@ -18,6 +18,7 @@ const paymentRoute = require("./routes/payment")
 const topicRoute = require("./routes/topic")
 const orderAppRoute = require("./routes/orderapp")
 const shippingCompanyRoute = require("./routes/shippingcompany")
+const roleRoute = require("./routes/role")
 
 // Import validation middleware
 const { validateRegister, validateLogin, validateUpdateUser } = require("./middleware/validation");
@@ -103,6 +104,7 @@ app.use("/classhub/payment", paymentRoute);
 app.use("/classhub/topic", topicRoute);
 app.use("/classhub/order-app", orderAppRoute);
 app.use("/classhub/shipping-company", shippingCompanyRoute);
+app.use("/classhub/role", roleRoute);
 
 // 404 handler for undefined routes
 app.use(notFound);

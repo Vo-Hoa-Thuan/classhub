@@ -7,7 +7,7 @@ const router = require("express").Router();
 router.post("/",middlewareControllers.vertifyTokenAdmin, paymentControllers.addPayment);
 
 //GET ALL PAYMENT
-router.get("/",middlewareControllers.vertifyTokenAdmin, paymentControllers.getAllPayment);
+router.get("/",middlewareControllers.vertifyTokenProductManager, paymentControllers.getAllPayment);
 
 //GET ALL PAYMENT BY CLIENT
 router.get("/client", paymentControllers.getAllPaymentClient);

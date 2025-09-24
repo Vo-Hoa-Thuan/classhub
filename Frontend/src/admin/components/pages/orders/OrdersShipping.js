@@ -3,18 +3,21 @@ import { useEffect, useState } from "react";
 import { api } from "../../../../api";
 import DefaultLayout from "../../layout/default/DefaultLayout";
 import OrderTable from "../../childrencomponents/ordertable/OrderTable";
+import usePermissions from "../../../../hooks/usePermissions";
 
 function OrdersShipping() {
     const [orders, setOrders] = useState([]);
-    const [token,setToken] = useState(() => {
+    const [hasError, setHasError] = useState(false);
+    const { isProductManager } = usePermissions();
+    const [token] = useState(() => {
         const data = localStorage.getItem('accessToken');
         return data ? data : '';
       });
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      };
 
     useEffect(()=>{
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        };
         axios.get(api+'/order',{headers})
             .then((response)=>{
             console.log(response.data);
@@ -24,9 +27,9 @@ function OrdersShipping() {
             setOrders(sortedOrders.filter((item) => item.orderTracking === 4 || item.orderTracking === 5));
             })
             .catch((err)=>{
-            console.log(err);
+            console.log('Error fetching orders in OrdersShipping:', err);
         });
-        },[]);
+        },[token]);
     return ( 
         <DefaultLayout>
             <OrderTable
