@@ -77,7 +77,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',  // Frontend development
     'http://localhost:3001',  // Frontend alternative port
-    'https://yourdomain.com'  // Production domain (thay đổi theo domain thực tế)
+    'https://classhub-three.vercel.app'  // Production domain (thay đổi theo domain thực tế)
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
