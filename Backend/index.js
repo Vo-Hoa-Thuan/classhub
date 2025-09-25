@@ -75,8 +75,8 @@ app.use(helmet({
 // Cấu hình CORS an toàn
 app.use(cors({
   origin: [
-    'http://localhost:3000',  // Frontend development
-    'http://localhost:3001',  // Frontend alternative port
+    'https://classhub-three.vercel.app',  // Frontend development
+ // Frontend alternative port
     'https://classhub-three.vercel.app'  // Production domain (thay đổi theo domain thực tế)
   ],
   credentials: true,

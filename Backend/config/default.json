@@ -3,6 +3,6 @@
   "vnp_HashSecret":"7MPNCNY81YAEV7G3UWUB69LG5HX61J3U",
   "vnp_Url":"https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
   "vnp_Api":"https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
-  "vnp_ReturnUrl": "http://localhost:3000/confirm-payment",
-  "vnp_ReturnAppUrl": "http://localhost:3000/confirm-app-payment"
+  "vnp_ReturnUrl": "https://classhub-three.vercel.app/confirm-payment",
+  "vnp_ReturnAppUrl": "https://classhub-three.vercel.app/confirm-app-payment"
 }
