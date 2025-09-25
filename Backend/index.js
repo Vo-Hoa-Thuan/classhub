@@ -57,7 +57,7 @@ const authLimiter = rateLimit({
 });
 
 // Áp dụng rate limiting - TẠM THỜI TẮT ĐỂ TEST
-app.use(limiter);
+// app.use(limiter);
 
 // Thêm helmet.js để bảo vệ security headers
 app.use(helmet({
