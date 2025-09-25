@@ -1,69 +1,80 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const RefreshTokenSchema = new mongoose.Schema({
+const refreshTokenSchema = new mongoose.Schema({
     token: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: 'User',
+        required: true,
+        index: true
     },
     expiresAt: {
         type: Date,
         required: true,
-        default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+        index: { expireAfterSeconds: 0 } // TTL index
     },
     isRevoked: {
         type: Boolean,
-        default: false
+        default: false,
+        index: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    userAgent: {
+        type: String,
+        default: ''
+    },
+    ipAddress: {
+        type: String,
+        default: ''
     },
     lastUsedAt: {
         type: Date,
         default: Date.now
     },
-    userAgent: {
-        type: String,
-        default: ""
-    },
-    ipAddress: {
-        type: String,
-        default: ""
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 }, {
     timestamps: true
 });
 
-// Index for better performance
-RefreshTokenSchema.index({ token: 1 });
-RefreshTokenSchema.index({ userId: 1 });
-RefreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+// Indexes for better performance
+refreshTokenSchema.index({ userId: 1, isRevoked: 1 });
+refreshTokenSchema.index({ token: 1, isRevoked: 1 });
+refreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-// Static method to clean up expired tokens
-RefreshTokenSchema.statics.cleanupExpiredTokens = async function() {
-    return await this.deleteMany({
+// Instance methods
+refreshTokenSchema.methods.isValid = function() {
+    return !this.isRevoked && this.expiresAt > new Date();
+};
+
+refreshTokenSchema.methods.revoke = function() {
+    this.isRevoked = true;
+    return this.save();
+};
+
+// Static methods
+refreshTokenSchema.statics.cleanupExpiredTokens = async function() {
+    const result = await this.deleteMany({
         $or: [
             { expiresAt: { $lt: new Date() } },
             { isRevoked: true }
         ]
     });
+    return result;
 };
 
-// Instance method to check if token is valid
-RefreshTokenSchema.methods.isValid = function() {
-    return !this.isRevoked && this.expiresAt > new Date();
+refreshTokenSchema.statics.revokeUserTokens = async function(userId) {
+    const result = await this.updateMany(
+        { userId, isRevoked: false },
+        { isRevoked: true }
+    );
+    return result;
 };
 
-// Instance method to revoke token
-RefreshTokenSchema.methods.revoke = function() {
-    this.isRevoked = true;
-    return this.save();
-};
-
-module.exports = mongoose.model("RefreshToken", RefreshTokenSchema);
+module.exports = mongoose.model('RefreshToken', refreshTokenSchema);

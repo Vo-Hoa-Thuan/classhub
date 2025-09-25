@@ -30,35 +30,46 @@ function ChangeProfile({data,id,setDialogActive}) {
     const [communes,setCommunes] = useState('');
 
     useEffect(() => {
-            if (data) {
-                setFullName(data.fullname || '');
-                setPhone(data.phone || '');
-                setEmail(data.email || '');
-                setGender(data.gender || '');
-                
-                // Xử lý địa chỉ an toàn
-                if (data.address) {
-                    const address = data.address;
-                    const parts = address.split(", ");
-                    setDetailAddress(parts[0] || '');
-                    setCommune(parts[1] || '');
-                    setDistrict(parts[2] || '');
-                    setCity(parts[3] || '');
-                }
-                
-                // Xử lý ngày sinh an toàn
-                if (data.birth) {
-                    const inputDate = new Date(data.birth);
-                    // Kiểm tra xem ngày có hợp lệ không
-                    if (!isNaN(inputDate.getTime())) {
-                        const day = inputDate.getDate().toString().padStart(2, '0');
-                        const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
-                        const year = inputDate.getFullYear();
-                        const outputDateString = `${year}-${month}-${day}`;
-                        setBirth(outputDateString);
-                    }
+        console.log('ChangeProfile - data received:', data);
+        if (data && typeof data === 'object') {
+            setFullName(data.fullname || '');
+            setPhone(data.phone || '');
+            setEmail(data.email || '');
+            setGender(data.gender || '');
+            
+            // Xử lý địa chỉ an toàn
+            if (data.address && typeof data.address === 'string') {
+                const address = data.address;
+                const parts = address.split(", ");
+                setDetailAddress(parts[0] || '');
+                setCommune(parts[1] || '');
+                setDistrict(parts[2] || '');
+                setCity(parts[3] || '');
+            }
+            
+            // Xử lý ngày sinh an toàn
+            if (data.birth) {
+                const inputDate = new Date(data.birth);
+                // Kiểm tra xem ngày có hợp lệ không
+                if (!isNaN(inputDate.getTime())) {
+                    const day = inputDate.getDate().toString().padStart(2, '0');
+                    const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+                    const year = inputDate.getFullYear();
+                    const outputDateString = `${year}-${month}-${day}`;
+                    setBirth(outputDateString);
                 }
             }
+        } else {
+            console.warn('ChangeProfile - data is null, undefined, or not an object:', data);
+            // Fallback: lấy user từ localStorage
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (localUser && localUser._id) {
+                setFullName(localUser.fullname || '');
+                setPhone(localUser.phone || '');
+                setEmail(localUser.email || '');
+                setGender(localUser.gender || '');
+            }
+        }
       },[data]);
 
       useEffect(() => {
@@ -158,7 +169,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                 <label htmlFor="fullName">Họ và Tên</label>
                 <input 
-                value={fullname} 
+                value={fullname || ''} 
                 type="text" 
                 className="form-control" id="fullName" 
                 onChange={(e)=>setFullName(e.target.value)}
@@ -184,7 +195,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 type="text" 
                 className="form-control" 
                 id="phone" 
-                value={phone}
+                value={phone || ''}
                 onChange={(e)=>setPhone(e.target.value)}
                 placeholder="Enter phone number"/>
                 </div>
@@ -194,7 +205,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <label htmlFor="birth">Ngày sinh</label>
                 <input 
                 type="date"
-                value={birth}
+                value={birth || ''}
                 onChange={(e)=>setBirth(e.target.value)}
                 className="form-control" 
                 id="birth" 
@@ -206,7 +217,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                     <label htmlFor="gender">Giới tính</label>
                     <select 
-                    value={gender}
+                    value={gender || ''}
                     onChange={(e)=>setGender(e.target.value)}
                     className="form-control" 
                     id="gender"
@@ -226,7 +237,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                 <label htmlFor="zIp">Tỉnh/Thành Phố</label>
                 <input type="text" 
-                value={city}
+                value={city || ''}
                 onChange={(e)=>setCity(e.target.value)}
                 className="form-control" 
                 id="zIp" placeholder="Nhập tỉnh/thành phố"/>
@@ -236,7 +247,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                 <label htmlFor="sTate">Quận/Huyện</label>
                 <input type="text" 
-                value={district}
+                value={district || ''}
                 onChange={(e)=>setDistrict(e.target.value)}
                 className="form-control" 
                 id="sTate" placeholder="Nhập quận/huyện"/>
@@ -246,7 +257,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                 <label htmlFor="ciTy">Phường/Xã</label>
                 <input type="text"
-                value={commune}
+                value={commune || ''}
                 onChange={(e)=>setCommune(e.target.value)} 
                 className="form-control" id="ciTy" 
                 placeholder="Nhập tên đường..."/>
@@ -256,7 +267,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                 <label htmlFor="Street">Địa chị cụ thể (Số nhà, tên đường, khu,...)</label>
                 <input type="text" 
-                value={detailAddress}
+                value={detailAddress || ''}
                 onChange={(e)=>setDetailAddress(e.target.value)}
                 className="form-control" 
                 id="Street" placeholder="Nhập số nhà..."/>
@@ -309,7 +320,7 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="form-group">
                 <label htmlFor="Street">Địa chị cụ thể (Số nhà, tên đường, khu,...)</label>
                 <input type="text" 
-                value={detailAddress}
+                value={detailAddress || ''}
                 onChange={(e)=>setDetailAddress(e.target.value)}
                 className="form-control" 
                 id="Street" placeholder="Nhập số nhà..."/>

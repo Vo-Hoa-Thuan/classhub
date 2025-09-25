@@ -25,7 +25,26 @@ function ProfilePage() {
   const headers = useMemo(() => ({
     Authorization: `Bearer ${token}`,
   }), [token]);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = authService.getCurrentUser();
+  
+  // Nếu không có ID trong URL, redirect đến profile của user hiện tại
+  useEffect(() => {
+    if (!id && user && user._id) {
+      navigate(`/profile/${user._id}`, { replace: true });
+    }
+  }, [id, user, navigate]);
+
+  
+
+  // Memoized image URL - lấy từ user (localStorage) vì API không trả về image
+  const imageUrl = useMemo(() => {
+    if (user && user.image) {
+      const result = (user.image);
+      return result;
+    }
+    return Images.default;
+  }, [user]); 
+
     useEffect(()=>{
       setLoaders(true);
       axios.get(api +`/order-app/user/${id}`,{headers})
@@ -65,7 +84,6 @@ function ProfilePage() {
       navigate('/');
     } catch (error) {
       console.error('Logout error:', error);
-      // Force logout even if API call fails
       authService.clearTokens();
       authService.clearUser();
       authService.stopTokenExpiryTimer();
@@ -82,7 +100,10 @@ function ProfilePage() {
   }},[navigate]);
 
   useEffect(() => {
-    axios.get(api +`/user/${id}`,{headers})
+    // Nếu có ID trong URL, lấy thông tin user theo ID
+    // Nếu không có ID, lấy thông tin user hiện tại từ /auth/me
+    const endpoint = id ? `/user/${id}` : `/auth/me`;
+    axios.get(api + endpoint, {headers})
             .then(response => {
                 console.log('User data response:', response.data);
                 setDataUser(response.data.data || response.data)
@@ -119,7 +140,28 @@ function ProfilePage() {
               <div className="main-profile mode-bar">
                 <div className="row">
                   <div className="col-lg-4">
-                    <img src={dataUser.image ? dataUser.image : Images.default} alt="" style={{borderRadius: '23px'}}/>
+                    <img 
+                      src={imageUrl} 
+                      alt="Avatar" 
+                      style={{
+                        borderRadius: '23px',
+                        width: '200px',
+                        height: '200px',
+                        objectFit: 'cover',
+                        display: 'block',
+                        margin: '0 auto'
+                      }}
+                      onError={(e) => {
+                        console.log('=== IMAGE ERROR DEBUG ===');
+                        console.log('Image load error:', e);
+                        console.log('Failed URL:', e.target.src);
+                        console.log('imageUrl from state:', imageUrl);
+                        console.log('dataUser.image original:', dataUser.image);
+                        console.log('=== END IMAGE ERROR ===');
+                        e.target.src = Images.default;
+                      }}
+                      onLoad={() => console.log('Image loaded successfully')}
+                    />
                   </div>
                   <div className="col-lg-4 align-self-center">
                     <div className="main-info header-text">
@@ -134,6 +176,9 @@ function ProfilePage() {
                       <p>Address: <b>{dataUser.address}</b></p>
                       <div className="main-border-button">
                         <Link to={`/profile/${id}`} onClick={handleActiveDialogEdit}>Sửa Thông Tin</Link>
+                      </div>
+                      <div className="main-border-button" style={{marginTop: '10px'}}>
+                        <Link to="/sessions">Quản lý phiên đăng nhập</Link>
                       </div>
                       <div className="btn-logout">
                         <button onClick={handleLogout} style={{background: 'none', border: 'none', color: 'inherit', cursor: 'pointer'}}>Đăng Xuất</button>

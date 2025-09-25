@@ -29,11 +29,21 @@ function DialogEditProfile({dialogActive,id,setDialogActive}) {
                     .then(response => {
                         console.log('Dữ liệu bên dialog:',response.data);
                         const userData = response.data.data || response.data;
-                        setUser(userData);
-                        setImageUrl(userData.image);
+                        if (userData) {
+                            setUser(userData);
+                            setImageUrl(userData.image || '');
+                        } else {
+                            console.error('User data is null or undefined');
+                        }
                     })
                     .catch(error => {
-                    console.log('Error loading user data in dialog:', error);
+                        console.log('Error loading user data in dialog:', error);
+                        // Fallback: lấy user từ localStorage
+                        const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+                        if (localUser && localUser._id) {
+                            setUser(localUser);
+                            setImageUrl(localUser.image || '');
+                        }
                     });
         }
       },[dialogActive, token, id]);

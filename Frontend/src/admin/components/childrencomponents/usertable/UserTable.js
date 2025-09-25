@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../../api";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import Toast from "../../../../components/toast/Toast";
 import DataTable from 'react-data-table-component'
 import { customStylesDark } from "../datatable/DatatableCustom";
@@ -97,17 +96,57 @@ function UserTable() {
           name: 'Action',
           cell: (row) => <>
             <button 
-                className="btn btn-sm btn-primary me-1"
+                className="btn btn-success me-2"
                 onClick={() => handlePermissionClick(row._id)}
+                style={{ 
+                    borderRadius: '6px',
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    transition: 'all 0.2s ease',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                }}
+                onMouseOver={(e) => {
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                }}
+                onMouseOut={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                }}
             >
-                Quản lý quyền
+                <i className="fas fa-user-shield"></i>
+                Phân quyền
             </button>
-            <Link to={`/admin/role/change/${row._id}`} 
-            className="btn btn-sm btn-outline-secondary me-1">Phân quyền cũ</Link>
             <button 
-                className="btn btn-sm btn-danger" 
+                className="btn btn-danger" 
                 onClick={() => handleDelete(row._id)}
+                style={{ 
+                    borderRadius: '6px',
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    transition: 'all 0.2s ease',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                }}
+                onMouseOver={(e) => {
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                }}
+                onMouseOut={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                }}
             >
+                <i className="fas fa-trash"></i>
                 Xóa
             </button>
           </>,

@@ -80,6 +80,13 @@ const ForgotPassword = () => {
                 Quay lại đăng nhập
               </NavLink>
             </div>
+
+            <div className="text-center mt-3">
+              <NavLink to='/' className="home-link">
+                <i className="fa fa-home" aria-hidden="true"></i>
+                Trở về trang chủ
+              </NavLink>
+            </div>
           </form>
 
           <div className="login100-more" style={{backgroundImage: `url(${process.env.PUBLIC_URL}/images/banner_login.jpg)`}}>

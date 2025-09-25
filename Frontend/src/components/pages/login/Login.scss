@@ -400,4 +400,33 @@
   color: #667eea;
   padding-left: 28px;
 }
+
+/* Home Link Styles */
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #667eea;
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 2px solid #667eea;
+  border-radius: 25px;
+  transition: all 0.4s;
+  background: transparent;
+
+  &:hover {
+    background: #667eea;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 16px;
+  }
+}
   

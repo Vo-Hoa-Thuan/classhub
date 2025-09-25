@@ -46,9 +46,9 @@ function AuthorSideBar() {
                     <div className="content">
                       <ul>
                         <li><a href="post-details.html">
-                        <img src={author.image} alt='Avatar author'/>
-                          <h5>{author.fullname}</h5>
-                          <span>{author.email}</span>
+                        <img src={author?.image || '/default-avatar.png'} alt='Avatar author'/>
+                          <h5>{author?.fullname || 'Unknown Author'}</h5>
+                          <span>{author?.email || 'No email'}</span>
                         </a></li>
                       </ul>
                     </div>

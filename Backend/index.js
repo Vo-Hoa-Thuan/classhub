@@ -26,6 +26,9 @@ const { validateRegister, validateLogin, validateUpdateUser } = require("./middl
 // Import error handling middleware
 const { errorHandler, notFound } = require("./middleware/errorHandler");
 
+// Import scheduler service
+const SchedulerService = require("./services/schedulerService");
+
 const port = 8080;
 dotenv.config();
 const app = express();
@@ -54,7 +57,7 @@ const authLimiter = rateLimit({
 });
 
 // Áp dụng rate limiting - TẠM THỜI TẮT ĐỂ TEST
-// app.use(limiter);
+app.use(limiter);
 
 // Thêm helmet.js để bảo vệ security headers
 app.use(helmet({
@@ -87,6 +90,8 @@ app.use(express.json())
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("Connected to MongoDB...");
+    // Start scheduler service after DB connection
+    SchedulerService.start();
   })
   .catch((err) => {
     console.error("Error connecting to MongoDB: ", err);

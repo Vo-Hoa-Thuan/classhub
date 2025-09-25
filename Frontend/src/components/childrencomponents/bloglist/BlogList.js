@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import './BlogList.scss'
-import Images from "../../../assets/img/Image";
 import BlogDetailItem from '../blogdetailcontent/BlogDetailItem';
 import {api} from '../../../api';
-import { NavLink } from 'react-router-dom';
 
 function BlogList() {
   const [pageNum, setPageNum] = useState(1);
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(5);
   const [loaders, setLoaders] = useState(false);
 
   useEffect(() => {
@@ -33,10 +31,6 @@ function BlogList() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleClick = (e, pageNumber) => {
-    e.preventDefault();
-    setCurrentPage(pageNumber);
-  };
   const handlePrevPage = (e) => {
     e.preventDefault();
     setCurrentPage(prevPage => prevPage <= 1 ? prevPage : prevPage - 1);
@@ -71,7 +65,7 @@ function BlogList() {
                     id={item._id}
                     topic={item.topic ? item.topic.title : null}
                     title={item.title}
-                    author={item.authorId.fullname}
+                    author={item.authorId ? item.authorId.fullname : 'Unknown Author'}
                     dateCreate={item.createdAt}
                     shortDesc={item.shortDesc}
                     image={item.imageUrl}
@@ -79,12 +73,12 @@ function BlogList() {
                 ))}
                   <div className="col-lg-12">
                     <ul className="page-numbers">
-                      <li onClick={handlePrevPage}><a href="#"><i className="fa fa-angle-double-left"></i></a></li>
+                      <li onClick={handlePrevPage}><a href="#blog"><i className="fa fa-angle-double-left"></i></a></li>
                       <li><a href='#blog'>
                       {/* onClick={e => handleClick(e, pageNumber)} */}
                             {pageNum}
                           </a></li>
-                      <li onClick={handleNextPage}><a href="#"><i className="fa fa-angle-double-right"></i></a></li>
+                      <li onClick={handleNextPage}><a href="#blog"><i className="fa fa-angle-double-right"></i></a></li>
                     </ul>
                     <div>
                     </div>

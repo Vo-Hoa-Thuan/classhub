@@ -116,10 +116,10 @@ function DetailOrderUser() {
         <td>
         <div className="d-flex mb-2">
         <div className="flex-shrink-0">
-        <img src={item.product.imageUrl} alt="" style={{width:'75px'}} className="img-fluid"/>
+        <img src={item.product && item.product.imageUrl} alt="" style={{width:'75px'}} className="img-fluid"/>
         </div>
         <div className="flex-lg-grow-1 ms-3">
-        <h6 className="small mb-0"><Link to={`/product-detail/${item.product._id}`} className="h6">{item.product.name}</Link></h6>
+        <h6 className="small mb-0"><Link to={`/product-detail/${item.product && item.product._id}`} className="h6">{item.product && item.product.name}</Link></h6>
         <span className="small">Số lượng: {item.quantity}</span>
         </div>
         </div>

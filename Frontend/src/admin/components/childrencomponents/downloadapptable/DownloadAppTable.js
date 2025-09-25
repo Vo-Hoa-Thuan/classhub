@@ -27,7 +27,9 @@ function DownloadAppTable() {
     axios
       .get(api + "/order-app", { headers })
       .then((response) => {
-        console.log(response.data);
+        console.log("Full response:", response);
+        console.log("Response data:", response.data);
+        console.log("Response data.data:", response.data.data);
         setOrdersApp(response.data);
       })
       .catch((error) => {
@@ -36,18 +38,20 @@ function DownloadAppTable() {
   }, []);
 
   useEffect(() => {
+    console.log("ordersApp state:", ordersApp);
+    console.log("ordersApp length:", ordersApp?.length);
     setRecords(ordersApp);
   }, [ordersApp]);
 
   const columns = [
     {
       name: "Người tải",
-      selector: (row) => row.user.fullname,
+      selector: (row) => row.user?.fullname || "N/A",
       sortable: true,
     },
     {
       name: "Email",
-      selector: (row) => row.user.email,
+      selector: (row) => row.user?.email || "N/A",
       sortable: true,
     },
     {
@@ -81,10 +85,17 @@ function DownloadAppTable() {
           >
             Xem
           </Link>
-          {/* | 
-            <a href="#home" 
+          {" | "}
+          <a 
+            href="#home" 
             className="btn-delete-table" 
-            onClick={() => handleDelete(row._id,row.imageUrl)}>Xóa</a> */}
+            onClick={(e) => {
+              e.preventDefault();
+              handleDelete(row._id);
+            }}
+          >
+            Xóa
+          </a>
         </>
       ),
     },
@@ -92,9 +103,25 @@ function DownloadAppTable() {
 
   const handleFilter = (e) => {
     const newData = ordersApp.filter((row) => {
-      return row.email.toLowerCase().includes(e.target.value.toLowerCase());
+      return (row.user?.email || "").toLowerCase().includes(e.target.value.toLowerCase());
     });
     setRecords(newData);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) {
+      try {
+        await axios.delete(api + `/order-app/delete/${id}`, { headers });
+        // Cập nhật lại danh sách sau khi xóa
+        const updatedOrders = ordersApp.filter(order => order._id !== id);
+        setOrdersApp(updatedOrders);
+        setRecords(updatedOrders);
+        alert("Xóa thành công!");
+      } catch (error) {
+        console.error("Lỗi khi xóa:", error);
+        alert("Có lỗi xảy ra khi xóa!");
+      }
+    }
   };
 
   const handleExportCSV = () => {
@@ -102,8 +129,8 @@ function DownloadAppTable() {
     for (var i = 0; i < ordersApp.length; i++) {
       const item = {
         id: ordersApp[i]._id,
-        userName: ordersApp[i].user.fullname,
-        email: ordersApp[i].user.email,
+        userName: ordersApp[i].user?.fullname || "N/A",
+        email: ordersApp[i].user?.email || "N/A",
         app: ordersApp[i].product.name,
         total: ordersApp[i].price,
         payment: ordersApp[i].payment && ordersApp[i].payment.name,
@@ -149,8 +176,8 @@ function DownloadAppTable() {
     for (var j = 0; j < middle.length; j++) {
       const item = {
         id: middle[j]._id,
-        userName: middle[j].user.fullname,
-        email: middle[j].user.email,
+        userName: middle[j].user?.fullname || "N/A",
+        email: middle[j].user?.email || "N/A",
         app: middle[j].product.name,
         total: middle[j].price,
         payment: middle[j].payment && middle[j].payment.name,

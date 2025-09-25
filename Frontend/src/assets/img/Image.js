@@ -10,7 +10,7 @@ const Images = {
     blog_1: require('../images/feature-right.jpg'),
     banner_login: require('../images/banner-login.jpg'),
     banner_signup: require('../images/banner-signup.jpg'),
-    default: 'https://firebasestorage.googleapis.com/v0/b/classhub.appspot.com/o/images%2FR.jpg?alt=media&token=6ff3f044-a8ea-42f3-a30e-0475583c9477',
+    default: 'https://firebasestorage.googleapis.com/v0/b/uploadingvnsim.appspot.com/o/images%2FR.jpg?alt=media&token=6ff3f044-a8ea-42f3-a30e-0475583c9477',
     
 }
 

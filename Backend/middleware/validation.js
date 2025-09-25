@@ -15,17 +15,6 @@ const passwordSchema = Joi.string()
 
 // User registration validation
 const registerSchema = Joi.object({
-  username: Joi.string()
-    .alphanum()
-    .min(3)
-    .max(30)
-    .required()
-    .messages({
-      'string.alphanum': 'Username must only contain alphanumeric characters',
-      'string.min': 'Username must be at least 3 characters long',
-      'string.max': 'Username must not exceed 30 characters',
-      'any.required': 'Username is required'
-    }),
   email: Joi.string()
     .email()
     .max(255)
@@ -42,6 +31,44 @@ const registerSchema = Joi.object({
     .messages({
       'any.only': 'Confirm password must match password',
       'any.required': 'Confirm password is required'
+    }),
+  fullname: Joi.string()
+    .min(2)
+    .max(100)
+    .required()
+    .messages({
+      'string.min': 'Full name must be at least 2 characters long',
+      'string.max': 'Full name must not exceed 100 characters',
+      'any.required': 'Full name is required'
+    }),
+  phone: Joi.string()
+    .pattern(/^[0-9]{9,15}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Phone number must contain only digits and be 9-15 characters long',
+      'any.required': 'Phone number is required'
+    }),
+  birth: Joi.date()
+    .max('now')
+    .optional()
+    .messages({
+      'date.max': 'Birth date cannot be in the future'
+    }),
+  gender: Joi.string()
+    .valid('Nam', 'Nữ')
+    .required()
+    .messages({
+      'any.only': 'Gender must be either "Nam" or "Nữ"',
+      'any.required': 'Gender is required'
+    }),
+  address: Joi.string()
+    .min(10)
+    .max(500)
+    .required()
+    .messages({
+      'string.min': 'Address must be at least 10 characters long',
+      'string.max': 'Address must not exceed 500 characters',
+      'any.required': 'Address is required'
     })
 });
 

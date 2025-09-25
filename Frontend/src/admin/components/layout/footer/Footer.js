@@ -9,7 +9,7 @@ function Footer() {
                         Copyright © 2025 <a href="#">Class Hub Company</a>, All Right Reserved. 
                         </div>
                         <div className="col-12 col-sm-6 text-center text-sm-end">
-                            Designed By <a href="https://htmlcodex.com">2T Team</a>
+                            Designed By <a href="">2T Team</a>
                         </div>
                     </div>
                 </div>

@@ -21,6 +21,6 @@ router.put("/update/:id",middlewareControllers.vertifyToken, orderAppControllers
 router.post('/create_app_payment_url', middlewareControllers.vertifyToken, orderAppControllers.paymentVNPay);
 
 //DELETE ORDERAPP
-//router.delete("/delete/:id",middlewareControllers.vertifyTokenAdmin, orderAppControllers.deleteOrderApp);
+router.delete("/delete/:id",middlewareControllers.vertifyTokenAdmin, orderAppControllers.deleteOrderApp);
 
 module.exports = router;

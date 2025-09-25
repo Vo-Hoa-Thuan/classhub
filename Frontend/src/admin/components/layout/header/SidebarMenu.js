@@ -29,7 +29,9 @@ function SideBarMenu({activeSideBar}) {
         canConfirmOrders,
         canCancelOrders,
         canManageProducts,
-        isAdmin
+        isAdmin,
+        isProductManager,
+        isBlogger
     } = usePermissions();
     
    const headers = {
@@ -155,10 +157,16 @@ function SideBarMenu({activeSideBar}) {
                 <Link onClick={()=>handleActiveItem(7)} to='/admin/download-app'>Downloaded App</Link></li>
             )}
             
-            {/* Demo Permissions - Admin only */}
-            {isAdmin && (
+            {/* Permissions - All admin users */}
+            {(isAdmin || isProductManager || isBlogger) && (
                 <li className={activeMenu===8 ? 'active' : ''}>
-                <Link onClick={()=>handleActiveItem(8)} to='/admin/demo/permissions'>Demo Permissions</Link></li>
+                <Link onClick={()=>handleActiveItem(8)} to='/admin/permissions'>Quyền Truy Cập</Link></li>
+            )}
+            
+            {/* Session Management - All admin users */}
+            {(isAdmin || isProductManager || isBlogger) && (
+                <li className={activeMenu===9 ? 'active' : ''}>
+                <Link onClick={()=>handleActiveItem(9)} to='/admin/sessions'>Quản lý phiên đăng nhập</Link></li>
             )}
          </ul>
       </nav>

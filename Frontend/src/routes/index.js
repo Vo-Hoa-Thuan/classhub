@@ -69,8 +69,11 @@ import UpdatePayment from '../admin/components/pages/crudpayment/UpdatePayment'
 //CHANGE ROLE
 import ChangeRole from '../admin/components/pages/role/ChangeRole'
 
-//DEMO
-import PermissionDemo from '../admin/components/pages/demo/PermissionDemo'
+//PERMISSIONS
+import PermissionPage from '../admin/components/pages/demo/PermissionPage'
+
+//SESSION MANAGEMENT
+import SessionManager from '../components/SessionManager'
 
 
 const publicRouter = [
@@ -83,6 +86,7 @@ const publicRouter = [
 {path:'/check-out',component:CheckOut},
 {path:'/order/:id',component:Order},
 {path:'/search-result',component:SearchResult},
+{path:'/profile',component:ProfilePage},
 {path:'/profile/:id',component:ProfilePage},
 {path:'/login',component:Login},
 {path:'/sign-up',component:SignUp},
@@ -151,8 +155,12 @@ const publicRouter = [
 //CHANGE ROLE
 {path:'/admin/role/change/:id',component:ChangeRole},
 
-//DEMO
-{path:'/admin/demo/permissions',component:PermissionDemo},
+//PERMISSIONS
+{path:'/admin/permissions',component:PermissionPage},
+
+//SESSION MANAGEMENT
+{path:'/admin/sessions',component:SessionManager},
+{path:'/sessions',component:SessionManager},
 
 //DETAIL
 {path:'/product-detail/:id',component:ProductDetailsPage},

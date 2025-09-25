@@ -119,6 +119,13 @@ function Login() {
                 hoặc đăng nhập với
               </span>
             </div>
+
+            <div className="text-center mt-3">
+              <NavLink to='/' className="home-link">
+                <i className="fa fa-home" aria-hidden="true"></i>
+                Trở về trang chủ
+              </NavLink>
+            </div>
   
             <div className="login100-form-social">
               <a href="#home" className="login100-form-social-item">

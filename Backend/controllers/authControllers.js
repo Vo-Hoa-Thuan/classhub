@@ -1,7 +1,7 @@
 const User = require("../models/User")
 const bcrypt = require("bcryptjs")
 const jwt = require('jsonwebtoken')
-const RefreshTokenService = require('../services/refreshTokenService')
+const TokenService = require('../services/tokenService')
 const rolePermissionService = require('../services/rolePermissionService')
 
 const authControllers = {
@@ -26,17 +26,13 @@ const authControllers = {
         try{
             // Check if user already exists
             const existingUser = await User.findOne({ 
-                $or: [
-                    { email: req.body.email },
-                    { username: req.body.username }
-                ]
+                email: req.body.email
             });
             
             if (existingUser) {
                 return res.status(400).json({
                     success: false,
-                    message: existingUser.email === req.body.email ? 
-                        "Email already exists" : "Username already exists"
+                    message: "Email already exists"
                 });
             }
 
@@ -94,7 +90,7 @@ const authControllers = {
                 // Create refresh token
                 const userAgent = req.get('User-Agent') || '';
                 const ipAddress = req.ip || req.connection.remoteAddress || '';
-                const refreshToken = await RefreshTokenService.createRefreshToken(
+                const refreshToken = await TokenService.createRefreshToken(
                     user._id, 
                     userAgent, 
                     ipAddress
@@ -161,7 +157,7 @@ const authControllers = {
                 });
             }
 
-            const { accessToken, user } = await RefreshTokenService.generateAccessToken(refreshToken);
+            const { accessToken, user } = await TokenService.refreshAccessToken(refreshToken);
             const { password, ...userWithoutPassword } = user._doc;
             
             res.status(200).json({
@@ -187,7 +183,7 @@ const authControllers = {
             const { refreshToken } = req.body;
             
             if (refreshToken) {
-                await RefreshTokenService.revokeRefreshToken(refreshToken);
+                await TokenService.revokeRefreshToken(refreshToken);
             }
             
             res.status(200).json({
@@ -203,7 +199,7 @@ const authControllers = {
     logoutAllSessions: async(req, res, next) => {
         try {
             const userId = req.user.id;
-            await RefreshTokenService.revokeAllUserTokens(userId);
+            await TokenService.revokeAllUserTokens(userId);
             
             res.status(200).json({
                 success: true,
@@ -218,7 +214,7 @@ const authControllers = {
     getUserSessions: async(req, res, next) => {
         try {
             const userId = req.user.id;
-            const sessions = await RefreshTokenService.getUserActiveTokens(userId);
+            const sessions = await TokenService.getUserSessions(userId);
             
             res.status(200).json({
                 success: true,
@@ -241,10 +237,16 @@ const authControllers = {
                 });
             }
             
+            // Thêm thông tin permissions chi tiết
+            const userWithPermissions = {
+                ...user.toObject(),
+                permissions: user.permissions || {}
+            };
+            
             res.status(200).json({
                 success: true,
                 message: "User retrieved successfully",
-                user: user
+                user: userWithPermissions
             });
         } catch (error) {
             next(error);

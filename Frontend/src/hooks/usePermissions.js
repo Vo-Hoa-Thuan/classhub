@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import authService from '../services/AuthService';
+
 /**
  * Custom hook để kiểm tra permissions của user hiện tại
  * @param {string|string[]} requiredPermissions - Permission hoặc array permissions cần kiểm tra
@@ -5,6 +8,10 @@
  * @returns {object} - { hasPermission, hasRole, user, permissions }
  */
 export const usePermissions = (requiredPermissions = null, mode = 'any') => {
+  const [user, setUser] = useState(null);
+  const [permissions, setPermissions] = useState({});
+  const [loading, setLoading] = useState(true);
+
   // Lấy user từ localStorage thay vì Redux
   const getUserFromStorage = () => {
     try {
@@ -16,57 +23,109 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
     }
   };
 
-  const user = getUserFromStorage();
+  // Load user permissions từ AuthService
+  const loadUserPermissions = async () => {
+    try {
+      setLoading(true);
+      
+      // Kiểm tra có token không
+      if (!authService.getAccessToken()) {
+        setUser(null);
+        setPermissions({});
+        return;
+      }
+
+      // Dùng AuthService để load user từ token
+      const userData = await authService.loadUserFromToken();
+      
+      if (userData) {
+        setUser(userData);
+        setPermissions(userData.permissions || {});
+      } else {
+        // Nếu AuthService fail, fallback về localStorage
+        const localUser = getUserFromStorage();
+        setUser(localUser);
+        setPermissions(localUser?.permissions || {});
+      }
+    } catch (error) {
+      console.error('Error loading user permissions:', error);
+      // Fallback về localStorage
+      const localUser = getUserFromStorage();
+      setUser(localUser);
+      setPermissions(localUser?.permissions || {});
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load permissions khi component mount
+  useEffect(() => {
+    loadUserPermissions();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Kiểm tra có user không
-  if (!user) {
+  if (!user && !loading) {
     return {
       hasPermission: false,
       hasRole: false,
       user: null,
-      permissions: {}
+      permissions: {},
+      loading: false
     };
   }
 
-  // Tạo permissions object dựa trên admin, blogger flags và role
-  const createPermissionsFromUser = (user) => {
-    const permissions = {};
-    
-    // Nếu là admin, có tất cả quyền
-    if (user.admin) {
-      permissions.canManageUsers = true;
-      permissions.canAssignRoles = true;
-      permissions.canManageBanners = true;
-      permissions.canManagePaymentMethods = true;
-      permissions.canManageShipping = true;
-      permissions.canViewAnalytics = true;
-      permissions.canConfirmOrders = true;
-      permissions.canCancelOrders = true;
-      permissions.canManageProducts = true;
-      permissions.canCreatePosts = true;
-      permissions.canEditPosts = true;
-      permissions.canDeletePosts = true;
-      permissions.canManageTopics = true;
-    } else if (user.blogger) {
-      // Nếu là blogger, chỉ có quyền blog
-      permissions.canCreatePosts = true;
-      permissions.canEditPosts = true;
-      permissions.canDeletePosts = true;
-      permissions.canManageTopics = true;
-    } else if (user.role === 'Quản lý sản phẩm' || user.role === 'productManager') {
-      // Nếu là Product Manager, có quyền quản lý sản phẩm và đơn hàng
-      permissions.canConfirmOrders = true;
-      permissions.canCancelOrders = true;
-      permissions.canManageProducts = true;
-    } else {
-      // User thường, không có quyền gì
-      // Có thể thêm permissions khác nếu cần
+  // Nếu đang loading, trả về loading state
+  if (loading) {
+    return {
+      hasPermission: false,
+      hasRole: false,
+      user: null,
+      permissions: {},
+      loading: true
+    };
+  }
+
+  // Sử dụng permissions từ API, fallback về logic cũ nếu không có
+  const getEffectivePermissions = () => {
+    if (permissions && Object.keys(permissions).length > 0) {
+      return permissions;
     }
     
-    return permissions;
+    // Fallback: tạo permissions từ role nếu không có permissions chi tiết
+    const fallbackPermissions = {};
+    
+    // Nếu là admin, có tất cả quyền
+    if (user?.admin) {
+      fallbackPermissions.canManageUsers = true;
+      fallbackPermissions.canAssignRoles = true;
+      fallbackPermissions.canManageBanners = true;
+      fallbackPermissions.canManagePaymentMethods = true;
+      fallbackPermissions.canManageShipping = true;
+      fallbackPermissions.canViewAnalytics = true;
+      fallbackPermissions.canConfirmOrders = true;
+      fallbackPermissions.canCancelOrders = true;
+      fallbackPermissions.canManageProducts = true;
+      fallbackPermissions.canCreatePosts = true;
+      fallbackPermissions.canEditPosts = true;
+      fallbackPermissions.canDeletePosts = true;
+      fallbackPermissions.canManageTopics = true;
+    } else if (user?.blogger) {
+      // Nếu là blogger, chỉ có quyền blog
+      fallbackPermissions.canCreatePosts = true;
+      fallbackPermissions.canEditPosts = true;
+      fallbackPermissions.canDeletePosts = true;
+      fallbackPermissions.canManageTopics = true;
+    } else if (user?.role === 'Quản lý sản phẩm' || user?.role === 'productManager') {
+      // Nếu là Product Manager, có quyền quản lý sản phẩm và đơn hàng
+      fallbackPermissions.canConfirmOrders = true;
+      fallbackPermissions.canCancelOrders = true;
+      fallbackPermissions.canManageProducts = true;
+    }
+    
+    return fallbackPermissions;
   };
 
-  const permissions = createPermissionsFromUser(user);
+  const effectivePermissions = getEffectivePermissions();
 
   // Kiểm tra role
   const hasRole = (role) => {
@@ -78,7 +137,7 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
 
   // Kiểm tra permission đơn lẻ
   const checkSinglePermission = (permission) => {
-    return permissions[permission] === true;
+    return effectivePermissions[permission] === true;
   };
 
   // Kiểm tra permissions
@@ -113,7 +172,7 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
 
   // Lấy tất cả permissions của user
   const getAllPermissions = () => {
-    return permissions;
+    return effectivePermissions;
   };
 
   // Kiểm tra có permission cụ thể không
@@ -126,6 +185,7 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
     hasRole: (role) => hasRole(role),
     user,
     permissions: getAllPermissions(),
+    loading,
     isAdmin: isAdmin(),
     isProductManager: isProductManager(),
     isBlogger: isBlogger(),

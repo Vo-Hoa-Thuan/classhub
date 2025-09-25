@@ -8,6 +8,15 @@ Profile Style
     border-radius: 23px;
     padding: 30px;
     background-color: #1f2122;
+    
+    img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 23px;
+      display: block;
+      margin: 0 auto;
+    }
   }
   
   .main-profile .main-info h4 {
@@ -57,5 +66,30 @@ Profile Style
     border-bottom: none;
     padding-bottom: 0;
     margin-bottom: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main-profile {
+      padding: 20px;
+      
+      img {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-profile {
+      padding: 15px;
+      
+      img {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 15px;
+      }
+    }
   }
   
