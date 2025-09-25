@@ -21,6 +21,7 @@ import Service from '../components/pages/service/Service'
 import BlogManagement from '../components/pages/blogmanagement/BlogManagement'
 import CreateBlog from '../components/pages/blogmanagement/CreateBlog'
 import UpdateBlogBlogger from '../components/pages/blogmanagement/UpdateBlog'
+import ProtectedRoute from '../components/ProtectedRoute'
 
 //Error
 import ErrorPage from '../components/pages/404/ErrorPage'

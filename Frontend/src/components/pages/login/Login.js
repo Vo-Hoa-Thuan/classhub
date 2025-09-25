@@ -30,10 +30,18 @@ function Login() {
         console.log('Login successful:', result);
         console.log('User data:', result.user);
         console.log('Admin status:', result.admin);
+        console.log('User role:', result.user?.role);
         
-        if (result.admin === true) {
+        // Check if user is admin, blogger, or product manager
+        const isAdmin = result.admin === true;
+        const isBlogger = result.user?.role === 'blogger';
+        const isProductManager = result.user?.role === 'productmanager';
+        
+        if (isAdmin || isBlogger || isProductManager) {
+          console.log('User has admin/blogger/product manager access, redirecting to admin dashboard');
           navigate('/admin/dashboard');
         } else {
+          console.log('Regular user, redirecting to home page');
           navigate('/'); 
           window.location.reload();
         }
