@@ -3,6 +3,7 @@ import PopularList from '../../childrencomponents/productcomponents/popular/Popu
 import HelpBar from '../../childrencomponents/helpbar/HelpBar';
 import Images from '../../../assets/img/Image';
 import Default from '../../layout/default/Default';
+import AdminRedirect from '../../AdminRedirect';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { api } from '../../../api';
@@ -42,6 +43,7 @@ function HomePage() {
   
     return (
       <Default>
+        <AdminRedirect />
       {loaders &&
         <div id="js-preloader" class="js-preloader">
             <div class="preloader-inner">
