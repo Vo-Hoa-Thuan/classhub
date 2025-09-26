@@ -9,6 +9,7 @@ function ChangeProfile({data,id,setDialogActive}) {
     const [email,setEmail] = useState();
     const [birth,setBirth] = useState();
     const [gender,setGender] = useState();
+    const [isUpdating, setIsUpdating] = useState(false);
     const [token] = useState(() => {
         const data = localStorage.getItem('accessToken');
         return data ? data : '';
@@ -127,38 +128,61 @@ function ChangeProfile({data,id,setDialogActive}) {
         e.preventDefault();
         if(!fullname || !phone ||!birth ||!gender ||!detailAddress ||!commune ||!district ||!city){
             notifyError('Thông tin không được để trống. Kiểm tra lại!');
-        } else {
-            const user = data && data.phone=== phone ? {
+            return;
+        }
+        
+        setIsUpdating(true);
+        try {
+            const user = data && data.phone === phone ? {
                 fullname: fullname,
                 birth: birth,
-                gender:gender,
+                gender: gender,
+                image: data.image, 
                 address: null
             } : {
                 fullname: fullname,
                 phone: phone,
                 birth: birth,
-                gender:gender,
+                gender: gender,
+                image: data.image,
                 address: null
             }
-            try {
+            
             const address = `${detailAddress}, ${commune}, ${district}, ${city}`;
             user.address = address;
-            console.log(user);
-            await axios.put(api +`/user/update/${id}`, user, { headers});
+            
+            const response = await axios.put(api +`/user/update/${id}`, user, { headers});
+            
+            if (response.data.success) {
                 notifySuccess('Đã lưu thông tin thành công!');
+                
                 const userLocal = JSON.parse(localStorage.getItem('user'));
-                userLocal.fullname = fullname;
-                if(user.phone) userLocal.phone = user.phone;
-                userLocal.birth = birth;
-                userLocal.gender = gender;
-                userLocal.address = address;
-                localStorage.setItem('user',JSON.stringify(userLocal));
-            } catch (error) {
-                console.log(error);  
-                if (error.response.data === 'Phone number already exists!') {
-                    notifyError("Số điện thoại đã được đăng ký, vui lòng sử dụng số khác!")
-                }else notifyError('Đã có lỗi xảy ra!');
+                if (userLocal) {
+                    userLocal.fullname = fullname;
+                    if(user.phone) userLocal.phone = user.phone;
+                    userLocal.birth = birth;
+                    userLocal.gender = gender;
+                    userLocal.address = address;
+                    if(data.image) userLocal.image = data.image;
+                    localStorage.setItem('user', JSON.stringify(userLocal));
+                }
+                
+                // Đóng dialog sau khi cập nhật thành công
+                setTimeout(() => {
+                    setDialogActive(false);
+                }, 1000);
+            } else {
+                notifyError('Có lỗi khi cập nhật thông tin!');
             }
+        } catch (error) {
+            console.error('Update profile error:', error);  
+            if (error.response && error.response.data === 'Phone number already exists!') {
+                notifyError("Số điện thoại đã được đăng ký, vui lòng sử dụng số khác!");
+            } else {
+                notifyError('Đã có lỗi xảy ra khi cập nhật thông tin!');
+            }
+        } finally {
+            setIsUpdating(false);
         }
     }
     return ( 
@@ -331,7 +355,16 @@ function ChangeProfile({data,id,setDialogActive}) {
                 <div className="row gutters">
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div className="text-right">
-                <button onClick={handleUpdateProfile} type="button" id="submit" name="submit" className="btn btn-success">Sửa thông tin</button>
+                <button 
+                    onClick={handleUpdateProfile} 
+                    type="button" 
+                    id="submit" 
+                    name="submit" 
+                    className="btn btn-success"
+                    disabled={isUpdating}
+                >
+                    {isUpdating ? 'Đang cập nhật...' : 'Sửa thông tin'}
+                </button>
                 <button onClick={(e)=>{e.preventDefault();setDialogActive(false);}} type="button" id="submit" name="submit" className="btn btn-secondary">Thoát</button>
                 </div>
                 </div>

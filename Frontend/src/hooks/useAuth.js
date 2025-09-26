@@ -28,7 +28,10 @@ export const AuthProvider = ({ children }) => {
 
             const response = await axios.get(`${api_auth}/me`);
             if (response.data.success) {
-                setUser(response.data.user);
+                const userData = response.data.user;
+                setUser(userData);
+                // Cập nhật localStorage với thông tin user mới nhất
+                localStorage.setItem('user', JSON.stringify(userData));
             } else {
                 clearAuth();
             }
@@ -60,6 +63,8 @@ export const AuthProvider = ({ children }) => {
                 tokenInterceptor.setTokens(accessToken, refreshToken);
                 
                 setUser(userData);
+                // Cập nhật localStorage với thông tin user mới
+                localStorage.setItem('user', JSON.stringify(userData));
                 return { success: true, data: userData };
             } else {
                 return { success: false, message: response.data.message };

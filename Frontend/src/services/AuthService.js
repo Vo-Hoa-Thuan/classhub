@@ -92,6 +92,9 @@ class AuthService {
         this.setTokens(accessToken, refreshToken);
         this.setUser(user);
         
+        // Clear admin redirect flag when logging in
+        sessionStorage.removeItem('adminRedirected');
+        
         const result = {
           success: true,
           user,
@@ -214,6 +217,8 @@ class AuthService {
     this.refreshToken = null;
     this.user = null;
     clearAuthData();
+    // Clear admin redirect flag when logging out
+    sessionStorage.removeItem('adminRedirected');
   }
 
   // Check if user is authenticated
