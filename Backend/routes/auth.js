@@ -114,7 +114,7 @@ router.post('/reset-password', async (req, res) => {
     const { email } = await mailController.verifyResetToken(token);
     
     // Cập nhật mật khẩu
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcryptjs');
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     
     await require('../models/User').findOneAndUpdate(
