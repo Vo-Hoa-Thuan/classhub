@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require('jsonwebtoken')
 
 const userControllers = {
-    getUser: async(req,res) => {
+    getUser: async(req,res,next) => {
         try {
             const user = await User.findById(req.params.id).select("-password");
             if (!user) {
@@ -94,15 +94,16 @@ const userControllers = {
 
             // Remove confirmPassword from update data
             delete updateData.confirmPassword;
-
-            await User.findByIdAndUpdate(req.params.id, updateData, { 
+            
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { 
                 new: true,
                 runValidators: true 
-            });
+            }).select("-password");
 
             res.status(200).json({
                 success: true,
-                message: "User updated successfully"
+                message: "User updated successfully",
+                data: updatedUser
             });
         } catch (error) {
             next(error);

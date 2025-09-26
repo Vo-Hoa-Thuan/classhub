@@ -6,7 +6,7 @@ import authService from '../../../../services/AuthService';
 
 function Header({activeSideBar,setActiveSideBar}) {
     const navigate = useNavigate();
-    const [user,setUser] = useState(()=>{
+    const [user] = useState(()=>{
         return authService.getCurrentUser() || {};
     });
     const [showMenuProfile,setMenuProfile] = useState(false);
@@ -53,14 +53,15 @@ function Header({activeSideBar,setActiveSideBar}) {
                     <div className="navbar-nav align-items-center ms-auto">
                         
                         <div className="nav-item">
-                            <a href="#" className="nav-link" onClick={handleMenuProfile}>
+                            <button className="nav-link" onClick={handleMenuProfile} style={{background: 'none', border: 'none', cursor: 'pointer'}}>
                                 <img className="rounded-circle me-lg-2" src={user && user.image} alt={user && user.fullname} style={{width: '40px', height: '40px'}}/>
                                 <span className="d-none d-lg-inline-flex">{user && user.fullname}<i className='bx bx-chevron-down'></i></span>
-                            </a>
+                            </button>
                             <div className={`dropdown-setting ${showMenuProfile ? 'show-dropsetting' :''}`}>
-                                <a href="#profile" onClick={handleActiveDialogEdit} className="setting-item"><i className='bx bxs-user'></i>My Profile</a>
-                                <a href="#setting" className="setting-item"><i className='bx bx-cog'></i>Settings</a>
-                                <a href="#logout" onClick={handleLogOut} className="setting-item"><i className='bx bxs-log-in'></i>Log Out</a>
+                                <button onClick={handleActiveDialogEdit} className="setting-item"><i className='bx bxs-user'></i>My Profile</button>
+                                <button onClick={() => { setMenuProfile(false); navigate('/'); }} className="setting-item"><i className='bx bx-home'></i>Về trang chính</button>
+                                <button className="setting-item"><i className='bx bx-cog'></i>Settings</button>
+                                <button onClick={handleLogOut} className="setting-item"><i className='bx bxs-log-in'></i>Log Out</button>
                             </div>
                         </div>
                         

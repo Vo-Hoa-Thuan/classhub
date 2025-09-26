@@ -7,7 +7,7 @@ import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { api} from "../../../api";
 import DialogEditProfile from "../../dialogs/dialogeditprofile/DialogEditProfile";
-import authService from "../../../services/AuthService";
+import { useAuth } from "../../../hooks/useAuth";
 
 function ProfilePage() {
   const navigate = useNavigate()
@@ -25,7 +25,7 @@ function ProfilePage() {
   const headers = useMemo(() => ({
     Authorization: `Bearer ${token}`,
   }), [token]);
-  const user = authService.getCurrentUser();
+  const { user, logout } = useAuth();
   
   // Nếu không có ID trong URL, redirect đến profile của user hiện tại
   useEffect(() => {
@@ -77,16 +77,12 @@ function ProfilePage() {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await authService.logout();
-      authService.stopTokenExpiryTimer();
+      await logout();
       localStorage.removeItem('order');
       localStorage.removeItem('export_order');
       navigate('/');
     } catch (error) {
       console.error('Logout error:', error);
-      authService.clearTokens();
-      authService.clearUser();
-      authService.stopTokenExpiryTimer();
       localStorage.removeItem('order');
       localStorage.removeItem('export_order');
       navigate('/');

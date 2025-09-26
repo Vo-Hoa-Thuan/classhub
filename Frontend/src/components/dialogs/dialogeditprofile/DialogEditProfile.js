@@ -15,6 +15,7 @@ function DialogEditProfile({dialogActive,id,setDialogActive}) {
     const [user,setUser] = useState();
     const [imageUrl,setImageUrl] = useState();
     const [selectedImage,setSelectedImage] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
     const [token,setToken] = useState(() => {
         const data = localStorage.getItem('accessToken');
         return data ? data : '';
@@ -32,6 +33,8 @@ function DialogEditProfile({dialogActive,id,setDialogActive}) {
                         if (userData) {
                             setUser(userData);
                             setImageUrl(userData.image || '');
+                            // Cập nhật localStorage với thông tin user mới nhất
+                            localStorage.setItem('user', JSON.stringify(userData));
                         } else {
                             console.error('User data is null or undefined');
                         }
@@ -49,48 +52,68 @@ function DialogEditProfile({dialogActive,id,setDialogActive}) {
       },[dialogActive, token, id]);
 
     const uploadImage = async() => {
-        const imagRef = ref(storage,`images/profile-users/${selectedImage.name + v4()}`);
-            await uploadBytes(imagRef, selectedImage)
-            .then(()=>{
-              // Lấy URL của ảnh từ StorageRef
-              getDownloadURL(imagRef)
-              .then((url) => {
-                  console.log(url); // In URL của ảnh ra console
-                  setImageUrl(url);
-                  axios.put(api +`/user/update/${id}`, {image: url}, { headers})
-                  notifySuccess('Đã lưu ảnh lên cloud');
-                  const userLocal = JSON.parse(localStorage.getItem('user'));
-                  userLocal.image = url;
-                  localStorage.setItem('user',JSON.stringify(userLocal));
-              })
-              .catch((err) => {
-                  console.log(err);
-                  notifyError('Đã có lỗi xảy ra!');
-              });
-          })
-          .catch((err)=>{
-            console.log(err);
-            notifyError('Đã có lỗi xảy ra!');
-          })
-      }
+        try {
+            setIsUploading(true);
+            const imagRef = ref(storage,`images/profile-users/${selectedImage.name + v4()}`);
+            await uploadBytes(imagRef, selectedImage);
+            
+            // Lấy URL của ảnh từ StorageRef
+            const url = await getDownloadURL(imagRef);
+            console.log('Image URL:', url);
+            
+            // Cập nhật ảnh trong database
+            const response = await axios.put(api +`/user/update/${id}`, {image: url}, { headers});
+            
+            if (response.data.success) {
+                setImageUrl(url);
+                notifySuccess('Đã lưu ảnh lên cloud');
+                
+                // Cập nhật user state với ảnh mới
+                setUser(prevUser => ({
+                    ...prevUser,
+                    image: url
+                }));
+                
+                // Cập nhật localStorage
+                const userLocal = JSON.parse(localStorage.getItem('user'));
+                if (userLocal) {
+                    userLocal.image = url;
+                    localStorage.setItem('user', JSON.stringify(userLocal));
+                }
+            } else {
+                notifyError('Có lỗi khi cập nhật ảnh trong database');
+            }
+        } catch (err) {
+            console.error('Upload image error:', err);
+            notifyError('Đã có lỗi xảy ra khi upload ảnh!');
+        } finally {
+            setIsUploading(false);
+        }
+    }
     const handleUploadImage = async(e)=>{
         e.preventDefault();
-        //notifySuccess('Đã lưu ảnh thành công!')
+        console.log('handleUploadImage called, selectedImage:', selectedImage);
         if(selectedImage == null) return notifyError('Bạn chưa chọn ảnh mới!');
-        if(imageUrl) {
-        const imageOld = ref(storage,imageUrl);
-        var deleteImageOld; 
-        await deleteObject(imageOld)
-        .then(()=> deleteImageOld=1)
-        .catch((err)=> deleteImageOld=err);
-        console.log(deleteImageOld);
-        if(deleteImageOld === 1){
-            uploadImage();
+        
+        try {
+            // Xóa ảnh cũ nếu có
+            if(imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
+                try {
+                    const imageOld = ref(storage, imageUrl);
+                    await deleteObject(imageOld);
+                    console.log('Old image deleted successfully');
+                } catch (deleteErr) {
+                    console.warn('Could not delete old image:', deleteErr);
+                    // Tiếp tục upload ảnh mới dù không xóa được ảnh cũ
+                }
+            }
+            
+            // Upload ảnh mới
+            await uploadImage();
             setSelectedImage(null);
-        } else console.log(deleteImageOld);
-        } else {
-            uploadImage();
-            setSelectedImage(null);
+        } catch (error) {
+            console.error('Handle upload image error:', error);
+            notifyError('Có lỗi xảy ra khi xử lý ảnh!');
         }
     }
 
@@ -117,7 +140,13 @@ return (
                 onChange={(e)=>setSelectedImage(e.target.files[0])} 
                 accept=".png,.jpg,.jpeg"
                 />
-                <button onClick={handleUploadImage} className="btn btn-primary">Lưu Ảnh</button>
+                <button 
+                    onClick={handleUploadImage} 
+                    className="btn btn-primary"
+                    disabled={isUploading}
+                >
+                    {isUploading ? 'Đang tải lên...' : 'Lưu Ảnh'}
+                </button>
                 </div>
                 </div>
                 </div>

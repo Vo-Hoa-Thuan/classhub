@@ -90,15 +90,45 @@ const loginSchema = Joi.object({
 
 // User update validation
 const updateUserSchema = Joi.object({
-  username: Joi.string()
-    .alphanum()
-    .min(3)
-    .max(30)
+  fullname: Joi.string()
+    .min(2)
+    .max(100)
     .optional()
     .messages({
-      'string.alphanum': 'Username must only contain alphanumeric characters',
-      'string.min': 'Username must be at least 3 characters long',
-      'string.max': 'Username must not exceed 30 characters'
+      'string.min': 'Full name must be at least 2 characters long',
+      'string.max': 'Full name must not exceed 100 characters'
+    }),
+  phone: Joi.string()
+    .pattern(/^[0-9]{9,15}$/)
+    .optional()
+    .messages({
+      'string.pattern.base': 'Phone number must contain only digits and be 9-15 characters long'
+    }),
+  birth: Joi.date()
+    .max('now')
+    .optional()
+    .messages({
+      'date.max': 'Birth date cannot be in the future'
+    }),
+  gender: Joi.string()
+    .valid('Nam', 'Nữ')
+    .optional()
+    .messages({
+      'any.only': 'Gender must be either "Nam" or "Nữ"'
+    }),
+  image: Joi.string()
+    .uri()
+    .optional()
+    .allow('')
+    .messages({
+      'string.uri': 'Image must be a valid URL'
+    }),
+  address: Joi.string()
+    .max(500)
+    .optional()
+    .allow('')
+    .messages({
+      'string.max': 'Address must not exceed 500 characters'
     }),
   email: Joi.string()
     .email()

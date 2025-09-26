@@ -135,6 +135,15 @@ function Header({searchOff,themeContext}) {
                         <i className='bx bx-user'></i>
                         <span>Hồ sơ của tôi</span>
                       </NavLink>
+                      
+                      {/* Admin Dashboard link for admin/blogger/productManager */}
+                      {(user.admin === true || user.role === 'blogger' || user.role === 'productManager') && (
+                        <NavLink to="/admin/dashboard" onClick={() => setShowUserMenu(false)}>
+                          <i className='bx bx-cog'></i>
+                          <span>Admin Dashboard</span>
+                        </NavLink>
+                      )}
+                      
                       <button onClick={() => { setShowSessionManagement(true); setShowUserMenu(false); }}>
                         <i className='bx bx-devices'></i>
                         <span>Quản lý Sessions</span>
