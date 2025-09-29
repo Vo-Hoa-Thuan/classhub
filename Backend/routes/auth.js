@@ -11,6 +11,12 @@ router.post("/register", validateRegister, authControllers.registerUser);
 //Login
 router.post("/login", validateLogin, authControllers.loginUser);
 
+//Verify Email
+router.get("/verify-email/:token", authControllers.verifyEmail);
+
+//Resend Verification Email
+router.post("/resend-verification", authControllers.resendVerificationEmail);
+
 //Check Password
 router.post("/check-password",authControllers.checkPassword);
 

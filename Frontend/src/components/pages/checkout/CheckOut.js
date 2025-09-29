@@ -131,30 +131,42 @@ function CheckOut() {
             notifyError("Thông tin không được để trống. Xem lại ngay!");
         } else{
             if(paymentId!== '' & paymentId!== null){
-                await axios.post(api +'/order', order, { headers })
-                .then(response => {
-                    console.log(response.data);
-                    localStorage.setItem("order",JSON.stringify(response.data));
-                    notifySuccess("Đang chuyển hướng tới trang thanh toán!");
-                    updateProduct();
-                    //Tạo url thanh toán
-                        axios.post(api +'/order/create_payment_url', 
-                        {userId: order.userId, total: parseInt(order.total)}, 
-                        { headers })
-                        .then(response => {
-                            console.log(response.data);
-                            clearCart();
-                            window.location.href = response.data;
-                        })
-                        .catch(error => {
-                        console.log(error);
-                        notifyError("Đã có lỗi xảy ra. Hãy thử lại!")
-                        });
-                })
-                .catch(error => {
-                console.log(error);
-                notifyError("Đã có lỗi xảy ra. Hãy thử lại!")
-                });
+            await axios.post(api +'/order', order, { headers })
+            .then(response => {
+                console.log(response.data);
+                localStorage.setItem("order",JSON.stringify(response.data));
+                notifySuccess("Đang chuyển hướng tới trang thanh toán!");
+                updateProduct();
+                //Tạo url thanh toán
+                    axios.post(api +'/order/create_payment_url', 
+                    {userId: order.userId, total: parseInt(order.total)}, 
+                    { headers })
+                    .then(response => {
+                        console.log(response.data);
+                        clearCart();
+                        window.location.href = response.data;
+                    })
+                    .catch(error => {
+                    console.log(error);
+                    notifyError("Đã có lỗi xảy ra. Hãy thử lại!")
+                    });
+            })
+            .catch(error => {
+            console.log(error);
+            // Xử lý lỗi chi tiết từ Backend
+            if (error.response && error.response.data) {
+                const errorData = error.response.data;
+                if (errorData.error === "Không thể mua số lượng vượt quá kho") {
+                    notifyError(errorData.message || "Không đủ hàng trong kho!");
+                } else if (errorData.error === "Sản phẩm không tồn tại") {
+                    notifyError("Một số sản phẩm không còn tồn tại. Vui lòng làm mới trang!");
+                } else {
+                    notifyError(errorData.message || "Đã có lỗi xảy ra. Hãy thử lại!");
+                }
+            } else {
+                notifyError("Đã có lỗi xảy ra. Hãy thử lại!");
+            }
+            });
             }
         }
     }
@@ -179,7 +191,19 @@ function CheckOut() {
             })
             .catch(error => {
             console.log(error);
-            notifyError("Đã có lỗi xảy ra. Hãy thử lại!")
+            // Xử lý lỗi chi tiết từ Backend
+            if (error.response && error.response.data) {
+                const errorData = error.response.data;
+                if (errorData.error === "Không thể mua số lượng vượt quá kho") {
+                    notifyError(errorData.message || "Không đủ hàng trong kho!");
+                } else if (errorData.error === "Sản phẩm không tồn tại") {
+                    notifyError("Một số sản phẩm không còn tồn tại. Vui lòng làm mới trang!");
+                } else {
+                    notifyError(errorData.message || "Đã có lỗi xảy ra. Hãy thử lại!");
+                }
+            } else {
+                notifyError("Đã có lỗi xảy ra. Hãy thử lại!");
+            }
             });
         }
     }

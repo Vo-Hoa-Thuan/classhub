@@ -108,6 +108,17 @@ class AuthService {
       throw new Error(response.data.message || 'Login failed');
     } catch (error) {
       console.error('Login error:', error);
+      console.error('Error response:', error.response?.data);
+      
+      // Handle email verification error specifically
+      if (error.response?.data?.code === 'EMAIL_NOT_VERIFIED') {
+        return {
+          success: false,
+          error: error.response.data.message,
+          code: error.response.data.code
+        };
+      }
+      
       return {
         success: false,
         error: error.response?.data?.message || 'Login failed'
@@ -369,6 +380,30 @@ class AuthService {
       throw new Error(response.data.message || 'Đặt lại mật khẩu thất bại');
     } catch (error) {
       console.error('Reset password error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại'
+      };
+    }
+  }
+
+  // Resend Verification Email - Gửi lại email xác nhận
+  async resendVerificationEmail(email) {
+    try {
+      const response = await axios.post(`${api_auth}/resend-verification`, {
+        email
+      });
+
+      if (response.data.success) {
+        return {
+          success: true,
+          message: response.data.message
+        };
+      }
+      
+      throw new Error(response.data.message || 'Gửi lại email xác nhận thất bại');
+    } catch (error) {
+      console.error('Resend verification error:', error);
       return {
         success: false,
         error: error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại'

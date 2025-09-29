@@ -126,7 +126,19 @@ console.log(orderApp);
       })
       .catch(error => {
       console.log(error);
-      console.log("Đã có lỗi xảy ra. Hãy thử lại!")
+      // Xử lý lỗi chi tiết từ Backend
+      if (error.response && error.response.data) {
+          const errorData = error.response.data;
+          if (errorData.error === "Không thể mua số lượng vượt quá kho") {
+              notifyError(errorData.message || "Không đủ hàng trong kho!");
+          } else if (errorData.error === "Sản phẩm không tồn tại") {
+              notifyError("Sản phẩm không còn tồn tại. Vui lòng làm mới trang!");
+          } else {
+              notifyError(errorData.message || "Đã có lỗi xảy ra. Hãy thử lại!");
+          }
+      } else {
+          notifyError("Đã có lỗi xảy ra. Hãy thử lại!");
+      }
       });
 }
 const handleDownloadAgain = () =>{

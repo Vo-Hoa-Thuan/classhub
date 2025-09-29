@@ -43,6 +43,10 @@ const userSChema = new mongoose.Schema({
         require: true,
         maxlength: 500
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     // Role system - chỉ một role được active
     role: {
         type: String,

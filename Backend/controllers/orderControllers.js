@@ -1,4 +1,5 @@
 const Order = require('../models/Order')
+const Product = require('../models/Product')
 // const User = require('../models/User')
 // const config = require('config');
 // const request = require('request');
@@ -10,8 +11,46 @@ const jwt = require('jsonwebtoken');
 const orderControllers = {
     addOrder: async (req,res) => {
        try {
-        const newOreder = new Order(req.body);
-        const save = await newOreder.save();
+        // Kiểm tra số lượng sản phẩm trong kho trước khi tạo đơn hàng
+        const { products } = req.body;
+        
+        for (const item of products) {
+            const product = await Product.findById(item.product);
+            if (!product) {
+                return res.status(400).json({
+                    error: "Sản phẩm không tồn tại",
+                    productId: item.product
+                });
+            }
+            
+            if (product.quantity < item.quantity) {
+                return res.status(400).json({
+                    error: "Không thể mua số lượng vượt quá kho",
+                    message: `Sản phẩm "${product.name}" chỉ còn ${product.quantity} sản phẩm trong kho, bạn đang muốn mua ${item.quantity} sản phẩm`,
+                    productName: product.name,
+                    availableQuantity: product.quantity,
+                    requestedQuantity: item.quantity
+                });
+            }
+        }
+        
+        // Tạo đơn hàng nếu tất cả sản phẩm đều có đủ số lượng
+        const newOrder = new Order(req.body);
+        const save = await newOrder.save();
+        
+        // Cập nhật số lượng sản phẩm trong kho sau khi tạo đơn hàng thành công
+        for (const item of products) {
+            await Product.findByIdAndUpdate(
+                item.product,
+                { 
+                    $inc: { 
+                        quantity: -item.quantity,
+                        purchased: +item.quantity 
+                    } 
+                }
+            );
+        }
+        
         res.status(200).json(save);
        } catch (error) {
         res.status(500).json(error);

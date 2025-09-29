@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { api_auth } from '../../../api';
 import './SignUp.scss'
 import Toast,{notifySuccess,notifyError} from "../../toast/Toast"; 
 
 function SignUp() {
-  const navigate = useNavigate()
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
   const [confirmPassword,setConfirmPassword] = useState("")
@@ -14,7 +13,6 @@ function SignUp() {
   const [phone,setPhone] = useState("")
   const [birth,setBirth] = useState("")
   const [gender,setGender] = useState("")
-  const [error] = useState("")
   const [locationErr,setLocationErr] = useState("")
 
   //Sate để nhận địa chỉ:
@@ -93,35 +91,136 @@ function SignUp() {
   }
   const handleSignup = (e)=>{
     e.preventDefault();
+    
+    // Validation trước khi gửi request
     if(!email ||!password ||!confirmPassword ||!fullname ||!phone ||!birth ||!gender ||!city ||!district ||!commune ||!detailAddress) {
-      notifyError('Không được để trống thông tin!')
-    } else if(password !== confirmPassword) {
-      notifyError('Mật khẩu xác nhận không khớp!')
-    } else{
-      axios.post(api_auth + "/register", newUser)
-      .then((response) => {
-        // handle successful response
-        console.log(response.data);
-        notifySuccess('Đăng ký mới thành công!');
-        setTimeout(function() {
-          navigate('/login');
-        }, 2000);
-        
-      })
-      .catch((error) => {
-        // handle error response
-        console.log(error.response.data);
-        if (error.response.data.code === 11000 && error.response.data.keyPattern.email === 1) {
-          notifyError("Email đã được đăng ký, vui lòng sử dụng email khác!")
-          setLocationErr("email")
-        }
-        if (error.response.data.code === 11000 && error.response.data.keyPattern.phone === 1) {
-          notifyError("Số điện thoại đã được đăng ký, vui lòng sử dụng số khác!")
-          setLocationErr("phone")
-        }
-      });
+      notifyError('Vui lòng điền đầy đủ thông tin!')
+      return;
     }
     
+    if(password !== confirmPassword) {
+      notifyError('Mật khẩu xác nhận không khớp!')
+      return;
+    }
+    
+    // Kiểm tra độ dài mật khẩu
+    if(password.length < 8) {
+      notifyError('Mật khẩu phải có ít nhất 8 ký tự!')
+      return;
+    }
+    
+    // Kiểm tra độ phức tạp mật khẩu
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if(!passwordRegex.test(password)) {
+      notifyError('Mật khẩu phải chứa ít nhất 1 chữ thường, 1 chữ hoa, 1 số và 1 ký tự đặc biệt!')
+      return;
+    }
+    
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email)) {
+      notifyError('Vui lòng nhập địa chỉ email hợp lệ!')
+      return;
+    }
+    
+    // Kiểm tra định dạng số điện thoại
+    const phoneRegex = /^[0-9]{9,15}$/;
+    if(!phoneRegex.test(phone)) {
+      notifyError('Số điện thoại phải chứa 9-15 chữ số!')
+      return;
+    }
+    
+    // Kiểm tra tên đầy đủ
+    if(fullname.length < 2) {
+      notifyError('Họ tên phải có ít nhất 2 ký tự!')
+      return;
+    }
+    
+    // Kiểm tra địa chỉ
+    if(detailAddress.length < 10) {
+      notifyError('Địa chỉ chi tiết phải có ít nhất 10 ký tự!')
+      return;
+    }
+    
+    // Gửi request đăng ký
+    axios.post(api_auth + "/register", newUser)
+    .then((response) => {
+      console.log('Registration success:', response.data);
+      notifySuccess('Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản. Bạn có 15 phút để hoàn tất xác nhận.');
+      
+      // Reset form sau khi đăng ký thành công
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setFullName('');
+      setPhone('');
+      setBirth('');
+      setGender('');
+      setDetailAddress('');
+      setCommune('');
+      setDistrict('');
+      setCity('');
+      setLocationErr('');
+    })
+    .catch((error) => {
+      console.error('Registration error:', error);
+      
+      // Xử lý các loại lỗi khác nhau
+      if (error.response) {
+        // Server trả về lỗi
+        const errorData = error.response.data;
+        const statusCode = error.response.status;
+        
+        if (statusCode === 400) {
+          // Lỗi validation hoặc business logic
+          if (errorData.message) {
+            // Xử lý các thông báo lỗi cụ thể từ server
+            if (errorData.message.includes('Email already exists')) {
+              notifyError('Email đã được đăng ký, vui lòng sử dụng email khác!');
+              setLocationErr('email');
+            } else if (errorData.message.includes('Phone already exists')) {
+              notifyError('Số điện thoại đã được đăng ký, vui lòng sử dụng số khác!');
+              setLocationErr('phone');
+            } else if (errorData.message.includes('Email verification already sent')) {
+              notifyError('Email xác thực đã được gửi. Vui lòng kiểm tra email hoặc đợi 15 phút để gửi lại!');
+            } else if (errorData.message.includes('Password must contain')) {
+              notifyError('Mật khẩu phải chứa ít nhất 1 chữ thường, 1 chữ hoa, 1 số và 1 ký tự đặc biệt!');
+            } else if (errorData.message.includes('Please provide a valid email')) {
+              notifyError('Vui lòng nhập địa chỉ email hợp lệ!');
+              setLocationErr('email');
+            } else if (errorData.message.includes('Phone number must contain only digits')) {
+              notifyError('Số điện thoại chỉ được chứa chữ số và có 9-15 ký tự!');
+              setLocationErr('phone');
+            } else if (errorData.message.includes('Full name must be at least')) {
+              notifyError('Họ tên phải có ít nhất 2 ký tự!');
+              setLocationErr('fullname');
+            } else if (errorData.message.includes('Address must be at least')) {
+              notifyError('Địa chỉ phải có ít nhất 10 ký tự!');
+              setLocationErr('address');
+            } else if (errorData.message.includes('Gender must be either')) {
+              notifyError('Giới tính phải là "Nam" hoặc "Nữ"!');
+              setLocationErr('gender');
+            } else if (errorData.message.includes('Birth date cannot be in the future')) {
+              notifyError('Ngày sinh không thể là ngày trong tương lai!');
+              setLocationErr('birth');
+            } else {
+              // Thông báo lỗi mặc định từ server
+              notifyError(errorData.message || 'Có lỗi xảy ra khi đăng ký!');
+            }
+          }
+        } else if (statusCode === 500) {
+          notifyError('Lỗi máy chủ! Vui lòng thử lại sau!');
+        } else {
+          notifyError('Có lỗi xảy ra khi đăng ký!');
+        }
+      } else if (error.request) {
+        // Không nhận được phản hồi từ server
+        notifyError('Không thể kết nối đến máy chủ! Vui lòng kiểm tra kết nối mạng!');
+      } else {
+        // Lỗi khác
+        notifyError('Có lỗi xảy ra! Vui lòng thử lại!');
+      }
+    });
   }
     return ( 
 <div className="signup-container">
@@ -196,11 +295,14 @@ function SignUp() {
                       <input 
                         type="text" 
                         id="fullname" 
-                        className="form-input" 
+                        className={`form-input ${locationErr === 'fullname' ? 'error' : ''}`}
                         placeholder="Nhập họ và tên của bạn"
+                        value={fullname}
                         onChange={(e)=>setFullName(e.target.value)}
+                        onClick={()=>setLocationErr("")}
                         required
                       />
+                      {locationErr === 'fullname' && <div className="error-message">Họ tên phải có ít nhất 2 ký tự!</div>}
                     </div>
                     <div className="form-group">
                       <label htmlFor="email">
@@ -210,13 +312,14 @@ function SignUp() {
                       <input 
                         type="email" 
                         id="email" 
-                        className="form-input"
+                        className={`form-input ${locationErr === 'email' ? 'error' : ''}`}
                         placeholder="example@email.com"
+                        value={email}
                         onChange={(e)=>setEmail(e.target.value)}
                         onClick={()=>setLocationErr("")}
                         required
                       />
-                      { locationErr === "email" && <span className='error-text'>{error}</span> }
+                      {locationErr === 'email' && <div className="error-message">Email đã được đăng ký hoặc không hợp lệ!</div>}
                     </div>
                     <div className="form-group">
                       <label htmlFor="phone">
@@ -226,14 +329,14 @@ function SignUp() {
                       <input 
                         type="tel" 
                         id="phone" 
-                        className="form-input" 
+                        className={`form-input ${locationErr === 'phone' ? 'error' : ''}`}
                         placeholder="0123456789"
+                        value={phone}
                         onChange={(e)=>setPhone(e.target.value)}
                         onClick={()=>setLocationErr("")}
                         required
                       />
-                      {phone?.length > 0 && phone.length < 10 && <span className='error-text'>Số điện thoại phải có 10 số!</span>}
-                      { locationErr === "phone" && <span className='error-text'>{error}</span> }
+                      {locationErr === 'phone' && <div className="error-message">Số điện thoại đã được đăng ký hoặc không hợp lệ!</div>}
                     </div>
                   </div>
 
@@ -347,13 +450,18 @@ function SignUp() {
                       <input 
                         type="password" 
                         id="password" 
-                        className="form-input" 
+                        className={`form-input ${locationErr === 'password' ? 'error' : ''}`}
                         placeholder="Tối thiểu 8 ký tự"
+                        value={password}
                         onChange={(e)=>setPassword(e.target.value)}
+                        onClick={()=>setLocationErr("")}
                         required
                       />
                       {password.length > 0 && password.length < 8 && 
-                        <span className='error-text'>Mật khẩu phải có ít nhất 8 ký tự!</span>
+                        <div className="error-message">Mật khẩu phải có ít nhất 8 ký tự!</div>
+                      }
+                      {password.length >= 8 && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(password) && 
+                        <div className="error-message">Mật khẩu phải chứa ít nhất 1 chữ thường, 1 chữ hoa, 1 số và 1 ký tự đặc biệt!</div>
                       }
                     </div>
                     <div className="form-group">
@@ -364,13 +472,15 @@ function SignUp() {
                       <input 
                         type="password" 
                         id="confirmPassword" 
-                        className="form-input" 
+                        className={`form-input ${locationErr === 'confirmPassword' ? 'error' : ''}`}
                         placeholder="Nhập lại mật khẩu"
+                        value={confirmPassword}
                         onChange={(e)=>setConfirmPassword(e.target.value)}
+                        onClick={()=>setLocationErr("")}
                         required
                       />
                       {confirmPassword !== password && confirmPassword.length > 0 && 
-                        <span className='error-text'>Mật khẩu nhập lại chưa trùng khớp!</span>
+                        <div className="error-message">Mật khẩu nhập lại chưa trùng khớp!</div>
                       }
                     </div>
                   </div>

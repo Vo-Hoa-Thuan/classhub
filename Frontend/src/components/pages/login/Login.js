@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Images from '../../../assets/img/Image';
 import './Login.scss'
 import authService from '../../../services/AuthService';
+import { toast } from 'react-toastify';
 
 function Login() {
   const [email,setEmail] = useState("");
@@ -10,12 +11,17 @@ function Login() {
   const [checkEmail,setCheckEmail] = useState(true);
   const [checkPassword,setCheckPassword] = useState(true);
   const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if(email === '' || password === ''){
       alert('Thông tin không được để trống!')
       return;
     }
+
+    // Clear previous messages
+    setCheckEmail(true);
+    setCheckPassword(true);
 
     try {
       const result = await authService.login(email, password);
@@ -43,21 +49,41 @@ function Login() {
         } else {
           console.log('Regular user, redirecting to home page');
           navigate('/'); 
-          window.location.reload();
         }
       } else {
         // Handle login errors
-        if (result.error.includes('password') || result.error.includes('mật khẩu')) {
+        if (result.code === 'EMAIL_NOT_VERIFIED') {
+          toast.warning(result.error, {
+            autoClose: 10000,
+            closeButton: true,
+            hideProgressBar: false,
+          });
+        } else if (result.error.includes('password') || result.error.includes('mật khẩu')) {
           setCheckPassword(false);
         } else if (result.error.includes('email') || result.error.includes('Email')) {
           setCheckEmail(false);
+        } else if (result.error.includes('verify') || result.error.includes('xác nhận')) {
+          toast.warning(result.error, {
+            autoClose: 10000,
+            closeButton: true,
+            hideProgressBar: false,
+          });
         } else {
-          alert(result.error);
+          toast.error(result.error);
         }
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Đã xảy ra lỗi khi đăng nhập');
+      // Check if it's an email verification error
+      if (error.response?.data?.code === 'EMAIL_NOT_VERIFIED') {
+        toast.warning(error.response.data.message, {
+          autoClose: 10000,
+          closeButton: true,
+          hideProgressBar: false,
+        });
+      } else {
+        toast.error('Đã xảy ra lỗi khi đăng nhập');
+      }
     }
   }
     return ( 

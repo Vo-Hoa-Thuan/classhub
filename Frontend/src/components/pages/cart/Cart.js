@@ -16,13 +16,13 @@ function Cart() {
     return cartData ? cartData : [];
   });
   const [total, setTotal] = useState('');
-  const idUser = JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user'))._id;
+  
   useEffect(()=>{
     const user = localStorage.getItem('user');
     if(!user){
       navigate('/404-page');
     }
-  },[]);
+  },[navigate]);
   
   useEffect(() => {
     const newTotal = cart.reduce(
@@ -60,6 +60,35 @@ function Cart() {
     if(updatedCart[productIndex].quantity <= 1){
       updatedCart[productIndex].quantity = 1;
     } else updatedCart[productIndex].quantity -= 1;
+    setCart(updatedCart);
+    setCartLocalStorage(updatedCart);
+  }
+
+  const handleQuantityInputChange = async (id, newQuantity) => {
+    const productIndex = cart.findIndex((item) => item.id === id);
+    let maxCountProduct = 0;
+    
+    // Lấy số lượng tối đa từ database
+    await axios.get(api+`/product/${id}`)
+    .then((res)=>{
+      maxCountProduct = res.data.quantity;
+    })
+    .catch((err)=>{
+      notifyError('Đã có lỗi xảy ra',err);
+    });
+
+    const updatedCart = [...cart];
+    
+    // Validation: số lượng phải >= 1 và <= số lượng trong kho
+    if (newQuantity < 1) {
+      updatedCart[productIndex].quantity = 1;
+    } else if (newQuantity > maxCountProduct) {
+      updatedCart[productIndex].quantity = maxCountProduct;
+      notifyError(`Sản phẩm chỉ còn ${maxCountProduct} sản phẩm trong kho!`);
+    } else {
+      updatedCart[productIndex].quantity = parseInt(newQuantity);
+    }
+    
     setCart(updatedCart);
     setCartLocalStorage(updatedCart);
   }
@@ -125,7 +154,19 @@ function Cart() {
                         </div> */}
                         <div className="quantity-input-cart">
                           <a href='#down' onClick={()=>handleQuantityChangeDown(product.id)} className='down-btn-input'>-</a>
-                          <input className="form-control quantity-input" min="0" name="quantity" value={product.quantity} type="number" readOnly/>
+                          <input 
+                            className="form-control quantity-input" 
+                            min="1" 
+                            name="quantity" 
+                            value={product.quantity} 
+                            type="number" 
+                            onChange={(e) => handleQuantityInputChange(product.id, e.target.value)}
+                            onBlur={(e) => {
+                              if (e.target.value === '' || e.target.value < 1) {
+                                handleQuantityInputChange(product.id, 1);
+                              }
+                            }}
+                          />
                           <a href='#up' onClick={()=>handleQuantityChangeUp(product.id)} className='up-btn-input'>+</a>
                         </div>
                       </div>

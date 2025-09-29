@@ -8,6 +8,7 @@ import Login from '../components/pages/login/Login'
 import SignUp from '../components/pages/signup/SignUp'
 import ForgotPassword from '../components/pages/forgot-password/ForgotPassword'
 import ResetPassword from '../components/pages/reset-password/ResetPassword'
+import VerifyEmail from '../components/pages/verify-email/VerifyEmail'
 import Cart from '../components/pages/cart/Cart'
 import SearchResult from '../components/pages/searchresult/SearchResult'
 import Topic from '../admin/components/pages/topic/Topic'
@@ -93,6 +94,7 @@ const publicRouter = [
 {path:'/sign-up',component:SignUp},
 {path:'/forgot-password',component:ForgotPassword},
 {path:'/reset-password/:token',component:ResetPassword},
+{path:'/verify-email/:token',component:VerifyEmail},
 {path:'/confirm-payment',component:ConfirmPayment},
 {path:'/confirm-app-payment',component:ConfirmAppDownload},
 {path:'/user/detail-order/:id',component:DetailOrderUser},

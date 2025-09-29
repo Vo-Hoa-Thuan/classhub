@@ -7,7 +7,7 @@ const crypto = require('crypto');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Tạo HTML template cho email reset password
-const createResetPasswordEmail = ( resetUrl) => {
+const createResetPasswordEmail = (resetUrl) => {
   return `
     <!DOCTYPE html>
     <html lang="vi">

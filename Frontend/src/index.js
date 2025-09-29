@@ -8,7 +8,6 @@ import { ThemeProvider } from './store/ThemeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
   <ThemeProvider>
   <CartCountProvider>
   <GlobalStyles>
@@ -16,7 +15,6 @@ root.render(
   </GlobalStyles>
   </CartCountProvider>
   </ThemeProvider>
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

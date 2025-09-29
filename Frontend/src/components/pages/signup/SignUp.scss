@@ -322,6 +322,11 @@
       transition: all 0.3s ease;
       background: white;
       
+      &.error {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+      }
+      
       &:focus {
         outline: none;
         border-color: #667eea;
@@ -344,15 +349,23 @@
       padding-right: 40px;
     }
     
-    .error-text {
+    .error-text, .error-message {
       display: block;
       color: #e74c3c;
       font-size: 12px;
       margin-top: 5px;
       font-weight: 500;
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
   }
 }
+
 
 .form-actions {
   text-align: center;

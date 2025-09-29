@@ -4,6 +4,7 @@ import {publicRouter} from './routes/index'
 import { AuthProvider } from './hooks/useAuth'
 import ProtectedRoute from './components/ProtectedRoute'
 import './assets/css/fontawesome.css'
+import Toast from './components/toast/Toast'
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             return <Route key={index} path={route.path} element={<Page/>}/>
           })}
           </Routes>
+          <Toast />
           </div>
         </Router>
       </AuthProvider>

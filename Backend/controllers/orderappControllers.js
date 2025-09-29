@@ -5,8 +5,9 @@ const jwt = require('jsonwebtoken');
 const orderAppControllers = {
     addOrderApp: async (req,res) => {
        try {
+        // Tạo đơn hàng cho sản phẩm phi vật lý (không cần kiểm tra tồn kho)
         const newOrderApp = new OrderApp(req.body);
-        const save= await newOrderApp.save();
+        const save = await newOrderApp.save();
         res.status(200).json(save);
        } catch (error) {
         res.status(500).json(error);

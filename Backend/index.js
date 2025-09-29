@@ -31,6 +31,9 @@ const { errorHandler, notFound } = require("./middleware/errorHandler");
 // Import scheduler service
 const SchedulerService = require("./services/schedulerService");
 
+// Import cleanup service
+const cleanupService = require("./services/cleanupService");
+
 const port = 8080;
 dotenv.config();
 const app = express();
@@ -77,7 +80,7 @@ app.use(helmet({
 // Cấu hình CORS an toàn
 app.use(cors({
   origin: [
-    'https://classhub-three.vercel.app',  // Frontend development
+    'http://localhost:3000',  // Frontend development
  // Frontend alternative port
     'https://classhub-three.vercel.app'  // Production domain (thay đổi theo domain thực tế)
   ],
@@ -94,6 +97,8 @@ mongoose.connect(process.env.MONGODB_URL)
     console.log("Connected to MongoDB...");
     // Start scheduler service after DB connection
     SchedulerService.start();
+    // Start cleanup service
+    cleanupService.start();
   })
   .catch((err) => {
     console.error("Error connecting to MongoDB: ", err);
