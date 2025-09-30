@@ -118,7 +118,6 @@ const userSChema = new mongoose.Schema({
         }
     },
     
-    // Legacy fields - giữ để tương thích ngược
     admin:{
         type: Boolean,
         default: false

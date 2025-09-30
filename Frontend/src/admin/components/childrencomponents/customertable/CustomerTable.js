@@ -30,15 +30,43 @@ function CustomerTable() {
             };
             
             console.log('Headers being sent:', headers);
-            console.log('Making API request to:', api+'/user/with-orders');
+            console.log('Making API request to:', api+'/user/with-orders', new Date().toISOString());
             axios.get(api+'/user/with-orders',{headers})
             .then((response)=>{
                 console.log('API Response:', response);
+                console.log('Response data:', response.data);
+                
                 // Lấy danh sách user có đơn hàng
-                const users = response.data.data || response.data;
-                console.log('Users with orders data:', users);
-                setCustomers(users);
-                setRecords(users);
+                let users = [];
+                if (response.data && response.data.data) {
+                    users = response.data.data;
+                } else if (Array.isArray(response.data)) {
+                    users = response.data;
+                } else {
+                    console.log('Invalid response structure:', response.data);
+                    users = [];
+                }
+                
+                console.log('Processed users data:', users);
+                
+                // Loại bỏ dữ liệu trùng lặp dựa trên _id ngay từ API response
+                const uniqueUsers = users.filter((user, index, self) => 
+                    index === self.findIndex(u => u._id === user._id)
+                );
+                
+                console.log('Original users count:', users.length);
+                console.log('Unique users count:', uniqueUsers.length);
+                console.log('Unique users data:', uniqueUsers);
+                
+                // Kiểm tra nếu users là array và có dữ liệu
+                if (Array.isArray(uniqueUsers) && uniqueUsers.length > 0) {
+                    setCustomers(uniqueUsers);
+                    setRecords(uniqueUsers);
+                } else {
+                    console.log('No users found or invalid data structure');
+                    setCustomers([]);
+                    setRecords([]);
+                }
                 setLoading(false);
             })
             .catch((err)=>{
@@ -53,6 +81,18 @@ function CustomerTable() {
             setLoading(false);
         }
     },[token]);
+
+    useEffect(() => {
+        console.log('Customers updated:', customers);
+        
+        // Loại bỏ dữ liệu trùng lặp dựa trên _id
+        const uniqueCustomers = customers.filter((customer, index, self) => 
+            index === self.findIndex(c => c._id === customer._id)
+        );
+        
+        console.log('Unique customers after deduplication:', uniqueCustomers);
+        setRecords(uniqueCustomers);
+    }, [customers]);
 
     const columns = [
         {
@@ -104,9 +144,15 @@ function CustomerTable() {
       ];
     
     const handleFilter = (e) =>{
+        const searchTerm = e.target.value.toLowerCase();
+        console.log('Filtering with term:', searchTerm);
+        console.log('Current customers:', customers);
+        
         const newData = customers.filter(row =>{
-          return row.email.toLowerCase().includes(e.target.value.toLowerCase());
+          return row.email && row.email.toLowerCase().includes(searchTerm);
         })
+        
+        console.log('Filtered data:', newData);
         setRecords(newData);
       }
 
