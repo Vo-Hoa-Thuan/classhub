@@ -5,4 +5,4 @@
   "vnp_Api":"https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
   "vnp_ReturnUrl": "https://classhub-three.vercel.app/confirm-payment",
   "vnp_ReturnAppUrl": "https://classhub-three.vercel.app/confirm-app-payment"
-} 
+}
