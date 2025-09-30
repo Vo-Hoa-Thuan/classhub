@@ -20,7 +20,6 @@ const authControllers = {
             permissions: user.permissions,
             // Legacy fields for backward compatibility
             admin: user.admin,
-            blogger: user.blogger,
             type: 'access'
         },
         process.env.JWT_ACCESS_KEY || 'HJAWJBFUAHWUFHUANWDUNWAUXCNAWHJAWJBFUAHWUFHUANWDUNWAUXCNAW',
@@ -157,6 +156,12 @@ const authControllers = {
             
             if (user && validPassword) {
                 console.log('🎫 [LOGIN] Creating access token...');
+                
+                // Gán permissions dựa trên role trước khi tạo token
+                console.log('🔐 [LOGIN] Assigning permissions based on role:', user.role);
+                rolePermissionService.assignPermissionsByRole(user, user.role);
+                await user.save(); // Lưu permissions vào database
+                
                 const accessToken = authControllers.createAccessToken(user);
                 
                 // Create refresh token

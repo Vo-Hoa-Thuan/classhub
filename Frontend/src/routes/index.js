@@ -1,6 +1,8 @@
 import Home from '../components/pages/home/HomePage'
 import ProductsPage from '../components/pages/products/ProductsPage'
 import BlogsPage from '../components/pages/blog/BlogsPage'
+import CreateBlogPage from '../components/pages/blog/CreateBlogPage'
+import MyBlogsPage from '../components/pages/blog/MyBlogsPage'
 import ProfilePage from '../components/pages/profile/ProfilePage'
 import ProductDetailsPage from '../components/pages/productdetail/ProductDetailsPage'
 import BlogDetailPage from '../components/pages/blogdetail/BlogDetailPage'
@@ -22,13 +24,13 @@ import Service from '../components/pages/service/Service'
 import BlogManagement from '../components/pages/blogmanagement/BlogManagement'
 import CreateBlog from '../components/pages/blogmanagement/CreateBlog'
 import UpdateBlogBlogger from '../components/pages/blogmanagement/UpdateBlog'
-import ProtectedRoute from '../components/ProtectedRoute'
 
 //Error
 import ErrorPage from '../components/pages/404/ErrorPage'
 
 //Admin
 import Dashboard from '../admin/components/pages/dashboard/Dashboard'
+import Analytics from '../admin/components/pages/analytics/Analytics'
 import Banner from '../admin/components/pages/banner/Banner'
 import Product from '../admin/components/pages/product/Product'
 import Blog from '../admin/components/pages/blog/Blog'
@@ -75,7 +77,6 @@ import ChangeRole from '../admin/components/pages/role/ChangeRole'
 import PermissionPage from '../admin/components/pages/demo/PermissionPage'
 
 //SESSION MANAGEMENT
-import SessionManager from '../components/SessionManager'
 
 
 const publicRouter = [
@@ -84,6 +85,8 @@ const publicRouter = [
 {path:'/',component:Home},
 {path:'/products',component:ProductsPage},
 {path:'/blogs',component:BlogsPage},
+{path:'/blog/create',component:CreateBlogPage},
+{path:'/blog/my-blogs',component:MyBlogsPage},
 {path:'/cart',component:Cart},
 {path:'/check-out',component:CheckOut},
 {path:'/order/:id',component:Order},
@@ -111,9 +114,11 @@ const publicRouter = [
 
 //ROUTE ADMIN
 {path:'/admin/dashboard',component:Dashboard},
+{path:'/admin/analytics',component:Analytics},
 {path:'/admin/banner',component:Banner},
 {path:'/admin/product',component:Product},
 {path:'/admin/blog',component:Blog},
+{path:'/admin/blog-approval',component:Blog},
 {path:'/admin/topic',component:Topic},
 {path:'/admin/role',component:Role},
 {path:'/admin/ship-company',component:ShippingCompany},
@@ -161,9 +166,6 @@ const publicRouter = [
 //PERMISSIONS
 {path:'/admin/permissions',component:PermissionPage},
 
-//SESSION MANAGEMENT
-{path:'/admin/sessions',component:SessionManager},
-{path:'/sessions',component:SessionManager},
 
 //DETAIL
 {path:'/product-detail/:id',component:ProductDetailsPage},

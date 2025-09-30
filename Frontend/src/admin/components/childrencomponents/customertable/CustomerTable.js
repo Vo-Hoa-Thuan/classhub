@@ -11,29 +11,46 @@ function CustomerTable() {
     const [records,setRecords] = useState([]);
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [customerIdToDelete, setCustomerIdToDelete] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [token] = useState(() => {
       const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
 
     useEffect(()=>{
+        console.log('Token from localStorage:', token);
+        console.log('Token length:', token ? token.length : 0);
+        setLoading(true);
+        setError(null);
+        
         if(token) {
             const headers = {
                 Authorization: `Bearer ${token}`,
             };
             
-            axios.get(api+'/user',{headers})
+            console.log('Headers being sent:', headers);
+            console.log('Making API request to:', api+'/user/with-orders');
+            axios.get(api+'/user/with-orders',{headers})
             .then((response)=>{
-                // Kiểm tra cấu trúc response và lấy data array
+                console.log('API Response:', response);
+                // Lấy danh sách user có đơn hàng
                 const users = response.data.data || response.data;
-                const filteredUsers = users.filter(item => item.admin===false && item.blogger===false);
-                setCustomers(filteredUsers);
-                setRecords(filteredUsers);
-                console.log('Users data:', users);
+                console.log('Users with orders data:', users);
+                setCustomers(users);
+                setRecords(users);
+                setLoading(false);
             })
             .catch((err)=>{
-                console.error('Error fetching users:', err);
+                console.error('Error fetching users with orders:', err);
+                console.error('Error response:', err.response);
+                setError(err.response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu');
+                setLoading(false);
             });
+        } else {
+            console.log('No token found in localStorage');
+            setError('Vui lòng đăng nhập để xem dữ liệu');
+            setLoading(false);
         }
     },[token]);
 
@@ -65,6 +82,16 @@ function CustomerTable() {
             sortable: true
         },
         {
+            name: 'Số đơn hàng',
+            selector: row => row.totalOrders || 0,
+            sortable: true,
+            cell: (row) => (
+                <span className="badge bg-primary">
+                    {row.totalOrders || 0} đơn
+                </span>
+            )
+        },
+        {
           name: 'Action',
           cell: (row) => <>
             <Link to={`/admin/details-customer/${row._id}`} 
@@ -87,23 +114,47 @@ function CustomerTable() {
         setCustomerIdToDelete(id);
         setDeleteDialog(true);
     }
-    return ( 
+    return (
         <>
             <div className="row mb-4">
                 <div className="col-12">
                     <div className="title-table">
-                    <h5 className="mb-2 upcase">Danh Sách Người Dùng</h5>
+                    <h5 className="mb-2 upcase">Danh Sách Khách Hàng Có Đơn Hàng</h5>
                     <div className='text-end'>
                         <input className="input-search-tb" placeholder='Tìm theo email...' type='text' onChange={handleFilter}/>
                     </div>
                     </div>
-                    <DataTable
-                        columns={columns}
-                        data={records}
-                        fixedHeader
-                        pagination
-                        customStyles={customStylesDark}
-                    ></DataTable>
+                    
+                    {loading && (
+                        <div className="text-center py-4">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                            <p className="mt-2">Đang tải dữ liệu...</p>
+                        </div>
+                    )}
+                    
+                    {error && (
+                        <div className="alert alert-danger" role="alert">
+                            <strong>Lỗi:</strong> {error}
+                        </div>
+                    )}
+                    
+                    {!loading && !error && records.length === 0 && (
+                        <div className="alert alert-info" role="alert">
+                            <strong>Thông báo:</strong> Không có dữ liệu khách hàng nào có đơn hàng.
+                        </div>
+                    )}
+                    
+                    {!loading && !error && records.length > 0 && (
+                        <DataTable
+                            columns={columns}
+                            data={records}
+                            fixedHeader
+                            pagination
+                            customStyles={customStylesDark}
+                        ></DataTable>
+                    )}
                 </div>
             </div>
             {deleteDialog && (

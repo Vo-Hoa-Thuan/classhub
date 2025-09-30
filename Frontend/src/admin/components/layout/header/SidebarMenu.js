@@ -10,7 +10,7 @@ function SideBarMenu({activeSideBar}) {
     const [ordersCancel, setOrdersCancel] = useState([]);
     const [ordersNew, setOrdersNew] = useState([]);
     const [ordersShipping, setOrdersShipping] = useState([]);
-    const [token,setToken] = useState(() => {
+    const [token] = useState(() => {
       const data = localStorage.getItem('accessToken');
       return data ? data : '';
     });
@@ -34,13 +34,12 @@ function SideBarMenu({activeSideBar}) {
         isBlogger
     } = usePermissions();
     
-   const headers = {
-      Authorization: `Bearer ${token}`,
-      };
-
     useEffect(()=>{
         setActiveMenu(parseInt(sessionStorage.getItem('code')));
         if(token) {
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
             axios.get(api+'/order',{headers})
             .then((response)=>{
             const data = response.data.data || response.data
@@ -64,17 +63,24 @@ function SideBarMenu({activeSideBar}) {
          Class Hub ADMIN
          </div>
          <ul className="main_side">
-            {/* Dashboard - Cần quyền xem thống kê, quản lý người dùng, hoặc quản lý sản phẩm */}
-            {(canViewAnalytics || canManageUsers || canManageProducts || isAdmin) && (
+            {/* Dashboard - Cần quyền quản lý người dùng hoặc quản lý sản phẩm */}
+            {(canManageUsers || canManageProducts) && (
                 <li onClick={()=>handleActiveItem(0)} className={activeMenu===0 ? 'active' : ''}>
                 <NavLink to='/admin/dashboard'>
                 <i className='bx bxs-dock-top'></i>Dashboard</NavLink></li>
             )}
             
+            {/* Analytics - Cần quyền xem thống kê */}
+            {canViewAnalytics && (
+                <li onClick={()=>handleActiveItem(10)} className={activeMenu===10 ? 'active' : ''}>
+                <NavLink to='/admin/analytics'>
+                <i className='bx bxs-bar-chart-alt-2'></i>Analytics</NavLink></li>
+            )}
+            
             {/* Components - Cần quyền quản lý banner, thanh toán, hoặc vận chuyển */}
-            {(canManageBanners || canManagePaymentMethods || canManageShipping || isAdmin) && (
+            {(canManageBanners || canManagePaymentMethods || canManageShipping) && (
                 <li className={activeMenu===1 ? 'active' : ''}>
-                   <a onClick={()=>handleActiveItem(1)} href="#" id="1">Components
+                   <a onClick={()=>handleActiveItem(1)} href="#components" id="1">Components
                    <span className={`fas fa-caret-down tab-sidebar-item ${activeMenu===1 ? 'rotate' : ''}`}></span>
                    </a>
                    <ul className={activeMenu===1 ? 'show' : ''}>
@@ -86,9 +92,9 @@ function SideBarMenu({activeSideBar}) {
             )}
             
             {/* Blogs - Cần quyền quản lý bài viết hoặc chủ đề */}
-            {(canCreatePosts || canEditPosts || canDeletePosts || canManageTopics || isAdmin) && (
+            {(canCreatePosts || canEditPosts || canDeletePosts || canManageTopics) && (
                 <li className={activeMenu===2 ? 'active' : ''}>
-                   <a onClick={()=>handleActiveItem(2)} href="#" id="2">Blogs
+                   <a onClick={()=>handleActiveItem(2)} href="#blogs" id="2">Blogs
                    <span className={`fas fa-caret-down tab-sidebar-item ${activeMenu===2 ? 'rotate' : ''}`}></span>
                    </a>
                    <ul className={activeMenu===2 ? 'show' : ''}>
@@ -100,9 +106,9 @@ function SideBarMenu({activeSideBar}) {
             )}
             
             {/* Orders - Cần quyền xác nhận hoặc hủy đơn hàng */}
-            {(canConfirmOrders || canCancelOrders || isAdmin) && (
+            {(canConfirmOrders || canCancelOrders) && (
                 <li className={activeMenu===3 ? 'active' : ''}>
-                   <a onClick={()=>handleActiveItem(3)} href="#" id="3">Orders
+                   <a onClick={()=>handleActiveItem(3)} href="#orders" id="3">Orders
                    <span className={`fas fa-caret-down tab-sidebar-item ${activeMenu===3 ? 'rotate' : ''}`}></span>
                    </a>
                    <ul className={activeMenu===3 ? 'show' : ''}>
@@ -134,19 +140,19 @@ function SideBarMenu({activeSideBar}) {
             )}
             
             {/* Sản Phẩm - Cần quyền quản lý sản phẩm */}
-            {(canManageProducts || isAdmin) && (
+            {canManageProducts && (
                 <li className={activeMenu===4 ? 'active' : ''}>
                 <Link onClick={()=>handleActiveItem(4)} to='/admin/product'>Sản Phẩm</Link></li>
             )}
             
             {/* Khách Hàng - Cần quyền quản lý người dùng */}
-            {(canManageUsers || isAdmin) && (
+            {canManageUsers && (
                 <li className={activeMenu===5 ? 'active' : ''}>
                 <Link onClick={()=>handleActiveItem(5)} to='/admin/customers'>Khách Hàng</Link></li>
             )}
             
             {/* Phân Quyền - Cần quyền quản lý người dùng hoặc phân quyền */}
-            {(canManageUsers || isAdmin) && (
+            {canManageUsers && (
                 <li className={activeMenu===6 ? 'active' : ''}>
                 <Link onClick={()=>handleActiveItem(6)} to='/admin/role'>Phân Quyền</Link></li>
             )}
@@ -163,11 +169,6 @@ function SideBarMenu({activeSideBar}) {
                 <Link onClick={()=>handleActiveItem(8)} to='/admin/permissions'>Quyền Truy Cập</Link></li>
             )}
             
-            {/* Session Management - All admin users */}
-            {(isAdmin || isProductManager || isBlogger) && (
-                <li className={activeMenu===9 ? 'active' : ''}>
-                <Link onClick={()=>handleActiveItem(9)} to='/admin/sessions'>Quản lý phiên đăng nhập</Link></li>
-            )}
          </ul>
       </nav>
      );

@@ -23,8 +23,7 @@ function DefaultLayout({children, childrenKey}) {
                 const user = JSON.parse(userData);
                 // Nếu là Product Manager hoặc Blogger, cho phép vào admin mà không cần gọi API check-admin
                 if(user.role === 'productManager' || user.role === 'Quản lý sản phẩm' || 
-                   user.role === 'blogger' || user.role === 'Blogger' ||
-                   user.blogger === true) {
+                   user.role === 'adminBlogger') {
                     console.log('Product Manager or Blogger detected, allowing admin access');
                     return;
                 }

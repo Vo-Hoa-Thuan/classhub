@@ -156,7 +156,8 @@ const permissionMiddleware = {
             'canCreatePosts',
             'canEditPosts',
             'canDeletePosts',
-            'canManageTopics'
+            'canManageTopics',
+            'canApprovePosts'
         ]);
     },
 

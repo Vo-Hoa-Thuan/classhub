@@ -18,8 +18,8 @@ router.get("/user/:id",middlewareControllers.vertifyToken, orderControllers.getO
 //UPDATE ORDER
 router.put("/update/:id",middlewareControllers.vertifyToken, orderControllers.updateOrder);
 
-//DELETE PAYMENT
-// router.delete("/delete/:id",middlewareControllers.vertifyTokenAdmin, orderControllers.deleteOrder);
+//DELETE ORDER
+router.delete("/delete/:id",middlewareControllers.vertifyTokenAdmin, orderControllers.deleteOrder);
 
 //PAYMENT ORDER
 router.post('/create_payment_url', middlewareControllers.vertifyToken, orderControllers.paymentVNPay);

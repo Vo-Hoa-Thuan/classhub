@@ -33,4 +33,10 @@ router.get('/users/:role',
     roleController.getUsersByRole
 );
 
+// Route để cập nhật permissions cho tất cả users
+router.post('/update-all-permissions',
+    permissionMiddleware.requirePermission('canAssignRoles'),
+    roleController.updateAllUsersPermissions
+);
+
 module.exports = router;

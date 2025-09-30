@@ -43,7 +43,7 @@ function BlogSideBar() {
                     <form id="search_form" name="gs" method="GET" action="#">
                       <input type="text" name="q" className="searchText" placeholder="type to search..." autoComplete="on"/>
                     </form>
-                    {user && user.blogger &&
+                    {user && user.role === 'adminBlogger' &&
                         <div className='mt-2'>
                         <Link to='/blog-management' className="btn btn-primary text-white">Quản lý bài viết</Link>
                         </div>

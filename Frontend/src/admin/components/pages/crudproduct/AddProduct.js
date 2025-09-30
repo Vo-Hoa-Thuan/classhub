@@ -53,7 +53,7 @@ function AddProduct() {
       setName("");
       setImageURL('');
       setSelectedImage(null);
-      imagesSub([]);
+      setImagesSub([]);
       setImageSubSelecte(null);
       setVideoURL("");
       setQuantity(0);

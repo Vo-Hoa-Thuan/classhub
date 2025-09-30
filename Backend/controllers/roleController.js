@@ -29,7 +29,7 @@ const roleController = {
     getUserRole: async (req, res) => {
         try {
             const { userId } = req.params;
-            const user = await User.findById(userId).select('role permissions admin blogger');
+            const user = await User.findById(userId).select('role permissions admin');
             
             if (!user) {
                 return res.status(404).json({
@@ -43,8 +43,7 @@ const roleController = {
                 data: {
                     role: user.role,
                     permissions: user.permissions,
-                    admin: user.admin,
-                    blogger: user.blogger
+                    admin: user.admin
                 }
             });
         } catch (error) {
@@ -62,8 +61,13 @@ const roleController = {
             const { userId } = req.params;
             const { role } = req.body;
 
+            console.log('UpdateUserRole - Current user:', req.user);
+            console.log('UpdateUserRole - Target userId:', userId);
+            console.log('UpdateUserRole - New role:', role);
+
             // Validate role
             if (!rolePermissionService.isValidRole(role)) {
+                console.log('UpdateUserRole - Invalid role:', role);
                 return res.status(400).json({
                     success: false,
                     message: "Invalid role"
@@ -95,6 +99,37 @@ const roleController = {
             res.status(500).json({
                 success: false,
                 message: "Failed to update user role",
+                error: error.message
+            });
+        }
+    },
+
+    // Cập nhật permissions cho tất cả users dựa trên role hiện tại
+    updateAllUsersPermissions: async (req, res) => {
+        try {
+            const users = await User.find({});
+            let updatedCount = 0;
+            
+            for (const user of users) {
+                if (user.role) {
+                    rolePermissionService.assignPermissionsByRole(user, user.role);
+                    await user.save();
+                    updatedCount++;
+                }
+            }
+            
+            res.status(200).json({
+                success: true,
+                message: `Updated permissions for ${updatedCount} users`,
+                data: {
+                    updatedCount,
+                    totalUsers: users.length
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to update user permissions",
                 error: error.message
             });
         }
@@ -151,7 +186,7 @@ const roleController = {
                 });
             }
 
-            const users = await User.find({ role }).select('fullname email phone role permissions admin blogger createdAt');
+            const users = await User.find({ role }).select('fullname email phone role permissions admin createdAt');
             
             res.status(200).json({
                 success: true,

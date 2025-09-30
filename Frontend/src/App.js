@@ -16,6 +16,8 @@ function App() {
           {publicRouter.map((route,index)=>{
             const Page = route.component;
             const isAdminRoute = route.path.startsWith('/admin');
+            const isBlogApprovalRoute = route.path === '/blog/approval';
+            const isProtectedRoute = route.path === '/blog/create' || route.path === '/blog/my-blogs';
             
             if (isAdminRoute) {
               return (
@@ -24,6 +26,34 @@ function App() {
                   path={route.path} 
                   element={
                     <ProtectedRoute requireAdmin={true}>
+                      <Page/>
+                    </ProtectedRoute>
+                  }
+                />
+              );
+            }
+            
+            if (isBlogApprovalRoute) {
+              return (
+                <Route 
+                  key={index} 
+                  path={route.path} 
+                  element={
+                    <ProtectedRoute requirePermission="canApprovePosts">
+                      <Page/>
+                    </ProtectedRoute>
+                  }
+                />
+              );
+            }
+            
+            if (isProtectedRoute) {
+              return (
+                <Route 
+                  key={index} 
+                  path={route.path} 
+                  element={
+                    <ProtectedRoute>
                       <Page/>
                     </ProtectedRoute>
                   }

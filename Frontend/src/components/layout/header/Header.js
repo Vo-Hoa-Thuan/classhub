@@ -136,8 +136,20 @@ function Header({searchOff,themeContext}) {
                         <span>Hồ sơ của tôi</span>
                       </NavLink>
                       
+                      {/* Blog management links */}
+                      <NavLink to="/blog/my-blogs" onClick={() => setShowUserMenu(false)}>
+                        <i className='bx bx-edit'></i>
+                        <span>Bài viết của tôi</span>
+                      </NavLink>
+                      
+                      <NavLink to="/blog/create" onClick={() => setShowUserMenu(false)}>
+                        <i className='bx bx-plus'></i>
+                        <span>Viết bài mới</span>
+                      </NavLink>
+                      
+                      
                       {/* Admin Dashboard link for admin/blogger/productManager */}
-                      {(user.admin === true || user.role === 'blogger' || user.role === 'productManager') && (
+                      {(user.admin === true || user.role === 'adminBlogger' || user.role === 'productManager') && (
                         <NavLink to="/admin/dashboard" onClick={() => setShowUserMenu(false)}>
                           <i className='bx bx-cog'></i>
                           <span>Admin Dashboard</span>

@@ -50,7 +50,7 @@ const userSChema = new mongoose.Schema({
     // Role system - chỉ một role được active
     role: {
         type: String,
-        enum: ['user', 'productManager', 'blogger', 'admin'],
+        enum: ['user', 'adminBlogger', 'productManager', 'admin'],
         default: 'user'
     },
     // Permissions chi tiết
@@ -83,6 +83,10 @@ const userSChema = new mongoose.Schema({
             default: false
         },
         canManageTopics: {
+            type: Boolean,
+            default: false
+        },
+        canApprovePosts: {
             type: Boolean,
             default: false
         },

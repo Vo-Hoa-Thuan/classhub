@@ -9,6 +9,9 @@ const middlewareControllers = {
             const authHeader = req.headers.authorization;
             const tokenHeader = req.headers.token;
             
+            console.log('vertifyToken: authHeader:', authHeader);
+            console.log('vertifyToken: tokenHeader:', tokenHeader);
+            
             let token = null;
             if (authHeader && authHeader.startsWith('Bearer ')) {
                 token = authHeader;
@@ -16,7 +19,10 @@ const middlewareControllers = {
                 token = tokenHeader;
             }
             
+            console.log('vertifyToken: extracted token:', token);
+            
             if(!token){
+                console.log('vertifyToken: No token found');
                 return res.status(401).json({
                     success: false,
                     message: "Access token is required"
@@ -24,7 +30,9 @@ const middlewareControllers = {
             }
 
             const accessToken = token.split(" ")[1];
+            console.log('vertifyToken: accessToken:', accessToken);
             if(!accessToken){
+                console.log('vertifyToken: Invalid token format');
                 return res.status(401).json({
                     success: false,
                     message: "Invalid token format"
@@ -71,17 +79,17 @@ const middlewareControllers = {
         }
        })
     },  
-    //verify token blogger
-    vertifyTokenBlogger: (req,res,next) =>{
+    //verify token adminBlogger
+    vertifyTokenAdminBlogger: (req,res,next) =>{
         middlewareControllers.vertifyToken(req,res,()=>{
-         if(req.user.blogger==true || req.user.admin==true){
+         if(req.user.role === 'adminBlogger' || req.user.admin==true){
              next()
          }
          else{
-             res.status(403).json({
-                 success: false,
-                 message: "Blogger or admin access required"
-             })
+            res.status(403).json({
+                success: false,
+                message: "Admin Blogger or admin access required"
+            })
          }
         })
      },

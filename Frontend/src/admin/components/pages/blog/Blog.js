@@ -6,9 +6,9 @@ import './Blog.scss';
 function Blog() {
     return ( 
         <ProtectedRoute 
-            requiredPermissions={['canCreatePosts', 'canEditPosts', 'canDeletePosts']}
+            requiredPermissions={['canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canApprovePosts']}
             mode="any"
-            customMessage="Bạn cần có quyền quản lý bài viết để truy cập trang này"
+            customMessage="Bạn cần có quyền quản lý bài viết hoặc duyệt bài viết để truy cập trang này"
         >
             <DefaultLayout>
             <BlogTable></BlogTable>

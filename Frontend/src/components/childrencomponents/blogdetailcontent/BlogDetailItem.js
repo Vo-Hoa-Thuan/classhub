@@ -2,7 +2,13 @@ import { NavLink } from "react-router-dom";
 
 function BlogDetailItem({id,topic,title,author, dateCreate,comments,shortDesc, desc, image}) {
   const createdAt = new Date(dateCreate);
-  const formattedDate = createdAt.toLocaleDateString('vi-VN'); 
+  const formattedDate = createdAt.toLocaleDateString('vi-VN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }); 
 
   return ( 
         <div className="col-lg-12">
@@ -11,16 +17,16 @@ function BlogDetailItem({id,topic,title,author, dateCreate,comments,shortDesc, d
               <div className="blog-thumb">
                   <img src={image} alt=""/>
                 </div>
-            <NavLink to={`/blog-detail/${id}`}>
-              <div className="title-info-content">
-                <span>{topic}</span>
-                <a href="post-details.html"><h4 className="title">{title}</h4></a>
-                <ul className="post-info">
-                  <li><a href="#">{author} |</a></li>
-                  <li><a href="#">{formattedDate} |</a></li>
-                </ul>
-                </div>
-            </NavLink>
+            <div className="title-info-content">
+              <span>{topic}</span>
+              <NavLink to={`/blog-detail/${id}`}>
+                <h4 className="title">{title}</h4>
+              </NavLink>
+              <ul className="post-info">
+                <li><a href="#">{author} |</a></li>
+                <li><a href="#">{formattedDate} |</a></li>
+              </ul>
+            </div>
             </div>
             <div className="down-content">
               <h6 className="title short-desc-blog">{shortDesc}</h6><br></br>

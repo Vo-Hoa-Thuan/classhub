@@ -2,20 +2,23 @@ const rolePermissionService = {
     // Định nghĩa permissions cho từng role
     rolePermissions: {
         user: {
-            // User thường không có quyền gì đặc biệt
+            // Tất cả user đều có quyền tạo bài viết (nhưng phải chờ duyệt)
+            canCreatePosts: true
+        },
+        
+        adminBlogger: {
+            // Admin blogger có quyền quản lý blog và duyệt bài
+            canCreatePosts: true,
+            canEditPosts: true,
+            canDeletePosts: true,
+            canManageTopics: true,
+            canApprovePosts: true
         },
         
         productManager: {
             canConfirmOrders: true,
             canCancelOrders: true,
             canManageProducts: true
-        },
-        
-        blogger: {
-            canCreatePosts: true,
-            canEditPosts: true,
-            canDeletePosts: true,
-            canManageTopics: true
         },
         
         admin: {
@@ -25,14 +28,7 @@ const rolePermissionService = {
             canManagePaymentMethods: true,
             canManageShipping: true,
             canViewAnalytics: true,
-            // Admin có tất cả quyền
-            canConfirmOrders: true,
-            canCancelOrders: true,
-            canManageProducts: true,
-            canCreatePosts: true,
-            canEditPosts: true,
-            canDeletePosts: true,
-            canManageTopics: true
+            canApprovePosts: true
         }
     },
 
@@ -52,8 +48,15 @@ const rolePermissionService = {
         
         // Cập nhật legacy fields để tương thích ngược
         user.admin = (role === 'admin');
-        user.blogger = (role === 'blogger');
         
+        return user;
+    },
+    
+    // Gán quyền tạo bài cho tất cả user (không cần role)
+    assignDefaultUserPermissions(user) {
+        if (user.permissions) {
+            user.permissions.canCreatePosts = true;
+        }
         return user;
     },
 
@@ -97,7 +100,7 @@ const rolePermissionService = {
 
     // Hàm validate role
     isValidRole: (role) => {
-        return ['user', 'productManager', 'blogger', 'admin'].includes(role);
+        return ['user', 'adminBlogger', 'productManager', 'admin'].includes(role);
     }
 };
 

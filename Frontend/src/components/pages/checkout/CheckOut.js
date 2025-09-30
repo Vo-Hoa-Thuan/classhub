@@ -110,20 +110,6 @@ function CheckOut() {
         cartCountContext.setCartCount(0);
         setCartLocalStorage(updatedCart);
     }
-    const updateProduct = () =>{
-        const products = order && order.products;
-        for (var i =0; i < products.length; i++){
-        axios.put(api+`/product/update_qty_purchased/${products[i].product}`,
-        {quantity:products[i].quantity},
-        {headers})
-        .then((response)=>{
-            console.log('Update thành công');
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-        }
-    }
     const handleCheckOut = async(e) =>{
         e.preventDefault();
         console.log(order); 
@@ -136,7 +122,6 @@ function CheckOut() {
                 console.log(response.data);
                 localStorage.setItem("order",JSON.stringify(response.data));
                 notifySuccess("Đang chuyển hướng tới trang thanh toán!");
-                updateProduct();
                 //Tạo url thanh toán
                     axios.post(api +'/order/create_payment_url', 
                     {userId: order.userId, total: parseInt(order.total)}, 
@@ -181,7 +166,6 @@ function CheckOut() {
             await axios.post(api +'/order', order, { headers })
             .then(response => {
                 console.log(response.data);
-                updateProduct();
                 notifySuccess("Đặt hàng thành công!");
                 setTimeout(function() {
                     clearCart();

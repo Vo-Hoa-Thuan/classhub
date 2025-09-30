@@ -94,27 +94,18 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
     // Fallback: tạo permissions từ role nếu không có permissions chi tiết
     const fallbackPermissions = {};
     
-    // Nếu là admin, có tất cả quyền
+    // Nếu là admin, chỉ có quyền quản lý user và phân quyền
     if (user?.admin) {
       fallbackPermissions.canManageUsers = true;
       fallbackPermissions.canAssignRoles = true;
-      fallbackPermissions.canManageBanners = true;
-      fallbackPermissions.canManagePaymentMethods = true;
-      fallbackPermissions.canManageShipping = true;
-      fallbackPermissions.canViewAnalytics = true;
-      fallbackPermissions.canConfirmOrders = true;
-      fallbackPermissions.canCancelOrders = true;
-      fallbackPermissions.canManageProducts = true;
-      fallbackPermissions.canCreatePosts = true;
-      fallbackPermissions.canEditPosts = true;
-      fallbackPermissions.canDeletePosts = true;
-      fallbackPermissions.canManageTopics = true;
-    } else if (user?.blogger) {
+      fallbackPermissions.canViewAnalytics = true; // Để xem dashboard tổng quan
+    } else if (user?.role === 'adminBlogger') {
       // Nếu là blogger, chỉ có quyền blog
       fallbackPermissions.canCreatePosts = true;
       fallbackPermissions.canEditPosts = true;
       fallbackPermissions.canDeletePosts = true;
       fallbackPermissions.canManageTopics = true;
+      fallbackPermissions.canApprovePosts = true;
     } else if (user?.role === 'Quản lý sản phẩm' || user?.role === 'productManager') {
       // Nếu là Product Manager, có quyền quản lý sản phẩm và đơn hàng
       fallbackPermissions.canConfirmOrders = true;
@@ -130,7 +121,7 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
   // Kiểm tra role
   const hasRole = (role) => {
     if (role === 'admin') return user.admin === true;
-    if (role === 'blogger') return user.blogger === true;
+    if (role === 'adminBlogger') return user.role === 'adminBlogger';
     if (role === 'productManager') return user.role === 'Quản lý sản phẩm' || user.role === 'productManager';
     return false;
   };
@@ -167,7 +158,7 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
 
   // Kiểm tra có phải blogger không
   const isBlogger = () => {
-    return user.blogger === true;
+    return user.role === 'adminBlogger';
   };
 
   // Lấy tất cả permissions của user
@@ -203,7 +194,8 @@ export const usePermissions = (requiredPermissions = null, mode = 'any') => {
     canCreatePosts: checkSinglePermission('canCreatePosts'),
     canEditPosts: checkSinglePermission('canEditPosts'),
     canDeletePosts: checkSinglePermission('canDeletePosts'),
-    canManageTopics: checkSinglePermission('canManageTopics')
+    canManageTopics: checkSinglePermission('canManageTopics'),
+    canApprovePosts: checkSinglePermission('canApprovePosts')
   };
 };
 

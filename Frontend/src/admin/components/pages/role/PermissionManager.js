@@ -46,7 +46,8 @@ function PermissionManager({ userId, onClose }) {
                 canCreatePosts: { label: 'Tạo bài viết', icon: '✍️', description: 'Tạo bài viết mới' },
                 canEditPosts: { label: 'Sửa bài viết', icon: '✏️', description: 'Chỉnh sửa bài viết' },
                 canDeletePosts: { label: 'Xóa bài viết', icon: '🗑️', description: 'Xóa bài viết' },
-                canManageTopics: { label: 'Quản lý chủ đề', icon: '🏷️', description: 'Quản lý các chủ đề bài viết' }
+                canManageTopics: { label: 'Quản lý chủ đề', icon: '🏷️', description: 'Quản lý các chủ đề bài viết' },
+                canApprovePosts: { label: 'Duyệt bài viết', icon: '✅', description: 'Duyệt và phê duyệt bài viết từ người dùng' }
             }
         },
         {
@@ -64,9 +65,9 @@ function PermissionManager({ userId, onClose }) {
 
     // Định nghĩa roles với icon và màu sắc
     const roles = [
-        { value: 'user', label: 'Người dùng thường', icon: '👤', color: '#6B7280', description: 'Quyền cơ bản' },
+        { value: 'user', label: 'Người dùng thường', icon: '👤', color: '#6B7280', description: 'Có thể tạo bài viết' },
         { value: 'productManager', label: 'Quản lý sản phẩm', icon: '📦', color: '#F59E0B', description: 'Quản lý sản phẩm và đơn hàng' },
-        { value: 'blogger', label: 'Người viết blog', icon: '✍️', color: '#2563EB', description: 'Quản lý nội dung' },
+        { value: 'adminBlogger', label: 'Admin Blogger', icon: '✍️', color: '#2563EB', description: 'Quản lý nội dung và duyệt bài' },
         { value: 'admin', label: 'Quản trị viên', icon: '👑', color: '#DC2626', description: 'Toàn quyền hệ thống' }
     ];
 
@@ -107,19 +108,16 @@ function PermissionManager({ userId, onClose }) {
         
         // Áp dụng permissions mặc định của role
         const roleDefaultPermissions = {
-            'user': [],
+            'user': ['canCreatePosts'], // Tất cả user đều có quyền tạo bài
+            'adminBlogger': [
+                'canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canManageTopics', 'canApprovePosts'
+            ],
             'productManager': [
                 'canConfirmOrders', 'canManageProducts', 'canCancelOrders'
             ],
-            'blogger': [
-                'canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canManageTopics'
-            ],
             'admin': [
                 'canManageUsers', 'canManageBanners', 'canManageShipping', 
-                'canAssignRoles', 'canManagePaymentMethods', 'canViewAnalytics',
-                'canConfirmOrders', 'canCancelOrders', 'canManageProducts',
-                'canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canManageTopics'
-            ]
+                'canAssignRoles', 'canManagePaymentMethods', 'canViewAnalytics'            ]
         };
         
         // Áp dụng permissions mặc định của role
@@ -147,18 +145,17 @@ function PermissionManager({ userId, onClose }) {
         
         // Định nghĩa permissions mặc định cho từng role
         const roleDefaultPermissions = {
-            'user': [],
+            'user': ['canCreatePosts'], // Tất cả user đều có quyền tạo bài
+            'adminBlogger': [
+                'canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canManageTopics', 'canApprovePosts'
+            ],
             'productManager': [
                 'canConfirmOrders', 'canManageProducts', 'canCancelOrders'
-            ],
-            'blogger': [
-                'canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canManageTopics'
             ],
             'admin': [
                 'canManageUsers', 'canManageBanners', 'canManageShipping', 
                 'canAssignRoles', 'canManagePaymentMethods', 'canViewAnalytics',
-                'canConfirmOrders', 'canCancelOrders', 'canManageProducts',
-                'canCreatePosts', 'canEditPosts', 'canDeletePosts', 'canManageTopics'
+                'canApprovePosts'
             ]
         };
         
@@ -191,6 +188,12 @@ function PermissionManager({ userId, onClose }) {
     const handleSave = async () => {
         try {
             setLoading(true);
+            
+            // Debug: Log current user info
+            const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            console.log('PermissionManager - Current user:', currentUser);
+            console.log('PermissionManager - User permissions:', currentUser.permissions);
+            console.log('PermissionManager - Can assign roles:', currentUser.permissions?.canAssignRoles);
             
             // Cập nhật role
             await axios.put(api + `/role/user/${userId}/role`, 

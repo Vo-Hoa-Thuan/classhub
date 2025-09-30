@@ -102,8 +102,28 @@ const orderControllers = {
     },
     deleteOrder: async (req,res)=>{
         try {
-            const order = await Order.findByIdAndDelete(req.params.id);
-            res.status(200).json("Delete Successfully");
+            // Lấy thông tin đơn hàng trước khi xóa để hoàn trả số lượng sản phẩm
+            const order = await Order.findById(req.params.id);
+            if (!order) {
+                return res.status(404).json("Order not found");
+            }
+
+            // Hoàn trả số lượng sản phẩm vào kho
+            for (const item of order.products) {
+                await Product.findByIdAndUpdate(
+                    item.product,
+                    { 
+                        $inc: { 
+                            quantity: +item.quantity,  // Cộng lại số lượng vào kho
+                            purchased: -item.quantity  // Trừ số lượng đã bán
+                        } 
+                    }
+                );
+            }
+
+            // Xóa đơn hàng sau khi đã hoàn trả số lượng
+            await Order.findByIdAndDelete(req.params.id);
+            res.status(200).json("Order cancelled and quantity restored successfully");
         } catch (error) {
             res.status(500).json(error);
         }

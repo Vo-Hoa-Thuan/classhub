@@ -15,6 +15,25 @@ const blogSChema = new mongoose.Schema({
         ref:"User",
         require: true, },
     status: { type: Boolean, default: true },
+    // Hệ thống duyệt bài
+    approvalStatus: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+    approvedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null
+    },
+    approvedAt: {
+        type: Date,
+        default: null
+    },
+    rejectionReason: {
+        type: String,
+        default: null
+    }
 },
 {timestamps: true}
 );

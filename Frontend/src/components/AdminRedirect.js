@@ -11,7 +11,7 @@ const AdminRedirect = () => {
     if (!loading && user) {
       // Check if user is admin, blogger, or product manager
       const isAdmin = user.admin === true;
-      const isBlogger = user.role === 'blogger' || user.role === 'Blogger' || user.blogger === true;
+      const isBlogger = user.role === 'adminBlogger';
       const isProductManager = user.role === 'productmanager' || user.role === 'productManager' || user.role === 'Quản lý sản phẩm';
       
       // Chỉ redirect nếu đang ở trang chính và chưa có redirect flag trong session

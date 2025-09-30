@@ -1,0 +1,245 @@
+.my-blogs-page {
+  padding: 2rem 0;
+  min-height: 80vh;
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    h2 {
+      color: #333;
+      margin: 0;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.btn-primary {
+        background: #007bff;
+        color: white;
+
+        &:hover {
+          background: #0056b3;
+        }
+      }
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+    color: #666;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+
+      &:hover {
+        background: #0056b3;
+      }
+    }
+  }
+
+  .blogs-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .blog-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .blog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .blog-title {
+        color: #333;
+        margin: 0;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        white-space: nowrap;
+
+        &.pending {
+          background: #fff3cd;
+          color: #856404;
+          border: 1px solid #ffeaa7;
+        }
+
+        &.approved {
+          background: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+        }
+
+        &.rejected {
+          background: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+        }
+
+        &.unknown {
+          background: #e2e3e5;
+          color: #383d41;
+          border: 1px solid #d6d8db;
+        }
+      }
+    }
+
+    .blog-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      color: #666;
+
+      .topic {
+        font-weight: 600;
+      }
+    }
+
+    .blog-short-desc {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .rejection-reason {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      border-radius: 4px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      color: #721c24;
+      font-size: 0.875rem;
+    }
+
+    .approval-info {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      border-radius: 4px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      color: #155724;
+      font-size: 0.875rem;
+    }
+
+    .blog-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid #007bff;
+        border-radius: 4px;
+        background: transparent;
+        color: #007bff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.btn-outline {
+          &:hover {
+            background: #007bff;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .my-blogs-page {
+    padding: 1rem 0;
+
+    .page-header {
+      flex-direction: column;
+      align-items: stretch;
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    .blog-card {
+      padding: 1rem;
+
+      .blog-header {
+        flex-direction: column;
+        align-items: stretch;
+
+        .blog-title {
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      .blog-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  }
+}

@@ -1,23 +1,21 @@
-import AdminDashboard from "../../childrencomponents/totaldashboard/AdminDashboard";
-import UserTable from "../../childrencomponents/usertable/UserTable";
+import TotalDashboard from "../../childrencomponents/totaldashboard/TotalDashboard";
 import DefaultLayout from "../../layout/default/DefaultLayout";
 import ProtectedRoute from "../../common/ProtectedRoute";
 
-function Dashboard() {
+function Analytics() {
     return ( 
         <ProtectedRoute 
-            requiredPermissions={['canManageUsers']}
+            requiredPermissions={['canViewAnalytics']}
             mode="any"
-            customMessage="Bạn cần có quyền quản lý người dùng để truy cập Dashboard"
+            customMessage="Bạn cần có quyền xem thống kê để truy cập Analytics"
         >
             <DefaultLayout>
                 <div className="container-fluid pt-4 px-4">
-                    <AdminDashboard/>
-                    <div className="row mt-2 g-4">
+                    <div className="row">
                         <div className="col-12">
                             <div className="bg-table-admin rounded h-100 p-4">
-                                <h6 className="mb-4">Quản lý người dùng</h6>
-                                <UserTable/>
+                                <h4 className="mb-4">Thống kê tổng quan</h4>
+                                <TotalDashboard/>
                             </div>
                         </div>
                     </div>
@@ -27,4 +25,4 @@ function Dashboard() {
      );
 }
 
-export default Dashboard;
+export default Analytics;

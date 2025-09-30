@@ -65,7 +65,15 @@ function UserTable() {
         {
             name: 'Role',
             cell: (row) => {
-                const getRoleLabel = (role) => {
+                const getRoleLabel = (role, admin) => {
+                    if (role === 'adminBlogger') {
+                        return 'Admin Blogger';
+                    }
+                    
+                    if (role === 'blogger' && admin === true) {
+                        return 'Admin Blogger';
+                    }
+                    
                     switch(role) {
                         case 'admin': return 'Quản trị viên';
                         case 'productManager': return 'Quản lý sản phẩm';
@@ -75,7 +83,17 @@ function UserTable() {
                     }
                 };
                 
-                const getRoleBadge = (role) => {
+                const getRoleBadge = (role, admin) => {
+                    // Xử lý role adminBlogger (từ migration) - màu xanh dương
+                    if (role === 'adminBlogger') {
+                        return 'badge bg-primary';
+                    }
+                    
+                    // Nếu là blogger và có admin = true thì dùng màu xanh dương
+                    if (role === 'blogger' && admin === true) {
+                        return 'badge bg-primary';
+                    }
+                    
                     const badges = {
                         'admin': 'badge bg-danger',
                         'productManager': 'badge bg-warning',
@@ -86,8 +104,8 @@ function UserTable() {
                 };
                 
                 return (
-                    <span className={getRoleBadge(row.role)}>
-                        {getRoleLabel(row.role)}
+                    <span className={getRoleBadge(row.role, row.admin)}>
+                        {getRoleLabel(row.role, row.admin)}
                     </span>
                 );
             },

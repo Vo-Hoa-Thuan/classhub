@@ -10,7 +10,7 @@ import Toast, { notifyError, notifySuccess, notifyWarning } from "../../../../co
 function DetailOrder() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [order,setOrder] = useState([]);
+    const [order,setOrder] = useState(null);
     const [cancelOrder,setCancelOrder] = useState(false);
     const [orderTrackings,setOrderTrackings] = useState([]);
     const [orderTrackingName,setOrderTrackingName] = useState();
@@ -30,9 +30,11 @@ function DetailOrder() {
       axios.get(api +'/order-tracking',{headers})
         .then(response => {
             console.log(response.data);
-            const name = response.data.find((track) => track.codeStatus === data.orderTracking).name;
-            setOrderTrackingName(name);
-            console.log("Tên là",name);
+            const tracking = response.data.find((track) => track.codeStatus === data.orderTracking);
+            if (tracking) {
+                setOrderTrackingName(tracking.name);
+                console.log("Tên là", tracking.name);
+            }
             setOrderTrackings(response.data)
         })
         .catch(error => {
@@ -41,15 +43,20 @@ function DetailOrder() {
           })
           .catch((err)=>{
           console.log(err);
+          notifyError("Không thể tải thông tin đơn hàng");
       });
       },[cancelOrder]);
 
     const handleConfirmCancel = async(e) =>{
       e.preventDefault();
-      await axios.put(api +`/order/update/${id}`, {orderTracking: 21}, { headers })
+      await axios.delete(api +`/order/delete/${id}`, { headers })
           .then(response => {
-              notifyWarning("Đã xác nhận hủy đơn hàng!");
+              notifySuccess("Đã xác nhận hủy đơn hàng và hoàn trả số lượng sản phẩm!");
               setCancelOrder(!cancelOrder);
+              // Chuyển về trang danh sách đơn hàng sau khi hủy
+              setTimeout(() => {
+                  window.location.href = '/admin/orders';
+              }, 1500);
           })
           .catch(error => {
           console.log(error);
@@ -74,6 +81,21 @@ function DetailOrder() {
         localStorage.setItem("export_order",JSON.stringify(order));
         navigate('/export-order');
     };
+    // Show loading if order is null
+    if (!order) {
+        return (
+            <DefaultLayout>
+                <div className="container-fluid pt-4 px-4">
+                    <div className="d-flex justify-content-center">
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </DefaultLayout>
+        );
+    }
+
     return ( 
         <DefaultLayout>
         <div className="container-fluid pt-4 px-4">
@@ -107,19 +129,19 @@ function DetailOrder() {
         </div>
         </td>
         <td>Giá:</td>
-        <td className="text-muted original-price">{item.priceSale.toLocaleString('vi-VN')}đ</td>
-        <td className="text-end">{item.price.toLocaleString('vi-VN')}đ</td>
+        <td className="text-muted original-price">{item.priceSale ? item.priceSale.toLocaleString('vi-VN') : 0}đ</td>
+        <td className="text-end">{item.price ? item.price.toLocaleString('vi-VN') : 0}đ</td>
         </tr>
         ))}
         </tbody>
         <tfoot>
         <tr>
         <td colspan="2">Tổng sản phẩm</td>
-        <td className="text-end">{(parseInt(order.total)-parseInt(order.shipPrice)).toLocaleString('vi-VN')}đ</td>
+        <td className="text-end">{((order.total || 0) - (order.shipPrice || 0)).toLocaleString('vi-VN')}đ</td>
         </tr>
         <tr>
         <td colspan="2">Phí vận chuyển</td>
-        <td className="text-end">{parseInt(order.shipPrice).toLocaleString('vi-VN')}đ</td>
+        <td className="text-end">{(order.shipPrice || 0).toLocaleString('vi-VN')}đ</td>
         </tr>
         <tr>
         <td colspan="2">Giảm giá</td>
@@ -127,7 +149,7 @@ function DetailOrder() {
         </tr>
         <tr className="fw-bold">
         <td colspan="2">Tổng tiền</td>
-        <td className="text-end">{parseInt(order.total).toLocaleString('vi-VN')}đ</td>
+        <td className="text-end">{(order.total || 0).toLocaleString('vi-VN')}đ</td>
         </tr>
         </tfoot>
         </table>
@@ -137,19 +159,19 @@ function DetailOrder() {
         <h3 className="h6">Thông tin vận chuyển</h3>
         <b>{order.shippingCompany && order.shippingCompany.name}</b><br/>
         <small>Mã vận chuyển: #{order.shippingCompany && order.shippingCompany._id}<br/>
-        Giá: {order.shippingCompany && order.shippingCompany.price.toLocaleString('vi-VN')}đ</small>
+        Giá: {order.shippingCompany && order.shippingCompany.price ? order.shippingCompany.price.toLocaleString('vi-VN') : 0}đ</small>
         <hr/>
         <h3 className="h6">Hình thức thanh toán</h3>
         {order.paymentId===null ?
         <>
             <b>Thanh toán khi nhận hàng</b><br/>
-            <p>Thanh toán: {parseInt(order.total).toLocaleString('vi-VN')}đ
+            <p>Thanh toán: {(order.total || 0).toLocaleString('vi-VN')}đ
             </p>
         </>
         :
         <p>
         <img src={order.paymentId && order.paymentId.imageUrl} alt={order.paymentId && order.paymentId.name} style={{width: '100px'}}/><br/>
-        Thanh toán: {parseInt(order.total).toLocaleString('vi-VN')}đ 
+        Thanh toán: {(order.total || 0).toLocaleString('vi-VN')}đ 
         {order.paymentStatus ?
             <span className="badge bg-success rounded-pill">Đã trả</span>
         :

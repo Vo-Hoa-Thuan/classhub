@@ -339,6 +339,15 @@ const verifyEmailToken = async (token) => {
         isVerified: true
       });
       
+      // Gán permissions cho user mới
+      const rolePermissionService = require('../services/rolePermissionService');
+      // Tất cả user đều có quyền tạo bài
+      rolePermissionService.assignDefaultUserPermissions(newUser);
+      // Gán permissions theo role nếu có
+      if (newUser.role && newUser.role !== 'user') {
+          rolePermissionService.assignPermissionsByRole(newUser, newUser.role);
+      }
+      
       const user = await newUser.save();
       
       // Đánh dấu verification đã được sử dụng

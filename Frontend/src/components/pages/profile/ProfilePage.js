@@ -162,7 +162,26 @@ function ProfilePage() {
                   <div className="col-lg-4 align-self-center">
                     <div className="main-info header-text">
                       <h4 className="title">{dataUser.fullname}</h4>
-                      {user && user.blogger &&
+                      {/* Hiển thị role */}
+                      <div style={{ marginBottom: '10px' }}>
+                        <span style={{ 
+                          padding: '4px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          backgroundColor: dataUser.role === 'adminBlogger' ? '#2563EB' :
+                                         dataUser.role === 'admin' ? '#DC2626' :
+                                         dataUser.role === 'productManager' ? '#F59E0B' :
+                                         '#6B7280',
+                          color: 'white'
+                        }}>
+                          {dataUser.role === 'adminBlogger' ? 'Admin Blogger' :
+                           dataUser.role === 'admin' ? 'Quản trị viên' :
+                           dataUser.role === 'productManager' ? 'Quản lý sản phẩm' :
+                           'Người dùng'}
+                        </span>
+                      </div>
+                      {user && user.role === 'adminBlogger' &&
                         <div>
                         <Link to='/blog-management' className="btn btn-primary">Quản lý bài viết</Link>
                         </div>

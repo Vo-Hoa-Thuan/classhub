@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import BlogService from '../../../services/BlogService';
 
 import './BlogList.scss'
 import BlogDetailItem from '../blogdetailcontent/BlogDetailItem';
-import {api} from '../../../api';
 
 function BlogList() {
   const [pageNum, setPageNum] = useState(1);
@@ -13,18 +12,25 @@ function BlogList() {
   const [loaders, setLoaders] = useState(false);
 
   useEffect(() => {
-    setLoaders(true);
-    axios.get(api+'/blog')
-      .then(response => {
-        setItems(response.data);
-        console.log(response.data);
-        setLoaders(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoaders(false);
-      });
+    loadApprovedBlogs();
   }, []);
+
+  const loadApprovedBlogs = async () => {
+    try {
+      setLoaders(true);
+      const response = await BlogService.getApprovedBlogs();
+      if (response.success) {
+        setItems(response.data);
+        console.log('Approved blogs:', response.data);
+      } else {
+        console.error('Error loading blogs:', response.message);
+      }
+    } catch (error) {
+      console.error('Error loading blogs:', error);
+    } finally {
+      setLoaders(false);
+    }
+  };
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -44,18 +50,18 @@ function BlogList() {
   };
     return ( 
         <>
-        {loaders &&
-        <div id="js-preloader" class="js-preloader">
-            <div class="preloader-inner">
-                <span class="dot"></span>
-                <div class="dots">
+        {loaders && (
+        <div id="js-preloader" className="js-preloader">
+            <div className="preloader-inner">
+                <span className="dot"></span>
+                <div className="dots">
                 <span></span>
                 <span></span>
                 <span></span>
                 </div>
             </div>
         </div>
-        }
+        )}
           <div className="col-lg-8">
               <div className="all-blog-posts">
                 <div className="row">
